@@ -224,3 +224,4 @@ Temporary Items
 # db
 root.properties
 /user-service/src/main/resources/root.properties
+user-service/src/main/resources/root.properties
