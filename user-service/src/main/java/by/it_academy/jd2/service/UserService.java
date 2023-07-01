@@ -5,6 +5,7 @@ import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
+import by.it_academy.jd2.service.util.UserConvertUtil;
 
 import java.util.List;
 
@@ -16,25 +17,24 @@ public class UserService implements IUserService {
         this.userService = userService;
     }
 
-
     @Override
     public List<UserEntity> get() {
-        return null;
+        return userService.get();
     }
 
     @Override
     public UserEntity get(Long id) {
-        return null;
+        return userService.get(id);
     }
 
     @Override
     public UserEntity add(UserCreateDTO item) {
-        return null;
+        return userService.add(UserConvertUtil.toEntity(item));
     }
 
     @Override
     public void remove(Long id) {
-
+    userService.remove(id);
     }
 
     @Override
@@ -43,12 +43,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean checkChildren(Long id) {
-        return false;
-    }
-
-    @Override
     public boolean validateCoordinatesParam(String id) {
-        return false;
+        return id != null && id.matches("\\d+") && Long.parseLong(id) > 0;
     }
 }
