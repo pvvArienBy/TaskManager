@@ -49,3 +49,6 @@ buildNumber.properties
 mvnw
 mvnw.cmd
 
+
+# db
+root.properties
