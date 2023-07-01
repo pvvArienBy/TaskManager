@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity
 public class UserEntity implements Serializable {
 
-    static  final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,26 +21,48 @@ public class UserEntity implements Serializable {
 
     private String lastName;
 
+    private String mail;
+
+    private String password;
+
+    private String telegram;
+
     private String position;
 
     private String role;
 
     private String status;
 
-    private Long version;
+    private String notificationWay;
 
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String firstName, String lastName, String position, String role, String status, Long version) {
-        this.id = id;
+    public UserEntity(String firstName, String lastName, String mail, String password, String telegram, String position, String role, String status, String notificationWay) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.mail = mail;
+        this.password = password;
+        this.telegram = telegram;
         this.position = position;
         this.role = role;
         this.status = status;
-        this.version = version;
+        this.notificationWay = notificationWay;
     }
+
+    public UserEntity(Long id, String firstName, String lastName, String mail, String password, String telegram, String position, String role, String status, String notificationWay) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mail = mail;
+        this.password = password;
+        this.telegram = telegram;
+        this.position = position;
+        this.role = role;
+        this.status = status;
+        this.notificationWay = notificationWay;
+    }
+
 
     public Long getId() {
         return id;
@@ -64,6 +86,30 @@ public class UserEntity implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTelegram() {
+        return telegram;
+    }
+
+    public void setTelegram(String telegram) {
+        this.telegram = telegram;
     }
 
     public String getPosition() {
@@ -90,12 +136,12 @@ public class UserEntity implements Serializable {
         this.status = status;
     }
 
-    public Long getVersion() {
-        return version;
+    public String getNotificationWay() {
+        return notificationWay;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
+    public void setNotificationWay(String notificationWay) {
+        this.notificationWay = notificationWay;
     }
 
     @Override
@@ -103,11 +149,12 @@ public class UserEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(position, that.position) && Objects.equals(role, that.role) && Objects.equals(status, that.status) && Objects.equals(version, that.version);
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(mail, that.mail) && Objects.equals(password, that.password) && Objects.equals(telegram, that.telegram) && Objects.equals(position, that.position) && Objects.equals(role, that.role) && Objects.equals(status, that.status) && Objects.equals(notificationWay, that.notificationWay);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, position, role, status, version);
+        return Objects.hash(id, firstName, lastName, mail, password, telegram, position, role, status, notificationWay);
     }
 }
+
