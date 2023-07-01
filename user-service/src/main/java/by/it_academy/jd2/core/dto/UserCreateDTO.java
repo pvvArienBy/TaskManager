@@ -22,28 +22,28 @@ public class UserCreateDTO {
     @JsonProperty("position")
     private String position;
 
-    @JsonProperty("notificationWay")
-    private String notificationWay;
-
     @JsonProperty("role")
     private String role;
 
     @JsonProperty("status")
     private String status;
 
+    @JsonProperty("notificationWay")
+    private String notificationWay;
+
     public UserCreateDTO() {
     }
 
-    public UserCreateDTO(String firstName, String lastName, String mail, String password, String telegram, String position, String notificationWay, String role, String status) {
+    public UserCreateDTO(String firstName, String lastName, String mail, String password, String telegram, String position, String role, String status, String notificationWay) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
         this.password = password;
         this.telegram = telegram;
         this.position = position;
-        this.notificationWay = notificationWay;
         this.role = role;
         this.status = status;
+        this.notificationWay = notificationWay;
     }
 
     public String getFirstName() {
@@ -94,14 +94,6 @@ public class UserCreateDTO {
         this.position = position;
     }
 
-    public String getNotificationWay() {
-        return notificationWay;
-    }
-
-    public void setNotificationWay(String notificationWay) {
-        this.notificationWay = notificationWay;
-    }
-
     public String getRole() {
         return role;
     }
@@ -116,6 +108,14 @@ public class UserCreateDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getNotificationWay() {
+        return notificationWay;
+    }
+
+    public void setNotificationWay(String notificationWay) {
+        this.notificationWay = notificationWay;
     }
 }
 
