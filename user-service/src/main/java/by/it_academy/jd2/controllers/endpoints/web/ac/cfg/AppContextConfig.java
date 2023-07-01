@@ -20,7 +20,7 @@ import java.util.Properties;
 @ComponentScan("by.it_academy.jd2")
 @PropertySources({
         @PropertySource("classpath:db.properties"),
-        @PropertySource("classpath:hibernate.properties"),
+        @PropertySource("classpath:hb.properties"),
         @PropertySource("classpath:root.properties")})
 public class AppContextConfig {
 
@@ -64,8 +64,8 @@ public class AppContextConfig {
         try {
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
 
-            dataSource.setDriverClass(env.getProperty("db.driver"));
-            dataSource.setJdbcUrl(env.getProperty("db.url"));
+            dataSource.setDriverClass(env.getProperty("jdbc.driver"));
+            dataSource.setJdbcUrl(env.getProperty("jdbc.url"));
             dataSource.setUser(env.getProperty("root.user"));
             dataSource.setPassword(env.getProperty("root.password"));
             return dataSource;
@@ -90,25 +90,4 @@ public class AppContextConfig {
 
 //    @Bean
 //    public DataSource dataSource() {
-//        try {
-//            ComboPooledDataSource dataSource = new ComboPooledDataSource();
-//            dataSource.setDriverClass("org.postgresql.Driver");
-//            dataSource.setJdbcUrl("jdbc:postgresql://localhost:5433/voting");
-//            dataSource.setUser("postgres123");
-//            dataSource.setPassword("postgres123");
-//            return dataSource;
-//        } catch (Exception e) {
-//            throw new RuntimeException("Unable to create DataSource", e);
-//        }
-//    }
-//
-//    @Bean
-//    public IArtistDao artistDao() throws SQLException {
-//        return new ArtistJDBCDao(dataSource());
-//    }
-//
-//    @Bean
-//    public IArtistService artisService() throws SQLException {
-//        return new ArtistService(artistDao());
-//    }
 }
