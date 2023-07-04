@@ -1,14 +1,12 @@
 package by.it_academy.jd2.dao.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Table(name = "users")
 public class UserEntity implements Serializable {
 
     static final long serialVersionUID = 2L;
