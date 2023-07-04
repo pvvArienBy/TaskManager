@@ -1,34 +1,23 @@
 package by.it_academy.jd2.core.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class UserCreateDTO {
 
-    @JsonProperty("firstName")
     private String firstName;
 
-    @JsonProperty("lastName")
     private String lastName;
 
-    @JsonProperty("mail")
     private String mail;
 
-    @JsonProperty("password")
     private String password;
 
-    @JsonProperty("telegram")
     private String telegram;
 
-    @JsonProperty("position")
     private String position;
 
-    @JsonProperty("role")
     private String role;
 
-    @JsonProperty("status")
     private String status;
 
-    @JsonProperty("notificationWay")
     private String notificationWay;
 
     public UserCreateDTO() {

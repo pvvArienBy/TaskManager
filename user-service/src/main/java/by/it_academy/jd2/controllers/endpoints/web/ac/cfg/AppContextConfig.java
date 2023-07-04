@@ -1,6 +1,9 @@
 package by.it_academy.jd2.controllers.endpoints.web.ac.cfg;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.*;
@@ -10,6 +13,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
 import java.util.Properties;
+
 
 @Configuration
 @ComponentScan("by.it_academy.jd2")
@@ -34,7 +38,12 @@ public class AppContextConfig {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new ParameterNamesModule());
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+        return objectMapper;
     }
 
     @Bean
