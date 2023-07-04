@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class UserJDBCDao implements IUserDao {
 
     private EntityManagerFactory emFactory;
@@ -45,10 +47,10 @@ public class UserJDBCDao implements IUserDao {
             CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
             Root<UserEntity> user = criteria.from(UserEntity.class);
             criteria.select(user)
-                    .where(cb.equal(user.get("id"),id));
+                    .where(cb.equal(user.get("id"), id));
             item = em.createQuery(criteria).getSingleResult();
 
-        } catch (NoResultException | NonUniqueResultException e ) {
+        } catch (NoResultException | NonUniqueResultException e) {
             return item;
         } catch (PersistenceException e) {
             throw new RuntimeException("Ошибка выполнения запроса", e);
@@ -121,5 +123,23 @@ public class UserJDBCDao implements IUserDao {
         } catch (PersistenceException e) {
             throw new RuntimeException("Ошибка выполнения запроса", e);
         }
+    }
+
+    @Override
+    public List<UserEntity> filterByName(String text) {
+        List<UserEntity> list;
+
+        try (EntityManager em = emFactory.createEntityManager()) {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<UserEntity> criteria = cb.createQuery(UserEntity.class);
+            Root<UserEntity> locRoot = criteria.from(UserEntity.class);
+
+            criteria.select(locRoot).where(cb.like(locRoot.get("name"), "%" + text + "%"));
+            list = em.createQuery(criteria).getResultList();
+
+        } catch (PersistenceException e) {
+            throw new RuntimeException("Ошибка выполнения запроса", e);
+        }
+        return list;
     }
 }
