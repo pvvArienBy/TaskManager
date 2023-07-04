@@ -1,13 +1,8 @@
 package by.it_academy.jd2.controllers.endpoints.web.ac.cfg;
 
-import by.it_academy.jd2.dao.api.IUserDao;
-import by.it_academy.jd2.dao.db.UserJDBCDao;
-import by.it_academy.jd2.service.UserService;
-import by.it_academy.jd2.service.api.IUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import jakarta.persistence.EntityManagerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -22,6 +17,7 @@ import java.util.Properties;
         @PropertySource("classpath:db.properties"),
         @PropertySource("classpath:hb.properties"),
         @PropertySource("classpath:root.properties")})
+
 public class AppContextConfig {
 
     private static final String DEFAULT_SCHEMA = "hibernate.default_schema";
@@ -30,28 +26,10 @@ public class AppContextConfig {
 
     private static final String HBM2DDL = "hibernate.hbm2ddl.auto";
 
-    //todo this check
-    @Autowired
-    private Environment env;
+    private final Environment environment;
 
-
-    private Properties hibernateProperties() {
-        Properties properties = new Properties();
-        properties.setProperty(DEFAULT_SCHEMA, env.getProperty(DEFAULT_SCHEMA));
-        properties.setProperty(SHOW_SQL, env.getProperty(SHOW_SQL));
-        properties.setProperty(HBM2DDL, env.getProperty(HBM2DDL));
-
-        return properties;
-    }
-
-    @Bean
-    public IUserDao userJDBCDao() {
-        return new UserJDBCDao(entityManager());
-    }
-
-    @Bean
-    public IUserService userService() {
-        return new UserService(userJDBCDao());
+    public AppContextConfig(Environment environment) {
+        this.environment = environment;
     }
 
     @Bean
@@ -64,10 +42,10 @@ public class AppContextConfig {
         try {
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
 
-            dataSource.setDriverClass(env.getProperty("jdbc.driver"));
-            dataSource.setJdbcUrl(env.getProperty("jdbc.url"));
-            dataSource.setUser(env.getProperty("root.user"));
-            dataSource.setPassword(env.getProperty("root.password"));
+            dataSource.setDriverClass(environment.getProperty("jdbc.driver"));
+            dataSource.setJdbcUrl(environment.getProperty("jdbc.url"));
+            dataSource.setUser(environment.getProperty("root.user"));
+            dataSource.setPassword(environment.getProperty("root.password"));
             return dataSource;
         } catch (Exception e) {
             throw new RuntimeException("Unable to create DataSource", e);
@@ -75,19 +53,27 @@ public class AppContextConfig {
     }
 
     @Bean
-    public EntityManagerFactory entityManager() {
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+    @Primary
+    public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
-        emf.setDataSource(dataSource());
-        emf.setPackagesToScan("by.it_academy.jd2.dao.entity");
-        emf.setJpaVendorAdapter(hibernateJpaVendorAdapter);
-        emf.setJpaProperties(hibernateProperties());
-        emf.afterPropertiesSet();
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setDataSource(dataSource);
+        factory.setPackagesToScan("by.it_academy.jd2.dao.entity");
+        factory.setPersistenceUnitName("userService");
+        factory.setJpaProperties(hibernateProperties());
+        factory.afterPropertiesSet();
 
-        return emf.getObject();
+        return factory.getObject();
     }
 
-//    @Bean
-//    public DataSource dataSource() {
+    private Properties hibernateProperties() {
+        Properties properties = new Properties();
+        properties.setProperty(DEFAULT_SCHEMA, environment.getProperty(DEFAULT_SCHEMA));
+        properties.setProperty(SHOW_SQL, environment.getProperty(SHOW_SQL));
+        properties.setProperty(HBM2DDL, environment.getProperty(HBM2DDL));
+        return properties;
+    }
+
 }

@@ -1,0 +1,13 @@
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="userService" transaction-type="RESOURCE_LOCAL">
+        <class>by.it_academy.jd2.dao.entity.UserEntity</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+              <property name="hibernate.use_sql_comments" value="true"/>
+              <property name="hibernate.connection.pool_size" value="10"/>
+             </properties>
+         </persistence-unit>
+     </persistence>
