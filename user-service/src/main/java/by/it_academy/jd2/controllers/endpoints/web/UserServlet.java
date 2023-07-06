@@ -2,6 +2,7 @@ package by.it_academy.jd2.controllers.endpoints.web;
 
 import by.it_academy.jd2.controllers.endpoints.web.ac.api.IAppContextAnnotation;
 import by.it_academy.jd2.controllers.endpoints.web.ac.factory.AppContextAnnotationFactory;
+import by.it_academy.jd2.core.dto.CoordinatesDTO;
 import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -35,8 +36,8 @@ public class UserServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         IAppContextAnnotation appContextAnnotation = AppContextAnnotationFactory.getInstance();
-        this.userService = appContextAnnotation.getUserService();
-        this.objectMapper =  appContextAnnotation.getObjectMapper();
+        userService = appContextAnnotation.getUserService();
+        objectMapper =  appContextAnnotation.getObjectMapper();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -86,47 +87,50 @@ public class UserServlet extends HttpServlet {
     }
 
 
-//    @Override
-//    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-//        PrintWriter writer = resp.getWriter();
-//        String idStr = req.getParameter(USER_ID);
-//        String versionStr = req.getParameter(USER_VERSION);
-//        InputStream requestBody = req.getInputStream();
-//
-//        DepartmentCreateUpdateDTO departmentDTO;
-//
-//        try {
-//            departmentDTO = objectMapper.readValue(requestBody, DepartmentCreateUpdateDTO.class);
-//        } catch (IOException e) {
-//            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//            writer.write("Проверьте данные, возможно вы не указали родителя!");
-//            return;
-//        }
-//        if (userService.validateCoordinatesParam(idStr) && userService.validateCoordinatesParam(versionStr)) {
-//            Long id = Long.parseLong(idStr);
-//            Long version = Long.parseLong(versionStr);
-//            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id,version);
-//
-//
-//            userService.update(depCoordinatesDTO, departmentDTO);
-//
-//            resp.setStatus(HttpServletResponse.SC_OK);
-//            UserDTO newDTO = UserConvertUtil.toDTO(userService.get(id));
-//
-//            writer.write(objectMapper.writeValueAsString(newDTO) + " - UPDATE DEPARTMENT");
-//        }
-//    }
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        PrintWriter writer = resp.getWriter();
+        String idStr = req.getParameter(USER_ID);
+        String versionStr = req.getParameter(USER_VERSION);
+        InputStream requestBody = req.getInputStream();
+
+        UserCreateDTO departmentDTO;
+
+        try {
+            departmentDTO = objectMapper.readValue(requestBody, UserCreateDTO.class);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            writer.write("Проверьте данные, возможно вы не указали родителя!");
+            return;
+        }
+        if (userService.validateCoordinatesParam(idStr) && userService.validateCoordinatesParam(versionStr)) {
+            Long id = Long.parseLong(idStr);
+            Long version = Long.parseLong(versionStr);
+            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id,version);
+
+
+            userService.update(depCoordinatesDTO, departmentDTO);
+
+            resp.setStatus(HttpServletResponse.SC_OK);
+            UserDTO newDTO = UserConvertUtil.toDTO(userService.get(id));
+
+            writer.write(objectMapper.writeValueAsString(newDTO) + " - UPDATE DEPARTMENT");
+        }
+    }
 
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         PrintWriter writer = resp.getWriter();
         String idStr = req.getParameter(USER_ID);
+        String versionStr = req.getParameter(USER_VERSION);
 
-        if (userService.validateCoordinatesParam(idStr)) {
+        if (userService.validateCoordinatesParam(idStr) && userService.validateCoordinatesParam(versionStr)) {
             Long id = Long.parseLong(idStr);
+            Long version = Long.parseLong(versionStr);
+            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id,version);
 
-                userService.remove(id);
+                userService.remove(depCoordinatesDTO);
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 writer.write("Департамент удалён");
