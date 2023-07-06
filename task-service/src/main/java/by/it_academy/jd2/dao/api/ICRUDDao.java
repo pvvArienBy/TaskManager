@@ -1,4 +1,4 @@
-package by.it_academy.jd2.Mk_JD2_98_23.dao.api;
+package by.it_academy.jd2.dao.api;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface ICRUDDao<T> {
 
     T add(T item);
 
-    void remove(Long id);
+    void remove(T item);
 
     void update(T item);
 
