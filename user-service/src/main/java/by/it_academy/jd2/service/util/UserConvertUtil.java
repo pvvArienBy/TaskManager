@@ -4,6 +4,7 @@ import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 
+import java.time.ZoneId;
 import java.util.Objects;
 
 public class UserConvertUtil  {
@@ -25,6 +26,7 @@ public class UserConvertUtil  {
         dto.setPosition(item.getPosition());
         dto.setRole(item.getRole());
         dto.setStatus(item.getStatus());
+        dto.setVersion(item.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         return dto;
     }
 
@@ -44,7 +46,7 @@ public class UserConvertUtil  {
         entity.setTelegram(dto.getTelegram());
         entity.setPosition(dto.getPosition());
         entity.setRole(dto.getRole());
-        entity.setStatus(dto.getStatus());
+        entity.setStatus(dto.getStatus().toString());
         return entity;
     }
 }
