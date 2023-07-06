@@ -4,10 +4,27 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 
 public enum ENotificationDelivery {
 
-    MAIL,
+    MAIL ("mail"),
 
-    TELEGRAM;
+    TELEGRAM("tg");
 
-    @JsonEnumDefaultValue
-    public static final ENotificationDelivery DEFAULT = MAIL;
+    private final String value;
+
+    ENotificationDelivery(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    //todo check
+    public static ENotificationDelivery fromValue(String value) {
+        for (ENotificationDelivery role : ENotificationDelivery.values()) {
+            if (role.value.equalsIgnoreCase(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ENotificationDelivery value: " + value);
+    }
 }

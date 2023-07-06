@@ -1,14 +1,28 @@
 package by.it_academy.jd2.core.enums;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-
 public enum ERole {
 
-    ADMIN,
+    ADMIN("admin"),
 
-    USER;
+    USER("user");
 
-    @JsonEnumDefaultValue
-    public static final ERole DEFAULT = USER;
+    private final String value;
 
+    ERole(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    //todo check
+    public static ERole fromValue(String value) {
+        for (ERole role : ERole.values()) {
+            if (role.value.equalsIgnoreCase(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid ERole value: " + value);
+    }
 }

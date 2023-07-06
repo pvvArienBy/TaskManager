@@ -1,5 +1,11 @@
 package by.it_academy.jd2.core.dto;
 
+import by.it_academy.jd2.core.enums.ENotificationDelivery;
+import by.it_academy.jd2.core.enums.EPosition;
+import by.it_academy.jd2.core.enums.ERole;
+import by.it_academy.jd2.core.enums.EStatusUser;
+import org.hibernate.annotations.ColumnDefault;
+
 public class UserCreateDTO {
 
     private String firstName;
@@ -12,18 +18,18 @@ public class UserCreateDTO {
 
     private String telegram;
 
-    private String position;
+    private EPosition position;
 
-    private String role;
+    private ERole role;
 
-    private String status;
+    private EStatusUser status;
 
-    private String notificationWay;
+    private ENotificationDelivery notificationWay;
 
     public UserCreateDTO() {
     }
 
-    public UserCreateDTO(String firstName, String lastName, String mail, String password, String telegram, String position, String role, String status, String notificationWay) {
+    public UserCreateDTO(String firstName, String lastName, String mail, String password, String telegram, EPosition position, ERole role, EStatusUser status, ENotificationDelivery notificationWay) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.mail = mail;
@@ -75,35 +81,35 @@ public class UserCreateDTO {
         this.telegram = telegram;
     }
 
-    public String getPosition() {
+    public EPosition getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(EPosition position) {
         this.position = position;
     }
 
-    public String getRole() {
+    public ERole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(ERole role) {
         this.role = role;
     }
 
-    public String getStatus() {
+    public EStatusUser getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EStatusUser status) {
         this.status = status;
     }
 
-    public String getNotificationWay() {
+    public ENotificationDelivery getNotificationWay() {
         return notificationWay;
     }
 
-    public void setNotificationWay(String notificationWay) {
+    public void setNotificationWay(ENotificationDelivery notificationWay) {
         this.notificationWay = notificationWay;
     }
 }
