@@ -1,44 +1,37 @@
-package by.it_academy.jd2.Mk_JD2_98_23.core.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package by.it_academy.jd2.core.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
-public class TaskCreateDTO {
+public class TaskDTO {
 
-    @JsonProperty("title")
+    private Long id;
+
     private String title;
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("project")
-    private Long project;
+    private ProjectDTO project;
 
-    @JsonProperty("performer")
-    private Long performer;
+    private UserDTO performer;
 
-    @JsonProperty("status")
     private String status;
 
-    @JsonProperty("priority")
     private String priority ;
 
-    @JsonProperty("category")
     private String category ;
 
-    @JsonProperty("term")
     private LocalDate term ;
 
-    @JsonProperty("files")
-    private List<String> files;
+    private List<FileDTO> files;
 
-    public TaskCreateDTO() {
+    private Long version;
+
+    public TaskDTO() {
     }
 
-    public TaskCreateDTO(String title, String description, Long project, Long performer, String status, String priority, String category, LocalDate term, List<String> files) {
+    public TaskDTO(Long id, String title, String description, ProjectDTO project, UserDTO performer, String status, String priority, String category, LocalDate term, List<FileDTO> files, Long version) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.project = project;
@@ -48,6 +41,15 @@ public class TaskCreateDTO {
         this.category = category;
         this.term = term;
         this.files = files;
+        this.version = version;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -66,19 +68,19 @@ public class TaskCreateDTO {
         this.description = description;
     }
 
-    public Long getProject() {
+    public ProjectDTO getProject() {
         return project;
     }
 
-    public void setProject(Long project) {
+    public void setProject(ProjectDTO project) {
         this.project = project;
     }
 
-    public Long getPerformer() {
+    public UserDTO getPerformer() {
         return performer;
     }
 
-    public void setPerformer(Long performer) {
+    public void setPerformer(UserDTO performer) {
         this.performer = performer;
     }
 
@@ -114,11 +116,19 @@ public class TaskCreateDTO {
         this.term = term;
     }
 
-    public List<String> getFiles() {
+    public List<FileDTO> getFiles() {
         return files;
     }
 
-    public void setFiles(List<String> files) {
+    public void setFiles(List<FileDTO> files) {
         this.files = files;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

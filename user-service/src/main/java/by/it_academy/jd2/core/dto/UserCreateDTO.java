@@ -4,7 +4,6 @@ import by.it_academy.jd2.core.enums.ENotificationDelivery;
 import by.it_academy.jd2.core.enums.EPosition;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
-import org.hibernate.annotations.ColumnDefault;
 
 public class UserCreateDTO {
 

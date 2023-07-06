@@ -1,31 +1,28 @@
-package by.it_academy.jd2.Mk_JD2_98_23.core.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package by.it_academy.jd2.core.dto;
 
 import java.util.List;
 
 public class ProjectCreateDTO {
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("creator")
     private Long creator;
 
-    @JsonProperty("creator")
     private List<Long> users;
+
+    private Long version;
 
     public ProjectCreateDTO() {
     }
 
-    public ProjectCreateDTO(String name, String description, Long creator, List<Long> users) {
+    public ProjectCreateDTO(String name, String description, Long creator, List<Long> users, Long version) {
         this.name = name;
         this.description = description;
         this.creator = creator;
         this.users = users;
+        this.version = version;
     }
 
     public String getName() {
@@ -58,5 +55,13 @@ public class ProjectCreateDTO {
 
     public void setUsers(List<Long> users) {
         this.users = users;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

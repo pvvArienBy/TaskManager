@@ -1,4 +1,4 @@
-package by.it_academy.jd2.Mk_JD2_98_23.core.dto;
+package by.it_academy.jd2.core.dto;
 
 import java.util.List;
 
@@ -10,17 +10,16 @@ public class ProjectDTO {
 
     private String description;
 
-    //todo temporary
-    private String creator;
+    private UserShortDTO creator;
 
-    private List<String> users;
+    private List<UserShortDTO> users;
 
     private Long version;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(Long id, String name, String description, String creator, List<String> users, Long version) {
+    public ProjectDTO(Long id, String name, String description, UserShortDTO creator, List<UserShortDTO> users, Long version) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -53,19 +52,19 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public String getCreator() {
+    public UserShortDTO getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(UserShortDTO creator) {
         this.creator = creator;
     }
 
-    public List<String> getUsers() {
+    public List<UserShortDTO> getUsers() {
         return users;
     }
 
-    public void setUsers(List<String> users) {
+    public void setUsers(List<UserShortDTO> users) {
         this.users = users;
     }
 
