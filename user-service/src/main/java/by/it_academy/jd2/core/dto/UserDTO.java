@@ -18,10 +18,12 @@ public class UserDTO {
 
     private String status;
 
+    private Long version;
+
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String firstName, String lastName, String mail, String telegram, String position, String role, String status) {
+    public UserDTO(Long id, String firstName, String lastName, String mail, String telegram, String position, String role, String status, Long version) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +32,7 @@ public class UserDTO {
         this.position = position;
         this.role = role;
         this.status = status;
+        this.version = version;
     }
 
     public Long getId() {
@@ -94,5 +97,13 @@ public class UserDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
