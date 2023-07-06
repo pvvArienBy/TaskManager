@@ -28,7 +28,7 @@ public class UserServlet extends HttpServlet {
     private static final String USER_VERSION = "version";
     private static final String TEXT_FILTER = "filter";
 
-    private static  IUserService userService;
+    private static IUserService userService;
 
     private static ObjectMapper objectMapper;
 
@@ -37,7 +37,7 @@ public class UserServlet extends HttpServlet {
         super.init();
         IAppContextAnnotation appContextAnnotation = AppContextAnnotationFactory.getInstance();
         userService = appContextAnnotation.getUserService();
-        objectMapper =  appContextAnnotation.getObjectMapper();
+        objectMapper = appContextAnnotation.getObjectMapper();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -100,21 +100,22 @@ public class UserServlet extends HttpServlet {
             departmentDTO = objectMapper.readValue(requestBody, UserCreateDTO.class);
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            writer.write("Проверьте данные, возможно вы не указали родителя!");
+            writer.write("Ошибка при чтении тела запроса: " + e.getMessage());
             return;
         }
         if (userService.validateCoordinatesParam(idStr) && userService.validateCoordinatesParam(versionStr)) {
-            Long id = Long.parseLong(idStr);
-            Long version = Long.parseLong(versionStr);
-            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id,version);
-
-
-            userService.update(depCoordinatesDTO, departmentDTO);
-
-            resp.setStatus(HttpServletResponse.SC_OK);
-            UserDTO newDTO = UserConvertUtil.toDTO(userService.get(id));
-
-            writer.write(objectMapper.writeValueAsString(newDTO) + " - UPDATE DEPARTMENT");
+            try {
+                Long id = Long.parseLong(idStr);
+                Long version = Long.parseLong(versionStr);
+                CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id, version);
+                userService.update(depCoordinatesDTO, departmentDTO);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                UserDTO newDTO = UserConvertUtil.toDTO(userService.get(id));
+                writer.write(objectMapper.writeValueAsString(newDTO) + " - UPDATE DEPARTMENT");
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                writer.write("Неверный формат параметров id и/или version: " + e.getMessage());
+            }
         }
     }
 
@@ -128,12 +129,12 @@ public class UserServlet extends HttpServlet {
         if (userService.validateCoordinatesParam(idStr) && userService.validateCoordinatesParam(versionStr)) {
             Long id = Long.parseLong(idStr);
             Long version = Long.parseLong(versionStr);
-            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id,version);
+            CoordinatesDTO depCoordinatesDTO = new CoordinatesDTO(id, version);
 
-                userService.remove(depCoordinatesDTO);
+            userService.remove(depCoordinatesDTO);
 
-                resp.setStatus(HttpServletResponse.SC_OK);
-                writer.write("Департамент удалён");
+            resp.setStatus(HttpServletResponse.SC_OK);
+            writer.write("Департамент удалён");
         } else {
             writer.write("Введите корректные данные");
         }

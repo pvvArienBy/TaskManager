@@ -4,14 +4,31 @@ import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 
 public enum EStatusUser {
 
-    PENDING_CONFIRMATION,
+    PENDING_CONFIRMATION("pending configuration"),
 
-    ACTIVE,
+    ACTIVE("active"),
 
-    DELETED,
+    DELETED("deleted"),
 
-    BLOCKED;
+    BLOCKED("blocked");
 
-    @JsonEnumDefaultValue
-    public static final EStatusUser DEFAULT = ACTIVE;
+    private final String value;
+
+    EStatusUser(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    //todo check
+    public static EStatusUser fromValue(String value) {
+        for (EStatusUser role : EStatusUser.values()) {
+            if (role.value.equalsIgnoreCase(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid EStatusUser value: " + value);
+    }
 }

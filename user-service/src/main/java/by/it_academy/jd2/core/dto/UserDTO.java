@@ -1,5 +1,9 @@
 package by.it_academy.jd2.core.dto;
 
+import by.it_academy.jd2.core.enums.EPosition;
+import by.it_academy.jd2.core.enums.ERole;
+import by.it_academy.jd2.core.enums.EStatusUser;
+
 public class UserDTO {
 
     private Long id;
@@ -12,18 +16,18 @@ public class UserDTO {
 
     private String telegram;
 
-    private String position;
+    private EPosition position;
 
-    private String role;
+    private ERole role;
 
-    private String status;
+    private EStatusUser status;
 
     private Long version;
 
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String firstName, String lastName, String mail, String telegram, String position, String role, String status, Long version) {
+    public UserDTO(Long id, String firstName, String lastName, String mail, String telegram, EPosition position, ERole role, EStatusUser status, Long version) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -75,27 +79,27 @@ public class UserDTO {
         this.telegram = telegram;
     }
 
-    public String getPosition() {
+    public EPosition getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(EPosition position) {
         this.position = position;
     }
 
-    public String getRole() {
+    public ERole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(ERole role) {
         this.role = role;
     }
 
-    public String getStatus() {
+    public EStatusUser getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EStatusUser status) {
         this.status = status;
     }
 

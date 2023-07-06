@@ -1,14 +1,28 @@
 package by.it_academy.jd2.core.enums;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-
 public enum EPosition {
 
-    PROJECT_MANAGER,
+    PROJECT_MANAGER("project manager"),
 
-    DEVELOPER;
+    DEVELOPER("developer");
 
-    @JsonEnumDefaultValue
-    public static final EPosition DEFAULT = DEVELOPER;
+    private final String value;
 
+    EPosition(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    //todo check
+    public static EPosition fromValue(String value) {
+        for (EPosition role : EPosition.values()) {
+            if (role.value.equalsIgnoreCase(value)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Invalid EPosition value: " + value);
+    }
 }

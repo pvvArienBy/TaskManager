@@ -1,5 +1,9 @@
 package by.it_academy.jd2.dao.entity;
 
+import by.it_academy.jd2.core.enums.ENotificationDelivery;
+import by.it_academy.jd2.core.enums.EPosition;
+import by.it_academy.jd2.core.enums.ERole;
+import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,7 +16,7 @@ import java.util.Objects;
 @Table(name = "users")
 public class UserEntity implements Serializable {
 
-    static final long serialVersionUID = 5L;
+    static final long serialVersionUID = 6L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +33,18 @@ public class UserEntity implements Serializable {
 
     private String telegram;
 
-    private String position;
+    @Enumerated(EnumType.STRING)
+    private EPosition position;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private ERole role;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EStatusUser status;
 
     @Column(name = "notification_way")
-    private String notificationWay;
+    @Enumerated(EnumType.STRING)
+    private ENotificationDelivery notificationWay;
 
     @CreationTimestamp
     @Column(name = "create_date")
@@ -50,7 +58,7 @@ public class UserEntity implements Serializable {
     public UserEntity() {
     }
 
-    public UserEntity(Long id, String firstName, String lastName, String mail, String password, String telegram, String position, String role, String status, String notificationWay, LocalDateTime createDate, LocalDateTime updateDate) {
+    public UserEntity(Long id, String firstName, String lastName, String mail, String password, String telegram, EPosition position, ERole role, EStatusUser status, ENotificationDelivery notificationWay, LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -113,35 +121,35 @@ public class UserEntity implements Serializable {
         this.telegram = telegram;
     }
 
-    public String getPosition() {
+    public EPosition getPosition() {
         return position;
     }
 
-    public void setPosition(String position) {
+    public void setPosition(EPosition position) {
         this.position = position;
     }
 
-    public String getRole() {
+    public ERole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(ERole role) {
         this.role = role;
     }
 
-    public String getStatus() {
+    public EStatusUser getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EStatusUser status) {
         this.status = status;
     }
 
-    public String getNotificationWay() {
+    public ENotificationDelivery getNotificationWay() {
         return notificationWay;
     }
 
-    public void setNotificationWay(String notificationWay) {
+    public void setNotificationWay(ENotificationDelivery notificationWay) {
         this.notificationWay = notificationWay;
     }
 
@@ -166,7 +174,7 @@ public class UserEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(mail, that.mail) && Objects.equals(password, that.password) && Objects.equals(telegram, that.telegram) && Objects.equals(position, that.position) && Objects.equals(role, that.role) && Objects.equals(status, that.status) && Objects.equals(notificationWay, that.notificationWay) && Objects.equals(createDate, that.createDate) && Objects.equals(updateDate, that.updateDate);
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(mail, that.mail) && Objects.equals(password, that.password) && Objects.equals(telegram, that.telegram) && position == that.position && role == that.role && status == that.status && notificationWay == that.notificationWay && Objects.equals(createDate, that.createDate) && Objects.equals(updateDate, that.updateDate);
     }
 
     @Override

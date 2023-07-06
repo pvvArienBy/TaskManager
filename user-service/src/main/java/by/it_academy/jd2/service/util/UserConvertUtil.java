@@ -27,6 +27,7 @@ public class UserConvertUtil  {
         dto.setRole(item.getRole());
         dto.setStatus(item.getStatus());
         dto.setVersion(item.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+
         return dto;
     }
 
@@ -46,7 +47,9 @@ public class UserConvertUtil  {
         entity.setTelegram(dto.getTelegram());
         entity.setPosition(dto.getPosition());
         entity.setRole(dto.getRole());
-        entity.setStatus(dto.getStatus().toString());
+        entity.setStatus(dto.getStatus());
+        entity.setNotificationWay(dto.getNotificationWay());
+
         return entity;
     }
 }
