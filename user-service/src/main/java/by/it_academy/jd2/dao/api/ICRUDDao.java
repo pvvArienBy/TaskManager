@@ -10,7 +10,7 @@ public interface ICRUDDao<T> {
 
     T add(T item);
 
-    void remove(Long id);
+    void remove(T item);
 
     void update(T item);
 

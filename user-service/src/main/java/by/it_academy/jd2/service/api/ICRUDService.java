@@ -10,7 +10,7 @@ public interface ICRUDService<T, S, A> {
 
     T add (S item);
 
-    void remove(Long id);
+    void remove(A coordinates);
 
     void update(A coordinates, S item);
 }
