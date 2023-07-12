@@ -3,6 +3,7 @@ package by.it_academy.jd2.service.exceptions;
 
 
 public class RemoveEntityException extends RuntimeException{
+
     public RemoveEntityException() {
         super();
     }

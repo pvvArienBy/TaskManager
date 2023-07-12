@@ -1,4 +1,6 @@
 package by.it_academy.jd2.Mk_JD2_98_23.dao.api;
 
-public interface ICommentDao extends ICRUDDao<CommentEntity>{
+import by.it_academy.jd2.dao.api.ICRUDDao;
+
+public interface ICommentDao extends ICRUDDao<CommentEntity> {
 }
