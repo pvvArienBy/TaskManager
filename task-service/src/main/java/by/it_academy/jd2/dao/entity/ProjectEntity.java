@@ -13,30 +13,20 @@ import java.util.Objects;
 @Table(name = "projects")
 public class ProjectEntity implements Serializable {
 
-    static  final long serialVersionUID = 1L;
+    static  final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    @JoinTable(
-            name="project_user",
-            joinColumns= @JoinColumn(name="project_id"),
-            inverseJoinColumns= @JoinColumn(name="user_id")
-    )
-    @ManyToOne
-    private UserEntity description;
+
+    private String description;
 
     private Long creator;
 
-    @OneToMany
-    @JoinTable(
-            name = "project_user",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<UserEntity> users;
+    @ElementCollection
+    private List<Long> users;
 
     @CreationTimestamp
     @Column(name = "create_date")
@@ -50,7 +40,7 @@ public class ProjectEntity implements Serializable {
     public ProjectEntity() {
     }
 
-    public ProjectEntity(Long id, String name, UserEntity description, Long creator, List<UserEntity> users, LocalDateTime createDate, LocalDateTime updateDate) {
+    public ProjectEntity(Long id, String name, String description, Long creator, List<Long> users, LocalDateTime createDate, LocalDateTime updateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,11 +66,11 @@ public class ProjectEntity implements Serializable {
         this.name = name;
     }
 
-    public UserEntity getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(UserEntity description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -92,11 +82,11 @@ public class ProjectEntity implements Serializable {
         this.creator = creator;
     }
 
-    public List<UserEntity> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserEntity> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 

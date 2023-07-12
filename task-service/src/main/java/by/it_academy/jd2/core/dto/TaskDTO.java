@@ -1,5 +1,9 @@
 package by.it_academy.jd2.core.dto;
 
+import by.it_academy.jd2.core.enums.ECategory;
+import by.it_academy.jd2.core.enums.EPriority;
+import by.it_academy.jd2.core.enums.EStatusTask;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,13 +17,13 @@ public class TaskDTO {
 
     private ProjectDTO project;
 
-    private UserDTO performer;
+    private Long performer;
 
-    private String status;
+    private EStatusTask status;
 
-    private String priority ;
+    private EPriority priority ;
 
-    private String category ;
+    private ECategory category ;
 
     private LocalDate term ;
 
@@ -30,7 +34,7 @@ public class TaskDTO {
     public TaskDTO() {
     }
 
-    public TaskDTO(Long id, String title, String description, ProjectDTO project, UserDTO performer, String status, String priority, String category, LocalDate term, List<FileDTO> files, Long version) {
+    public TaskDTO(Long id, String title, String description, ProjectDTO project, Long performer, EStatusTask status, EPriority priority, ECategory category, LocalDate term, List<FileDTO> files, Long version) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -76,35 +80,35 @@ public class TaskDTO {
         this.project = project;
     }
 
-    public UserDTO getPerformer() {
+    public Long getPerformer() {
         return performer;
     }
 
-    public void setPerformer(UserDTO performer) {
+    public void setPerformer(Long performer) {
         this.performer = performer;
     }
 
-    public String getStatus() {
+    public EStatusTask getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EStatusTask status) {
         this.status = status;
     }
 
-    public String getPriority() {
+    public EPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(EPriority priority) {
         this.priority = priority;
     }
 
-    public String getCategory() {
+    public ECategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ECategory category) {
         this.category = category;
     }
 

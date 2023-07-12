@@ -10,16 +10,16 @@ public class ProjectDTO {
 
     private String description;
 
-    private UserShortDTO creator;
+    private Long creator;
 
-    private List<UserShortDTO> users;
+    private List<Long> users;
 
     private Long version;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(Long id, String name, String description, UserShortDTO creator, List<UserShortDTO> users, Long version) {
+    public ProjectDTO(Long id, String name, String description, Long creator, List<Long> users, Long version) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,19 +52,19 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public UserShortDTO getCreator() {
+    public Long getCreator() {
         return creator;
     }
 
-    public void setCreator(UserShortDTO creator) {
+    public void setCreator(Long creator) {
         this.creator = creator;
     }
 
-    public List<UserShortDTO> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(List<UserShortDTO> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 
