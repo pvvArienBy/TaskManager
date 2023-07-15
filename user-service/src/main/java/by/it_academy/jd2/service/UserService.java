@@ -1,6 +1,5 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.CoordinatesDTO;
 import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
@@ -28,8 +28,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity findById(Long id) {
-        Optional<UserEntity> userOptional = userDao.findById(id);
+    public UserEntity findById(UUID uuid) {
+        Optional<UserEntity> userOptional = userDao.findById(uuid);
         return userOptional.orElse(null);
     }
 
@@ -39,42 +39,29 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void delete(CoordinatesDTO coordinates) {
-        Optional<UserEntity> userOptional = userDao.findById(coordinates.getId());
+    public void delete(UUID uuid, Long version) {
+        Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.get();
         if (entity != null && entity.getUpdateDate() != null) {
-            if (coordinates.getVersion() == entity.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+            if (version == entity.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 userDao.delete(entity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
         else throw new UpdateEntityException("Такого объекта не существует!");
-
     }
 
     @Override
-    public UserEntity save(CoordinatesDTO coordinates, UserCreateDTO item) {
-        Optional<UserEntity> userOptional = userDao.findById(coordinates.getId());
+    public UserEntity save(UUID uuid, Long version, UserCreateDTO item) {
+        Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.get();
         if (entity != null && entity.getUpdateDate() != null) {
-            if (coordinates.getVersion() == entity.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+            if (version == entity.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 UserEntity updEntity = UserConvertUtil.toEntity(item);
-                updEntity.setId(entity.getId());
+                updEntity.setUuid(entity.getUuid()););
                 updEntity.setUpdateDate(entity.getUpdateDate());
                 return userDao.save(updEntity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
         else throw new UpdateEntityException("Такого объекта не существует!");
-    }
-
-    @Override
-    public boolean validateCoordinatesParam(String id) {
-        return id != null && id.matches("\\d+") && Long.parseLong(id) > 0;
-    }
-
-
-    @Override
-    public List<UserEntity> filterByName(String text) {
-//        return userDao.filterByName(text);
-        return null;
     }
 }
