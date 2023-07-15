@@ -1,15 +1,15 @@
 package by.it_academy.jd2.controllers.endpoints.web.ac.cfg;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -21,7 +21,8 @@ import java.util.Properties;
         @PropertySource("classpath:db.properties"),
         @PropertySource("classpath:hb.properties"),
         @PropertySource("classpath:root.properties")})
-
+@EnableJpaRepositories(basePackages = "by.it_academy.jd2.dao.api")
+@EnableTransactionManagement
 public class AppContextConfig {
 
     private static final String DEFAULT_SCHEMA = "hibernate.default_schema";
@@ -34,16 +35,6 @@ public class AppContextConfig {
 
     public AppContextConfig(Environment environment) {
         this.environment = environment;
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new ParameterNamesModule());
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-        return objectMapper;
     }
 
     @Bean
@@ -63,26 +54,33 @@ public class AppContextConfig {
 
     @Bean
     @Primary
-    public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setDataSource(dataSource);
         factory.setPackagesToScan("by.it_academy.jd2.dao.entity");
-        factory.setPersistenceUnitName("userService");
+        factory.setDataSource(dataSource());
         factory.setJpaProperties(hibernateProperties());
         factory.afterPropertiesSet();
-
-        return factory.getObject();
+        return factory;
     }
 
-    private Properties hibernateProperties() {
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+
+        JpaTransactionManager txManager = new JpaTransactionManager();
+        txManager.setEntityManagerFactory(entityManagerFactory);
+        return txManager;
+    }
+
+        private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.setProperty(DEFAULT_SCHEMA, environment.getProperty(DEFAULT_SCHEMA));
         properties.setProperty(SHOW_SQL, environment.getProperty(SHOW_SQL));
         properties.setProperty(HBM2DDL, environment.getProperty(HBM2DDL));
         return properties;
     }
-
 }

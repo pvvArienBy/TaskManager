@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.exceptions;
 
 
-
+//todo actuality?
 public class UnknownUserFormatException extends RuntimeException{
 
     public UnknownUserFormatException() {
