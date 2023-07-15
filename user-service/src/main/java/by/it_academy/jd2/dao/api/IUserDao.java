@@ -6,12 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface IUserDao extends CrudRepository<UserEntity, Long> {
+public interface IUserDao extends CrudRepository<UserEntity, UUID> {
 
     @Override
-    Optional<UserEntity> findById(Long aLong);
+    Optional<UserEntity> findById(UUID uuid);
 
     @Override
     List<UserEntity> findAll();
