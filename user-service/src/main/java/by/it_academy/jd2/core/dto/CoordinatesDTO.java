@@ -1,5 +1,7 @@
 package by.it_academy.jd2.core.dto;
 
+
+//todo need?
 public class CoordinatesDTO {
 
     private Long id;
