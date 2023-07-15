@@ -5,6 +5,8 @@ import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class UserConvertUtil  {
@@ -31,6 +33,27 @@ public class UserConvertUtil  {
         return dto;
     }
 
+    public static List<UserDTO> toDTO(List<UserEntity> entityList) {
+        List<UserDTO> dtoList = new ArrayList<>();
+
+        for (UserEntity fileEntity : entityList) {
+            UserDTO dto = new UserDTO();
+            dto.setId(fileEntity.getId());
+            dto.setFirstName(fileEntity.getFirstName());
+            dto.setLastName(fileEntity.getLastName());
+            dto.setMail(fileEntity.getMail());
+            dto.setTelegram(fileEntity.getTelegram());
+            dto.setPosition(fileEntity.getPosition());
+            dto.setRole(fileEntity.getRole());
+            dto.setStatus(fileEntity.getStatus());
+            dto.setVersion(fileEntity.getUpdateDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+            dtoList.add(dto);
+        }
+
+        return dtoList;
+    }
+
+
     /**
      * Converts a UserDTO object to a UserEntity object.
      *
@@ -41,7 +64,7 @@ public class UserConvertUtil  {
         Objects.requireNonNull(dto, "The dto parameter cannot be null");
         UserEntity entity = new UserEntity();
         entity.setFirstName(dto.getFirstName());
-        entity.setLastName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
         entity.setMail(dto.getMail());
         entity.setPassword(dto.getPassword());
         entity.setTelegram(dto.getTelegram());

@@ -4,14 +4,14 @@ import java.util.List;
 
 public interface ICRUDService<T, S, A> {
 
-    List<T> get();
+    List<T> findAll();
 
-    T get(Long id);
+    T findById(Long id);
 
-    T add (S item);
+    T save(S item);
 
-    void remove(A coordinates);
+    void delete(A coordinates);
 
-    void update(A coordinates, S item);
+    T save(A coordinates, S item);
 }
 
