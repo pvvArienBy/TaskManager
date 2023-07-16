@@ -1,6 +1,7 @@
 package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.UserCreateDTO;
+import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
@@ -42,15 +43,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void delete(UUID uuid, Long version) {
-        Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.get();
-        if (entity.getDtUpdate() != null) {
-            if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
-                userDao.delete(entity);
-            } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
-        }
-        else throw new UpdateEntityException("Такого объекта не существует!");
+    public UserEntity save(UserRegistrationDTO item) {
+        return userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
     }
 
     @Override
@@ -65,6 +59,18 @@ public class UserService implements IUserService {
                 updEntity.setDtCreate(entity.getDtCreate());
                 updEntity.setDtUpdate(entity.getDtUpdate());
                 return userDao.save(updEntity);
+            } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
+        }
+        else throw new UpdateEntityException("Такого объекта не существует!");
+    }
+
+    @Override
+    public void delete(UUID uuid, Long version) {
+        Optional<UserEntity> userOptional = userDao.findById(uuid);
+        UserEntity entity = userOptional.get();
+        if (entity.getDtUpdate() != null) {
+            if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+                userDao.delete(entity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
         else throw new UpdateEntityException("Такого объекта не существует!");
