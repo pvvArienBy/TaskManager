@@ -1,6 +1,5 @@
 package by.it_academy.jd2.dao.entity;
 
-import by.it_academy.jd2.core.enums.ENotificationDelivery;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.*;
@@ -22,13 +21,13 @@ public class UserEntity implements Serializable {
     private UUID uuid;
 
     @CreationTimestamp
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
+    @Column(name = "date_create")
+    private LocalDateTime dtCreate;
 
     @Version
     @UpdateTimestamp
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
+    @Column(name = "date_update")
+    private LocalDateTime dtUpdate;
 
     private String mail;
 
@@ -47,8 +46,8 @@ public class UserEntity implements Serializable {
 
     public UserEntity(UUID uuid, LocalDateTime createDate, LocalDateTime updateDate, String mail, String fio, ERole role, EStatusUser status, String password) {
         this.uuid = uuid;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.dtCreate = createDate;
+        this.dtUpdate = updateDate;
         this.mail = mail;
         this.fio = fio;
         this.role = role;
@@ -64,20 +63,20 @@ public class UserEntity implements Serializable {
         this.uuid = uuid;
     }
 
-    public LocalDateTime getCreateDate() {
-        return createDate;
+    public LocalDateTime getDtCreate() {
+        return dtCreate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
+    public void setDtCreate(LocalDateTime createDate) {
+        this.dtCreate = createDate;
     }
 
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
+    public LocalDateTime getDtUpdate() {
+        return dtUpdate;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
+    public void setDtUpdate(LocalDateTime updateDate) {
+        this.dtUpdate = updateDate;
     }
 
     public String getMail() {
@@ -125,12 +124,12 @@ public class UserEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(createDate, that.createDate) && Objects.equals(updateDate, that.updateDate) && Objects.equals(mail, that.mail) && Objects.equals(fio, that.fio) && role == that.role && status == that.status && Objects.equals(password, that.password);
+        return Objects.equals(uuid, that.uuid) && Objects.equals(dtCreate, that.dtCreate) && Objects.equals(dtUpdate, that.dtUpdate) && Objects.equals(mail, that.mail) && Objects.equals(fio, that.fio) && role == that.role && status == that.status && Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, createDate, updateDate, mail, fio, role, status, password);
+        return Objects.hash(uuid, dtCreate, dtUpdate, mail, fio, role, status, password);
     }
 }
 
