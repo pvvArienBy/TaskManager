@@ -6,7 +6,7 @@
 
     <groupId>by.it-academy.jd2</groupId>
     <artifactId>user-service</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>user-service</name>
