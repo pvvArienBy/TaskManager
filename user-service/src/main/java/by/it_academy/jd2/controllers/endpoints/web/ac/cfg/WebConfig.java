@@ -1,10 +1,13 @@
 package by.it_academy.jd2.controllers.endpoints.web.ac.cfg;
 
+import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
+import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -38,5 +41,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter(jacksonBuilder().build()));
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new UserEntityToDtoConverter());
+        registry.addConverter(new UserCreateDtoToEntityConverter());
     }
 }
