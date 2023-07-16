@@ -2,6 +2,7 @@ package by.it_academy.jd2.controllers.endpoints.web.ac.cfg;
 
 import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
 import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
+import by.it_academy.jd2.service.convert.UserRegistrationDtoToEntityConverter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
@@ -47,5 +48,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new UserEntityToDtoConverter());
         registry.addConverter(new UserCreateDtoToEntityConverter());
+        registry.addConverter(new UserRegistrationDtoToEntityConverter());
     }
 }
