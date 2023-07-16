@@ -9,9 +9,9 @@ public class UserDTO {
 
     private UUID uuid;
 
-    private Long createDate;
+    private Long dtCreate;
 
-    private Long updateDate;
+    private Long dtUpdate;
 
     private String mail;
 
@@ -26,8 +26,8 @@ public class UserDTO {
 
     public UserDTO(UUID uuid, Long createDate, Long updateDate, String mail, String fio, ERole role, EStatusUser status) {
         this.uuid = uuid;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.dtCreate = createDate;
+        this.dtUpdate = updateDate;
         this.mail = mail;
         this.fio = fio;
         this.role = role;
@@ -42,20 +42,20 @@ public class UserDTO {
         this.uuid = uuid;
     }
 
-    public Long getCreateDate() {
-        return createDate;
+    public Long getDtCreate() {
+        return dtCreate;
     }
 
-    public void setCreateDate(Long createDate) {
-        this.createDate = createDate;
+    public void setDtCreate(Long dtCreate) {
+        this.dtCreate = dtCreate;
     }
 
-    public Long getUpdateDate() {
-        return updateDate;
+    public Long getDtUpdate() {
+        return dtUpdate;
     }
 
-    public void setUpdateDate(Long updateDate) {
-        this.updateDate = updateDate;
+    public void setDtUpdate(Long dtUpdate) {
+        this.dtUpdate = dtUpdate;
     }
 
     public String getMail() {
