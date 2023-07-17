@@ -5,6 +5,7 @@ import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
+import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
-        return userOptional.orElse(null);
+        return userOptional.orElseThrow(() -> new EntityNotFoundException("Не найдено"));
     }
 
     @Override
@@ -50,29 +51,32 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(UUID uuid, Long version, UserCreateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.get();
+        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
         if (entity.getDtUpdate() != null) {
             if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 UserEntity updEntity = conversionService.convert(item, UserEntity.class);
-                assert updEntity != null;
+                if (updEntity == null) {
+                    throw new IllegalArgumentException("Не удалось преобразовать объект UserCreateDTO в UserEntity");
+                }
                 updEntity.setUuid(entity.getUuid());
                 updEntity.setDtCreate(entity.getDtCreate());
                 updEntity.setDtUpdate(entity.getDtUpdate());
                 return userDao.save(updEntity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
-        else throw new UpdateEntityException("Такого объекта не существует!");
+        else throw new EntityNotFoundException("Такого объекта не существует!");
     }
 
-    @Override
-    public void delete(UUID uuid, Long version) {
-        Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.get();
-        if (entity.getDtUpdate() != null) {
-            if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
-                userDao.delete(entity);
-            } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
-        }
-        else throw new UpdateEntityException("Такого объекта не существует!");
-    }
+    //   todo требует корректировки по аналогии с UserEntity save(UUID uuid, Long version, UserCreateDTO item)
+//    @Override
+//    public void delete(UUID uuid, Long version) {
+//        Optional<UserEntity> userOptional = userDao.findById(uuid);
+//        UserEntity entity = userOptional.get();
+//        if (entity.getDtUpdate() != null) {
+//            if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+//                userDao.delete(entity);
+//            } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
+//        }
+//        else throw new UpdateEntityException("Такого объекта не существует!");
+//    }
 }
