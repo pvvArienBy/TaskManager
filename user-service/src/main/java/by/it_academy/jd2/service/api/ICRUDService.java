@@ -11,7 +11,7 @@ public interface ICRUDService<T, S> {
 
     T save(S item);
 
-    void delete(UUID uuid, Long version);
+//    void delete(UUID uuid, Long version);
 
     T save(UUID uuid, Long version, S item);
 }
