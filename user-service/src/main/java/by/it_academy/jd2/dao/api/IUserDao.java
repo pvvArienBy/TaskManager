@@ -1,7 +1,7 @@
 package by.it_academy.jd2.dao.api;
 
 import by.it_academy.jd2.dao.entity.UserEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,10 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface IUserDao extends CrudRepository<UserEntity, UUID> {
-
-    @Override
-    Optional<UserEntity> findById(UUID uuid);
+public interface IUserDao extends ListCrudRepository<UserEntity, UUID> {
 
     @Override
     List<UserEntity> findAll();
@@ -21,5 +18,6 @@ public interface IUserDao extends CrudRepository<UserEntity, UUID> {
     <S extends UserEntity> S save(S entity);
 
     @Override
-    void delete(UserEntity entity);
+    Optional<UserEntity> findById(UUID id);
+
 }
