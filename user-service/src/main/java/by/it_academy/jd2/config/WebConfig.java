@@ -3,7 +3,7 @@ package by.it_academy.jd2.config;
 import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
 import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
 import by.it_academy.jd2.service.convert.UserRegistrationDtoToEntityConverter;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+        builder.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE );
         builder.modules(new ParameterNamesModule());
         builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return builder;

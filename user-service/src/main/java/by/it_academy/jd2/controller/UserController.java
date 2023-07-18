@@ -2,7 +2,6 @@ package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.core.dto.UserDTO;
-import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
@@ -43,24 +42,9 @@ public class UserController {
         return dtoList;
     }
 
-//    @GetMapping("/verification")
-//    public ResponseEntity<UserDTO> verification(@RequestParam String code, @RequestParam String email) {
-//
-//        UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
-//        return null;
-//    }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody UserCreateDTO dto) {
-        this.userService.save(dto);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @PostMapping("/registration")
-    public ResponseEntity<?> save(@RequestBody UserRegistrationDTO dto) {
         this.userService.save(dto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);

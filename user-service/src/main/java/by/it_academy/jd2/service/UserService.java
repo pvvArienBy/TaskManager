@@ -20,6 +20,7 @@ import java.util.UUID;
 public class UserService implements IUserService {
 
     private final IUserDao userDao;
+
     private final ConversionService conversionService;
 
     public UserService(IUserDao userService, ConversionService conversionService) {
@@ -29,23 +30,18 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserEntity> findAll() {
-        return userDao.findAll();
+        return this.userDao.findAll();
     }
 
     @Override
     public UserEntity findById(UUID uuid) {
-        Optional<UserEntity> userOptional = userDao.findById(uuid);
+        Optional<UserEntity> userOptional = this.userDao.findById(uuid);
         return userOptional.orElseThrow(() -> new EntityNotFoundException("Не найдено"));
     }
 
     @Override
     public UserEntity save(UserCreateDTO item) {
-        return userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
-    }
-
-    @Override
-    public UserEntity save(UserRegistrationDTO item) {
-        return userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
+        return this.userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
     }
 
     @Override
@@ -61,10 +57,15 @@ public class UserService implements IUserService {
                 updEntity.setUuid(entity.getUuid());
                 updEntity.setDtCreate(entity.getDtCreate());
                 updEntity.setDtUpdate(entity.getDtUpdate());
-                return userDao.save(updEntity);
+                return this.userDao.save(updEntity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
         else throw new EntityNotFoundException("Такого объекта не существует!");
+    }
+
+    @Override
+    public UserEntity save(UserRegistrationDTO item) {
+        return this.userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
     }
 
     //   todo требует корректировки по аналогии с UserEntity save(UUID uuid, Long version, UserCreateDTO item)
