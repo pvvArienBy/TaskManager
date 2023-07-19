@@ -10,6 +10,7 @@ import by.it_academy.jd2.service.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
@@ -45,11 +46,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserEntity save(UUID uuid, Long version, UserCreateDTO item) {
+    public UserEntity save(UUID uuid, LocalDateTime version, UserCreateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
         if (entity.getDtUpdate() != null) {
-            if (version == entity.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
+            if (version.equals(entity.getDtUpdate())) {
                 UserEntity updEntity = conversionService.convert(item, UserEntity.class);
                 if (updEntity == null) {
                     throw new IllegalArgumentException("Не удалось преобразовать объект UserCreateDTO в UserEntity");
@@ -60,7 +61,7 @@ public class UserService implements IUserService {
                 return this.userDao.save(updEntity);
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
-        else throw new EntityNotFoundException("Такого объекта не существует!");
+        else throw new EntityNotFoundException("Такого объекта не существует!!!");
     }
 
     @Override

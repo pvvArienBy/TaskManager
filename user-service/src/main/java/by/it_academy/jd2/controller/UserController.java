@@ -5,10 +5,12 @@ import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
-    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid, @PathVariable Long dt_update, @RequestBody UserCreateDTO dto) {
+    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,@PathVariable LocalDateTime dt_update, @RequestBody UserCreateDTO dto) {
         UserEntity userEntity = this.userService.save(uuid, dt_update, dto);
         UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
 

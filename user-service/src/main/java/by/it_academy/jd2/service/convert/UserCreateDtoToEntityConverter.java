@@ -3,9 +3,11 @@ package by.it_academy.jd2.service.convert;
 import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class UserCreateDtoToEntityConverter implements Converter<UserCreateDTO, UserEntity> {
 
     /**

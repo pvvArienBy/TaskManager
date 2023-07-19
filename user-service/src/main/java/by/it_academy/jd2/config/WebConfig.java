@@ -1,8 +1,6 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
-import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
-import by.it_academy.jd2.service.convert.UserRegistrationDtoToEntityConverter;
+import by.it_academy.jd2.service.convert.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
@@ -24,12 +22,6 @@ import java.util.List;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.mediaType("json", MediaType.APPLICATION_JSON);
-        configurer.mediaType("xml", MediaType.APPLICATION_XML);
-    }
-
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -49,5 +41,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new UserEntityToDtoConverter());
         registry.addConverter(new UserCreateDtoToEntityConverter());
         registry.addConverter(new UserRegistrationDtoToEntityConverter());
+        registry.addConverter(new StringToLocalDateTimeConverter());
     }
 }

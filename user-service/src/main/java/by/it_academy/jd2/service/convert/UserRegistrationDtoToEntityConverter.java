@@ -5,9 +5,11 @@ import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class UserRegistrationDtoToEntityConverter implements Converter<UserRegistrationDTO, UserEntity> {
 
     /**
