@@ -1,2 +1,0 @@
-# TaskManager
-IT-Academy project

@@ -1,21 +1,20 @@
 package by.it_academy.jd2.core.dto;
 
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EStatusUser;
-
-public class UserCreateDTO {
+public class UserRegistrationDTO {
 
     private String mail;
 
     private String fio;
 
-    private ERole role;
-
-    private EStatusUser status;
-
     private String password;
 
-    public UserCreateDTO() {
+    public UserRegistrationDTO() {
+    }
+
+    public UserRegistrationDTO(String mail, String fio, String password) {
+        this.mail = mail;
+        this.fio = fio;
+        this.password = password;
     }
 
     public String getMail() {
@@ -34,22 +33,6 @@ public class UserCreateDTO {
         this.fio = fio;
     }
 
-    public ERole getRole() {
-        return role;
-    }
-
-    public void setRole(ERole role) {
-        this.role = role;
-    }
-
-    public EStatusUser getStatus() {
-        return status;
-    }
-
-    public void setStatus(EStatusUser status) {
-        this.status = status;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -58,6 +41,3 @@ public class UserCreateDTO {
         this.password = password;
     }
 }
-
-
-

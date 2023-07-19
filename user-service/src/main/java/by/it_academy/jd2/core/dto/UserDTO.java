@@ -1,66 +1,61 @@
 package by.it_academy.jd2.core.dto;
 
-import by.it_academy.jd2.core.enums.EPosition;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 
+import java.util.UUID;
+
 public class UserDTO {
 
-    private Long id;
+    private UUID uuid;
 
-    private String firstName;
+    private Long dtCreate;
 
-    private String lastName;
+    private Long dtUpdate;
 
     private String mail;
 
-    private String telegram;
-
-    private EPosition position;
+    private String fio;
 
     private ERole role;
 
     private EStatusUser status;
 
-    private Long version;
-
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String firstName, String lastName, String mail, String telegram, EPosition position, ERole role, EStatusUser status, Long version) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public UserDTO(UUID uuid, Long createDate, Long updateDate, String mail, String fio, ERole role, EStatusUser status) {
+        this.uuid = uuid;
+        this.dtCreate = createDate;
+        this.dtUpdate = updateDate;
         this.mail = mail;
-        this.telegram = telegram;
-        this.position = position;
+        this.fio = fio;
         this.role = role;
         this.status = status;
-        this.version = version;
     }
 
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Long getDtCreate() {
+        return dtCreate;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setDtCreate(Long dtCreate) {
+        this.dtCreate = dtCreate;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Long getDtUpdate() {
+        return dtUpdate;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDtUpdate(Long dtUpdate) {
+        this.dtUpdate = dtUpdate;
     }
 
     public String getMail() {
@@ -71,20 +66,12 @@ public class UserDTO {
         this.mail = mail;
     }
 
-    public String getTelegram() {
-        return telegram;
+    public String getFio() {
+        return fio;
     }
 
-    public void setTelegram(String telegram) {
-        this.telegram = telegram;
-    }
-
-    public EPosition getPosition() {
-        return position;
-    }
-
-    public void setPosition(EPosition position) {
-        this.position = position;
+    public void setFio(String fio) {
+        this.fio = fio;
     }
 
     public ERole getRole() {
@@ -101,13 +88,5 @@ public class UserDTO {
 
     public void setStatus(EStatusUser status) {
         this.status = status;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 }

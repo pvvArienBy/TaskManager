@@ -1,16 +1,12 @@
 package by.it_academy.jd2.core.enums;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-
 public enum EStatusUser {
 
-    PENDING_CONFIRMATION("pending configuration"),
+    WAITING_ACTIVATION("waiting activation"),
 
-    ACTIVE("active"),
+    ACTIVATED ("activated"),
 
-    DELETED("deleted"),
-
-    BLOCKED("blocked");
+    DEACTIVATED ("deactivated");
 
     private final String value;
 
