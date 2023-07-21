@@ -5,7 +5,6 @@ import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,6 @@ public class UserController {
 
         return dtoList;
     }
-
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody UserCreateDTO dto) {
