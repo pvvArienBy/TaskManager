@@ -1,6 +1,6 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.config.filter.JwtAuthenticationFilter;
+import by.it_academy.jd2.controller.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
