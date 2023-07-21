@@ -1,11 +1,8 @@
 package by.it_academy.jd2.core.dto;
 
 public class UserRegistrationDTO {
-
     private String mail;
-
     private String fio;
-
     private String password;
 
     public UserRegistrationDTO() {

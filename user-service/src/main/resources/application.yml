@@ -13,6 +13,7 @@ spring:
       hibernate:
         show_sql: true
     open-in-view: true
+    database: postgresql
 
 server:
   port: 80

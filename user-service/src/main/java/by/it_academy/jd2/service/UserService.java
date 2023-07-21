@@ -8,10 +8,10 @@ import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,14 +19,14 @@ import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
-
     private final IUserDao userDao;
-
     private final ConversionService conversionService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(IUserDao userService, ConversionService conversionService) {
+    public UserService(IUserDao userService, ConversionService conversionService, PasswordEncoder passwordEncoder) {
         this.userDao = userService;
         this.conversionService = conversionService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -37,6 +37,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
+
         return userOptional.orElseThrow(() -> new EntityNotFoundException("Не найдено"));
     }
 
@@ -58,7 +59,9 @@ public class UserService implements IUserService {
                 updEntity.setUuid(entity.getUuid());
                 updEntity.setDtCreate(entity.getDtCreate());
                 updEntity.setDtUpdate(entity.getDtUpdate());
+
                 return this.userDao.save(updEntity);
+
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         }
         else throw new EntityNotFoundException("Такого объекта не существует!!!");
@@ -66,7 +69,15 @@ public class UserService implements IUserService {
 
     @Override
     public UserEntity save(UserRegistrationDTO item) {
-        return this.userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
+        UserEntity entity = Objects.requireNonNull(conversionService.convert(item, UserEntity.class));
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        this.userDao.save(entity);
+        return entity;
+    }
+
+    @Override
+    public Optional<UserEntity> findByMail(String mail) {
+        return this.userDao.findByMail(mail);
     }
 
     //   todo требует корректировки по аналогии с UserEntity save(UUID uuid, Long version, UserCreateDTO item)

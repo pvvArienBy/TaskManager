@@ -3,21 +3,13 @@ package by.it_academy.jd2.core.dto;
 import java.util.List;
 
 public class PageOfUserDTO {
-
     private Integer number;
-
     private Integer size;
-
     private Integer totalPages;
-
     private Long totalElements;
-
     private Boolean first;
-
     private Integer numberOfElements;
-
     private Boolean last;
-
     private List<UserDTO> content;
 
     public PageOfUserDTO() {
