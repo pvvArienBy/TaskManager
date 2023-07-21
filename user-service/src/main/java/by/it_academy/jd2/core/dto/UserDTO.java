@@ -6,19 +6,12 @@ import by.it_academy.jd2.core.enums.EStatusUser;
 import java.util.UUID;
 
 public class UserDTO {
-
     private UUID uuid;
-
     private Long dtCreate;
-
     private Long dtUpdate;
-
     private String mail;
-
     private String fio;
-
     private ERole role;
-
     private EStatusUser status;
 
     public UserDTO() {

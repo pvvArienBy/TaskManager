@@ -4,15 +4,10 @@ import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 
 public class UserCreateDTO {
-
     private String mail;
-
     private String fio;
-
     private ERole role;
-
     private EStatusUser status;
-
     private String password;
 
     public UserCreateDTO() {
