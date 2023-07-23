@@ -9,7 +9,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface IUserDao extends JpaRepository<UserEntity, UUID> {
+public interface IUserDao
+        extends JpaRepository<UserEntity, UUID> {
     @Override
     List<UserEntity> findAll();
     @Override
