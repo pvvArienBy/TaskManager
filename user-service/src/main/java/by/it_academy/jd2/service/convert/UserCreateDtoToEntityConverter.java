@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class UserCreateDtoToEntityConverter implements Converter<UserCreateDTO, UserEntity> {
+public class UserCreateDtoToEntityConverter
+        implements Converter<UserCreateDTO, UserEntity> {
 
     /**
      * Converts a UserCreateDTO object to a UserEntity object.

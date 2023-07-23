@@ -12,7 +12,6 @@ import java.time.temporal.ChronoField;
 public class StringToLocalDateTimeConverter
         implements Converter<String, LocalDateTime> {
 
-
     @Override
     public LocalDateTime convert(String source) {
         Instant instant = Instant.ofEpochMilli(Long.parseLong(source));
