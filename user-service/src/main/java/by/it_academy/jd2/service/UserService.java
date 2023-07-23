@@ -2,6 +2,7 @@ package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.UserCreateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
+import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
@@ -78,6 +79,14 @@ public class UserService implements IUserService {
     @Override
     public Optional<UserEntity> findByMail(String mail) {
         return this.userDao.findByMail(mail);
+    }
+
+    @Override
+    public void enableUser(String mail) {
+        Optional<UserEntity> userOptional = userDao.findByMail(mail);
+        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
+        entity.setStatus(EStatusUser.ACTIVATED);
+        this.userDao.save(entity);
     }
 
     //   todo требует корректировки по аналогии с UserEntity save(UUID uuid, Long version, UserCreateDTO item)
