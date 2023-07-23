@@ -5,10 +5,7 @@ import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.service.api.IAuthenticationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -16,18 +13,28 @@ public class AuthenticationController {
 
     private final IAuthenticationService authService;
 
-    public AuthenticationController(IAuthenticationService userAuthService) {
-        this.authService = userAuthService;
+    public AuthenticationController(IAuthenticationService authService) {
+        this.authService = authService;
     }
 
+    //    @PostMapping("/registration")
+//    public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
+//        return  ResponseEntity.ok(this.authService.registration(dto));
+//    }
+
     @PostMapping("/registration")
-    public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
-        return  ResponseEntity.ok(this.authService.registration(dto));
+    public ResponseEntity<?> registration(@RequestBody UserRegistrationDTO dto) {
+        return  ResponseEntity.ok(this.authService.register(dto));
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenDTO> authentication(@RequestBody UserLoginDTO dto) {
         return ResponseEntity.ok(this.authService.authentication(dto));
+    }
+
+    @GetMapping("/registration/confirm")
+    public ResponseEntity<?> confirm(@RequestParam("token") String token) {
+        return ResponseEntity.ok(this.authService.confirmToken(token));
     }
 
 
