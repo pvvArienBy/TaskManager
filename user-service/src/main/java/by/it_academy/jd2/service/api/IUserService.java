@@ -7,8 +7,7 @@ import by.it_academy.jd2.dao.entity.UserEntity;
 import java.util.Optional;
 
 public interface IUserService extends ICRUDService<UserEntity, UserCreateDTO> {
-
     UserEntity save(UserRegistrationDTO item);
-
     Optional<UserEntity> findByMail(String mail);
+    void enableUser(String mail);
 }
