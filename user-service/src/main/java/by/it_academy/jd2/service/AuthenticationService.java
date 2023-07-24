@@ -46,16 +46,6 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public TokenDTO registration(UserRegistrationDTO dto) {
-        UserEntity entity = userService.save(dto);
-        var jwtToken = jwtService.generateToken(entity);
-
-        return TokenDTO.builder()
-                .token(jwtToken)
-                .build();
-    }
-
-    @Override
-    public String register(UserRegistrationDTO dto) {
         boolean isValidMail = this.emailValidatorService.test(dto.getMail());
 
         if (!isValidMail) {
@@ -91,7 +81,7 @@ public class AuthenticationService implements IAuthenticationService {
                                 String.format(USER_NAME_NOT_FOUND_MSG, username)));
     }
 
-    public String signInUser(UserRegistrationDTO dto) {
+    public TokenDTO signInUser(UserRegistrationDTO dto) {
         boolean userExist = this.userService
                 .findByMail(dto.getMail()).isPresent();
 
@@ -100,8 +90,9 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         UserEntity entity = userService.save(dto);
+        var jwtToken = jwtService.generateToken(entity);
 
-        String  token = UUID.randomUUID().toString();
+        String token = UUID.randomUUID().toString();
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
                 LocalDateTime.now(),
@@ -117,7 +108,9 @@ public class AuthenticationService implements IAuthenticationService {
                 dto.getMail(),
                 buildEmail(dto.getFio(), link));
 
-        return token;
+        return TokenDTO.builder()
+                .token(jwtToken)
+                .build();
     }
 
     @Transactional
@@ -125,7 +118,7 @@ public class AuthenticationService implements IAuthenticationService {
         ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
 
         if (confirmationToken.getConfirmedAt() != null) {
-        throw new IllegalStateException("email already confirmed");
+            throw new IllegalStateException("email already confirmed");
         }
 
         LocalDateTime expireAt = confirmationToken.getExpiresAt();

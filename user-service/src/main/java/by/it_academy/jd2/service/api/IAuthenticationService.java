@@ -8,6 +8,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface IAuthenticationService extends UserDetailsService {
     TokenDTO registration(UserRegistrationDTO dto);
     TokenDTO authentication(UserLoginDTO dto);
-    String register(UserRegistrationDTO dto);
     String confirmToken(String token);
 }

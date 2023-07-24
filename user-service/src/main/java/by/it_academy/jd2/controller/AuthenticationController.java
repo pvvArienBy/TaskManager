@@ -17,14 +17,9 @@ public class AuthenticationController {
         this.authService = authService;
     }
 
-    //    @PostMapping("/registration")
-//    public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
-//        return  ResponseEntity.ok(this.authService.registration(dto));
-//    }
-
     @PostMapping("/registration")
-    public ResponseEntity<?> registration(@RequestBody UserRegistrationDTO dto) {
-        return  ResponseEntity.ok(this.authService.register(dto));
+    public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
+        return  ResponseEntity.ok(this.authService.registration(dto));
     }
 
     @PostMapping("/login")
