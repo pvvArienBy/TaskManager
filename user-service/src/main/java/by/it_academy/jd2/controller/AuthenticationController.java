@@ -31,21 +31,4 @@ public class AuthenticationController {
     public ResponseEntity<?> confirm(@RequestParam("token") String token) {
         return ResponseEntity.ok(this.authService.confirmToken(token));
     }
-
-
-//    @GetMapping("/verification")
-//    public ResponseEntity<UserDTO> verification(@RequestParam String code, @RequestParam String email) {
-//
-//        UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
-//        return null;
-//    }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody AuthenticationRequest dto) {
-//       this.userAuthService.registration(dto);
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//        return null;
-//    }
 }
