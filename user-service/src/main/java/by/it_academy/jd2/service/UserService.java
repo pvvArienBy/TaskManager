@@ -7,26 +7,30 @@ import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
+@Validated
 public class UserService implements IUserService {
     private final IUserDao userDao;
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
+    private final Validator validator;
 
-    public UserService(IUserDao userService, ConversionService conversionService, PasswordEncoder passwordEncoder) {
+    public UserService(IUserDao userService, ConversionService conversionService, PasswordEncoder passwordEncoder, Validator validator) {
         this.userDao = userService;
         this.conversionService = conversionService;
         this.passwordEncoder = passwordEncoder;
+        this.validator = validator;
     }
 
     @Override
@@ -69,6 +73,12 @@ public class UserService implements IUserService {
 
     @Override
     public UserEntity save(UserRegistrationDTO item) {
+
+        Set<ConstraintViolation<UserRegistrationDTO>> violations = validator.validate(item);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         UserEntity entity = Objects.requireNonNull(conversionService.convert(item, UserEntity.class));
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         this.userDao.save(entity);
