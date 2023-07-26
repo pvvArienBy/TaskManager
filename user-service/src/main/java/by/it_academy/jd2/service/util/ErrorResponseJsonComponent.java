@@ -24,7 +24,8 @@ public class ErrorResponseJsonComponent {
             dto.getErrorMap().entrySet().stream().forEach(error -> {
                 try {
                     jgen.writeStartObject();
-                    jgen.writeStringField("field", error.getKey());
+                    String fieldNameWithUnderscores = error.getKey().replace(".", "_");
+                    jgen.writeStringField("field", fieldNameWithUnderscores);
                     jgen.writeStringField("message", error.getValue());
                     jgen.writeEndObject();
                 } catch (IOException e) {
