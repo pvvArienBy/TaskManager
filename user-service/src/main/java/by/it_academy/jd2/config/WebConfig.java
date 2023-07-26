@@ -1,11 +1,15 @@
 package by.it_academy.jd2.config;
 
+import by.it_academy.jd2.service.util.ErrorResponseJsonComponent;
+import by.it_academy.jd2.core.dto.StructuredErrorDTO;
 import by.it_academy.jd2.service.convert.StringToLocalDateTimeConverter;
 import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
 import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
 import by.it_academy.jd2.service.convert.UserRegistrationDtoToEntityConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +40,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new MappingJackson2HttpMessageConverter(jacksonBuilder().build()));
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
+                .modules(new ParameterNamesModule())
+                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .build();
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(StructuredErrorDTO.class, new ErrorResponseJsonComponent.StructuredErrorResponseSerializer());
+        objectMapper.registerModule(module);
+
+        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
     }
 
     @Override

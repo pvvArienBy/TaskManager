@@ -7,9 +7,13 @@ import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,15 +22,21 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Validated
 public class UserService implements IUserService {
     private final IUserDao userDao;
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
+    private final Validator validator;
 
-    public UserService(IUserDao userService, ConversionService conversionService, PasswordEncoder passwordEncoder) {
+    public UserService(IUserDao userService,
+                       ConversionService conversionService,
+                       PasswordEncoder passwordEncoder,
+                       Validator validator) {
         this.userDao = userService;
         this.conversionService = conversionService;
         this.passwordEncoder = passwordEncoder;
+        this.validator = validator;
     }
 
     @Override
@@ -63,15 +73,34 @@ public class UserService implements IUserService {
                 return this.userDao.save(updEntity);
 
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
-        }
-        else throw new EntityNotFoundException("Такого объекта не существует!!!");
+        } else throw new EntityNotFoundException("Такого объекта не существует!!!");
     }
 
     @Override
-    public UserEntity save(UserRegistrationDTO item) {
+    @Validated
+    public UserEntity save(@Valid UserRegistrationDTO item) {
+
+//        Set<ConstraintViolation<UserRegistrationDTO>> violations = validator.validate(item);
+//        if (!violations.isEmpty()) {
+//            throw new ConstraintViolationException(violations);
+//        }
+
+
         UserEntity entity = Objects.requireNonNull(conversionService.convert(item, UserEntity.class));
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-        this.userDao.save(entity);
+
+//        Set<ConstraintViolation<ErrorDTO>> violations2 = validator.validate(entity);
+//        if (!violations.isEmpty()) {
+//            throw new ConstraintViolationException(violations2);
+//        }
+
+        try {
+            this.userDao.save(entity);
+        } catch (DataIntegrityViolationException e) {
+            if (e.getCause().getMessage().contains("duplicate key value violates unique constraint \"fio\"")) {
+                throw new EntityNotFoundException("tessttt");
+            } else throw new EntityNotFoundException("tessttt22");
+        }
         return entity;
     }
 

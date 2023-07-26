@@ -1,4 +1,4 @@
-package by.it_academy.jd2.config.filter;
+package by.it_academy.jd2.controller.filter;
 
 import by.it_academy.jd2.service.JwtService;
 import jakarta.servlet.FilterChain;
