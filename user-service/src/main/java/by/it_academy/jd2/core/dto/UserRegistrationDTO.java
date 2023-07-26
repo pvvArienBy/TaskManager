@@ -1,19 +1,21 @@
 package by.it_academy.jd2.core.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserRegistrationDTO {
-    @NotEmpty
+    @NotBlank(message = "fio не должен быть пустым")
     @Size(max = 50)
-    @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
+    @Pattern(regexp = "^[^\\d]+$", message = "fio не должно содержать цифр")
     private String fio;
-    @NotEmpty
+    @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
+    @Column(unique = true)
     private String mail;
-    @NotEmpty
+    @NotBlank(message = "password не должен быть пустым")
     @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 
