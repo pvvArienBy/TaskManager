@@ -3,7 +3,10 @@ package by.it_academy.jd2.dao.entity;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,11 +33,11 @@ public class UserEntity implements Serializable, UserDetails {
     @UpdateTimestamp
     @Column(name = "date_update")
     private LocalDateTime dtUpdate;
-    @NotBlank (message = "mail не должен быть пустым")
+    @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
     @Column(unique = true)
     private String mail;
-    @NotBlank (message = "fio не должен быть пустым")
+    @NotBlank(message = "fio не должен быть пустым")
     @Size(max = 50)
     @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
     private String fio;
@@ -42,7 +45,7 @@ public class UserEntity implements Serializable, UserDetails {
     private ERole role;
     @Enumerated(EnumType.STRING)
     private EStatusUser status;
-    @NotBlank
+    @NotBlank(message = "password не должен быть пустым")
     @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 
