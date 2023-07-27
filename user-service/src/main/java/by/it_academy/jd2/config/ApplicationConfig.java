@@ -1,11 +1,10 @@
 package by.it_academy.jd2.config;
 
 import by.it_academy.jd2.dao.api.IUserDao;
+import by.it_academy.jd2.service.validator.ValidEmailValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.StandardEnvironment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -46,9 +45,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public Environment environment() {
-//        return new StandardEnvironment();
-//    }
 }
