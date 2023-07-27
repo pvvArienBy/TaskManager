@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.TokenDTO;
+import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IAuthenticationService;
@@ -31,22 +31,22 @@ public class AuthenticationService implements IAuthenticationService {
         UserEntity entity = userService.save(dto);
         var jwtToken = jwtService.generateToken(entity);
 
-         return TokenDTO.builder()
-                 .token(jwtToken)
-                 .build();
+        return TokenDTO.builder()
+                .token(jwtToken)
+                .build();
     }
 
     @Override
-    public TokenDTO authentication(UserLoginDTO request) {
+    public TokenDTO authentication(UserLoginDTO dto) {
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getMail(),
-                        request.getPassword()
+                        dto.getMail(),
+                        dto.getPassword()
                 )
         );
 
-        var user = userService.findByMail(request.getMail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user = userService.findByMail(dto.getMail())
+                .orElseThrow(() -> new UsernameNotFoundException("Объект не найден!"));
         var jwtToken = jwtService.generateToken(user);
         return TokenDTO.builder()
                 .token(jwtToken)
