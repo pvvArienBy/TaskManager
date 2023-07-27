@@ -1,7 +1,15 @@
 package by.it_academy.jd2.core.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserLoginDTO {
+    @NotBlank(message = "mail не должен быть пустым")
+    @Email(message = "Некорректный адрес электронной почты")
     private String mail;
+    @NotBlank(message = "password не должен быть пустым")
+    @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 
     public UserLoginDTO() {
