@@ -1,5 +1,6 @@
 package by.it_academy.jd2.dao.entity;
 
+import by.it_academy.jd2.annotation.ValidEmail;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.*;
@@ -35,18 +36,17 @@ public class UserEntity implements Serializable, UserDetails {
     private LocalDateTime dtUpdate;
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
-    @Column(unique = true)
+    @ValidEmail(message = "Mail: ${validateValue} уже существует.")
     private String mail;
     @NotBlank(message = "fio не должен быть пустым")
-    @Size(max = 50)
+    @Size(max = 255)
     @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
     private String fio;
     @Enumerated(EnumType.STRING)
     private ERole role;
     @Enumerated(EnumType.STRING)
     private EStatusUser status;
-    @NotBlank(message = "password не должен быть пустым")
-    @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
+    @NotBlank
     private String password;
 
     public UserEntity() {
