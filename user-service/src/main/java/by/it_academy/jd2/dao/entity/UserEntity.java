@@ -36,7 +36,6 @@ public class UserEntity implements Serializable, UserDetails {
     private LocalDateTime dtUpdate;
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
-    @ValidEmail(message = "Mail: ${validateValue} уже существует.")
     private String mail;
     @NotBlank(message = "fio не должен быть пустым")
     @Size(max = 255)
