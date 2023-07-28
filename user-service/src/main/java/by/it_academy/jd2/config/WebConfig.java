@@ -2,10 +2,7 @@ package by.it_academy.jd2.config;
 
 import by.it_academy.jd2.core.dto.ErrorDTO;
 import by.it_academy.jd2.core.dto.StructuredErrorDTO;
-import by.it_academy.jd2.service.convert.StringToLocalDateTimeConverter;
-import by.it_academy.jd2.service.convert.UserCreateDtoToEntityConverter;
-import by.it_academy.jd2.service.convert.UserEntityToDtoConverter;
-import by.it_academy.jd2.service.convert.UserRegistrationDtoToEntityConverter;
+import by.it_academy.jd2.service.convert.*;
 import by.it_academy.jd2.service.util.ErrorResponseJsonComponent;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,5 +59,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new UserCreateDtoToEntityConverter());
         registry.addConverter(new UserRegistrationDtoToEntityConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
+        registry.addConverter(new PageEntityToPageDtoConverter(new UserEntityToDtoConverter()));
     }
 }

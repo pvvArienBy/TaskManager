@@ -1,17 +1,17 @@
 package by.it_academy.jd2.controller;
 
+import by.it_academy.jd2.core.dto.PageDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,13 +34,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> findAll() {
-        List<UserDTO> dtoList = new ArrayList<>();
-        for (UserEntity userEntity : this.userService.findAll()) {
-            dtoList.add(conversionService.convert(userEntity, UserDTO.class));
-        }
-
-        return dtoList;
+    public PageDTO<UserDTO> findAll(@RequestParam(required = false, defaultValue = "0") int page,
+                                    @RequestParam(required = false, defaultValue = "20") int size) {
+        return conversionService.convert(this.userService.findAll(PageRequest.of(page, size)), PageDTO.class);
     }
 
     @PostMapping
