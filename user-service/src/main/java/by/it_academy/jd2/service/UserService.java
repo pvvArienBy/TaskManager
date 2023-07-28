@@ -1,6 +1,8 @@
 package by.it_academy.jd2.service;
 
+import by.it_academy.jd2.core.dto.PageDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
+import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -9,12 +11,13 @@ import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
 import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,8 +38,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserEntity> findAll() {
-        return this.userDao.findAll();
+    public Page<UserEntity> findAll(PageRequest pageRequest) {
+        return this.userDao.findAll(pageRequest);
     }
 
     @Override
@@ -83,8 +86,7 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<UserEntity> findByMail(String mail) {
-        Optional<UserEntity> byMail = this.userDao.findByMail(mail);
-        return byMail;
+        return this.userDao.findByMail(mail);
     }
 
     @Override
