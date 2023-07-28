@@ -1,5 +1,7 @@
 package by.it_academy.jd2.core.dto;
 
+import by.it_academy.jd2.annotation.ValidEmail;
+import by.it_academy.jd2.annotation.ValidEnum;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.EnumType;
@@ -9,6 +11,7 @@ import jakarta.validation.constraints.*;
 public class UserCreateUpdateDTO {
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
+    @ValidEmail(message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
     private String mail;
     @NotBlank(message = "fio не должен быть пустым")
     @Size(max = 255)
@@ -20,7 +23,6 @@ public class UserCreateUpdateDTO {
     @NotNull(message = "status не должен быть пустым")
     @Enumerated(EnumType.STRING)
     private EStatusUser status;
-    @NotBlank(message = "password не должен быть пустым")
     @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 
