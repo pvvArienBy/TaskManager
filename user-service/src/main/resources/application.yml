@@ -20,8 +20,11 @@ spring:
 server:
   port: 80
 
-
-
-
-
   #<!-- value="jdbc:postgresql://pg_db:5432/crm_db"/>-->
+logging:
+  level:
+    org:
+      apache:
+        catalina: debug
+  file:
+    name: logs/spring.log
