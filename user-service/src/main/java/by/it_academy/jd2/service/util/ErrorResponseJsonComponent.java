@@ -13,7 +13,7 @@ import java.util.List;
 
 @JsonComponent
 public class ErrorResponseJsonComponent {
-    public static class  StructuredErrorResponseSerializer extends JsonObjectSerializer<StructuredErrorDTO> {
+    public static class StructuredErrorResponseSerializer extends JsonObjectSerializer<StructuredErrorDTO> {
         @Override
         protected void serializeObject(StructuredErrorDTO dto,
                                        JsonGenerator jgen,
@@ -36,17 +36,13 @@ public class ErrorResponseJsonComponent {
         }
     }
 
-    public static class ErrorResponseSerializer extends JsonSerializer<List<ErrorDTO>> {
+    public static class ErrorResponseSerializer extends JsonSerializer<ErrorDTO> {
         @Override
-        public void serialize(List<ErrorDTO> errorList, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeStartArray();
-            for (ErrorDTO dto : errorList) {
-                jgen.writeStartObject();
-                jgen.writeStringField("logref", dto.getErrorType().name().toLowerCase());
-                jgen.writeStringField("message", dto.getMessage());
-                jgen.writeEndObject();
-            }
-            jgen.writeEndArray();
+        public void serialize(ErrorDTO dto, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+            jgen.writeStartObject();
+            jgen.writeStringField("logref", dto.getErrorType().name().toLowerCase());
+            jgen.writeStringField("message", dto.getMessage());
+            jgen.writeEndObject();
         }
     }
 }
