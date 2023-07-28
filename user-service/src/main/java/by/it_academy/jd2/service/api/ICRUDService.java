@@ -1,6 +1,6 @@
 package by.it_academy.jd2.service.api;
 
-import org.springframework.validation.annotation.Validated;
+import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,11 +12,7 @@ public interface ICRUDService<T, S> {
 
     T findById(UUID uuid);
 
-    @Validated
-    T save(S item);
-
-    //todo ref
-//    void delete(UUID uuid, Long version);
+    T save(@Valid S item);
 
     T save(UUID uuid, LocalDateTime version, S item);
 }

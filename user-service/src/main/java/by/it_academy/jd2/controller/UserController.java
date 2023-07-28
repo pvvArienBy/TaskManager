@@ -1,6 +1,6 @@
 package by.it_academy.jd2.controller;
 
-import by.it_academy.jd2.core.dto.UserCreateDTO;
+import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
@@ -44,23 +44,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody UserCreateDTO dto) {
+    public ResponseEntity<?> save(@RequestBody UserCreateUpdateDTO dto) {
         this.userService.save(dto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
-    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,@PathVariable LocalDateTime dt_update, @RequestBody UserCreateDTO dto) {
+    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid, @PathVariable LocalDateTime dt_update, @RequestBody UserCreateUpdateDTO dto) {
         UserEntity userEntity = this.userService.save(uuid, dt_update, dto);
         UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
     }
-
-//    @DeleteMapping("/")
-//    public ResponseEntity<Void> delete(@RequestParam UUID uuid, @RequestParam Long version) {
-//        userService.delete(uuid, version);
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
 }
