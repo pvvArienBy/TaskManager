@@ -34,9 +34,10 @@ public class UserController {
     }
 
     @GetMapping
-    public PageDTO<UserDTO> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                    @RequestParam(required = false, defaultValue = "20") int size) {
-        return conversionService.convert(this.userService.findAll(PageRequest.of(page, size)), PageDTO.class);
+    public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") int page,
+                                  @RequestParam(required = false, defaultValue = "20") int size) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(conversionService.convert(this.userService.findAll(PageRequest.of(page, size)), PageDTO.class));
     }
 
     @PostMapping
