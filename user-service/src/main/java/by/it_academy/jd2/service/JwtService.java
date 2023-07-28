@@ -1,6 +1,10 @@
 package by.it_academy.jd2.service;
 
+import by.it_academy.jd2.core.dto.ErrorDTO;
+import by.it_academy.jd2.core.enums.ErrorType;
+import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -9,9 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -61,12 +63,22 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims body = null;
+        try {
+            body = Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            List<ErrorDTO> errorResponse = new ArrayList<>();
+            errorResponse.add(new ErrorDTO(ErrorType.ERROR, "1"));
+            // TODO: 28.07.2023 problem
+            throw new NotCorrectValueException(errorResponse);
+        }
+
+        return body;
     }
 
     private Key getSignInKey() {
