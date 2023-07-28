@@ -22,6 +22,6 @@ public class ValidEmailValidator implements ConstraintValidator<ValidEmail, Stri
 
     @Override
     public boolean isValid(String mail, ConstraintValidatorContext context) {
-        return this.userService.existsByMail(mail);
+        return !this.userService.existsByMail(mail);
     }
 }
