@@ -8,8 +8,7 @@ public class UserLoginDTO {
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
     private String mail;
-    @NotBlank(message = "password не должен быть пустым")
-    @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
+    @Size(min = 6, max = 250, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 
     public UserLoginDTO() {

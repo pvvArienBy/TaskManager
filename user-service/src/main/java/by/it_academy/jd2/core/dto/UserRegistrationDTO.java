@@ -13,11 +13,9 @@ public class UserRegistrationDTO {
     private String fio;
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
-    @ValidEmail(message = "mail: ${validatedValue} уже существует! Выберите другой mail.")
+    @ValidEmail(message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
     private String mail;
-    @NotBlank(message = "password не должен быть пустым")
     @Size(min = 6, max = 255, message = "Пароль должен содержать от {min} до {max} символов")
-
     private String password;
 
     public UserRegistrationDTO() {
