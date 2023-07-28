@@ -12,7 +12,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -127,9 +126,6 @@ public class UserExceptionHandler {
     public ResponseEntity<List<ErrorDTO>> handleNotCorrectValueException(NotCorrectValueException ex) {
         return new ResponseEntity(ex.getValues(), HttpStatus.BAD_REQUEST);
     }
-
-
-
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<List<ErrorDTO>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
