@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
-    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,@PathVariable LocalDateTime dt_update, @RequestBody UserCreateUpdateDTO dto) {
+    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid, @PathVariable LocalDateTime dt_update, @RequestBody UserCreateUpdateDTO dto) {
         UserEntity userEntity = this.userService.save(uuid, dt_update, dto);
         UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
 
