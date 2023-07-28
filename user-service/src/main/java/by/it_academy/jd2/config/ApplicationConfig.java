@@ -1,7 +1,6 @@
 package by.it_academy.jd2.config;
 
 import by.it_academy.jd2.dao.api.IUserDao;
-import by.it_academy.jd2.service.validator.ValidEmailValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
