@@ -4,6 +4,7 @@ import by.it_academy.jd2.core.dto.ErrorDTO;
 import by.it_academy.jd2.core.dto.StructuredErrorDTO;
 import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
+import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import by.it_academy.jd2.service.exceptions.UniqueConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
@@ -118,5 +119,10 @@ public class UserExceptionHandler {
         }
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotCorrectValueException.class)
+    public ResponseEntity<List<ErrorDTO>> handleNotCorrectValueException(NotCorrectValueException ex) {
+        return new ResponseEntity(ex.getValues(), HttpStatus.BAD_REQUEST);
     }
 }
