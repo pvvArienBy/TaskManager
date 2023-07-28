@@ -6,6 +6,7 @@ import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import by.it_academy.jd2.service.exceptions.UniqueConstraintViolation;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -136,4 +137,20 @@ public class UserExceptionHandler {
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
 
+    // TODO: 28.07.2023 problem exception (403)
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<List<ErrorDTO>> handleJwtException(ExpiredJwtException ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getCause().getMessage());
+//        System.out.println(ex.getHeader());
+        System.out.println(ex.getSuppressed());
+//        System.out.println(ex.getClaims());
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+        List<ErrorDTO> errorList = new ArrayList<>();
+        errorList.add(new ErrorDTO(ErrorType.ERROR,
+                "JWT "));
+
+        return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
 }
