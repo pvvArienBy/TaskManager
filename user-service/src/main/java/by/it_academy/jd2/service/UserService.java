@@ -1,8 +1,6 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.PageDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
-import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;

@@ -9,7 +9,6 @@ import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.boot.jackson.JsonObjectSerializer;
 
 import java.io.IOException;
-import java.util.List;
 
 @JsonComponent
 public class ErrorResponseJsonComponent {
