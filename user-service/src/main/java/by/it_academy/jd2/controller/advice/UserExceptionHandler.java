@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,4 +127,17 @@ public class UserExceptionHandler {
     public ResponseEntity<List<ErrorDTO>> handleNotCorrectValueException(NotCorrectValueException ex) {
         return new ResponseEntity(ex.getValues(), HttpStatus.BAD_REQUEST);
     }
+
+
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<List<ErrorDTO>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        List<ErrorDTO> errorList = new ArrayList<>();
+        errorList.add(new ErrorDTO(ErrorType.ERROR,
+                "Не корректные данные в передаваемом параметре - " + ex.getName()));
+
+        return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
+
 }
