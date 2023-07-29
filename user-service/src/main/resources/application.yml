@@ -1,9 +1,13 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/user_service?ApplicationName=user-service-app
-    username: postgres123
-    password: postgres123
+    url: jdbc:postgresql://db:5432/user_service?ApplicationName=user-service-app
+    username: userservice
+    password: userservice
+  #    url: jdbc:postgresql://localhost:5432/user_service?ApplicationName=user-service-app
+  #    username: postgres123
+  #    password: postgres123
+
   mvc:
     throw-exception-if-no-handler-found: false
 
@@ -15,16 +19,8 @@ spring:
       hibernate:
         show_sql: true
     open-in-view: true
-    database: postgresql
 
-server:
-  port: 80
 
-  #<!-- value="jdbc:postgresql://pg_db:5432/crm_db"/>-->
-logging:
-  level:
-    org:
-      apache:
-        catalina: debug
-  file:
-    name: logs/spring.log
+#server:
+#  port: 80
+
