@@ -1,10 +1,9 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.core.dto.ErrorDTO;
-import by.it_academy.jd2.core.dto.StructuredErrorDTO;
+import by.it_academy.jd2.core.errors.ErrorResponse;
+import by.it_academy.jd2.core.errors.StructuredErrorResponse;
 import by.it_academy.jd2.service.convert.*;
 import by.it_academy.jd2.service.util.ErrorResponseJsonComponent;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -19,14 +18,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -46,8 +43,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .build();
 
         SimpleModule module = new SimpleModule();
-        module.addSerializer(StructuredErrorDTO.class, new ErrorResponseJsonComponent.StructuredErrorResponseSerializer());
-        module.addSerializer(ErrorDTO.class, new ErrorResponseJsonComponent.ErrorResponseSerializer());
+        module.addSerializer(StructuredErrorResponse.class, new ErrorResponseJsonComponent.StructuredErrorResponseSerializer());
+        module.addSerializer(ErrorResponse.class, new ErrorResponseJsonComponent.ErrorResponseSerializer());
         objectMapper.registerModule(module);
 
         converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
@@ -56,7 +53,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new UserEntityToDtoConverter());
-        registry.addConverter(new UserCreateDtoToEntityConverter());
+        registry.addConverter(new UserCreateUpdateDtoToEntityConverter());
         registry.addConverter(new UserRegistrationDtoToEntityConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
         registry.addConverter(new PageEntityToPageDtoConverter(new UserEntityToDtoConverter()));

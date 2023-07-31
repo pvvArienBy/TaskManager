@@ -1,15 +1,15 @@
-package by.it_academy.jd2.core.dto;
+package by.it_academy.jd2.core.errors;
 
 import by.it_academy.jd2.core.enums.ErrorType;
 
-public class ErrorDTO {
+public class ErrorResponse {
     private ErrorType errorType;
     private String message;
 
-    public ErrorDTO() {
+    public ErrorResponse() {
     }
 
-    public ErrorDTO(ErrorType errorType, String message) {
+    public ErrorResponse(ErrorType errorType, String message) {
         this.errorType = errorType;
         this.message = message;
     }

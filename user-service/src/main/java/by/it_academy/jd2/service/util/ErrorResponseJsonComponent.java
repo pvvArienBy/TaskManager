@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.util;
 
-import by.it_academy.jd2.core.dto.ErrorDTO;
-import by.it_academy.jd2.core.dto.StructuredErrorDTO;
+import by.it_academy.jd2.core.errors.ErrorResponse;
+import by.it_academy.jd2.core.errors.StructuredErrorResponse;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -12,9 +12,9 @@ import java.io.IOException;
 
 @JsonComponent
 public class ErrorResponseJsonComponent {
-    public static class StructuredErrorResponseSerializer extends JsonObjectSerializer<StructuredErrorDTO> {
+    public static class StructuredErrorResponseSerializer extends JsonObjectSerializer<StructuredErrorResponse> {
         @Override
-        protected void serializeObject(StructuredErrorDTO dto,
+        protected void serializeObject(StructuredErrorResponse dto,
                                        JsonGenerator jgen,
                                        SerializerProvider provider) throws IOException {
 
@@ -35,9 +35,9 @@ public class ErrorResponseJsonComponent {
         }
     }
 
-    public static class ErrorResponseSerializer extends JsonSerializer<ErrorDTO> {
+    public static class ErrorResponseSerializer extends JsonSerializer<ErrorResponse> {
         @Override
-        public void serialize(ErrorDTO dto, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+        public void serialize(ErrorResponse dto, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeStartObject();
             jgen.writeStringField("logref", dto.getErrorType().name().toLowerCase());
             jgen.writeStringField("message", dto.getMessage());
