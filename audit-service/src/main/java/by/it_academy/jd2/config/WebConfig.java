@@ -37,10 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
-                .modules(new ParameterNamesModule())
-                .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .build();
+        ObjectMapper objectMapper = jacksonBuilder().build(); // Используйте jacksonBuilder() здесь
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(StructuredErrorResponse.class, new ErrorResponseJsonComponent.StructuredErrorResponseSerializer());
