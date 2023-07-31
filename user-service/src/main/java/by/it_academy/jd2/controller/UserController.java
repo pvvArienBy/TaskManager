@@ -17,9 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     private final IUserService userService;
-
     private final ConversionService conversionService;
 
     public UserController(IUserService userService, ConversionService conversionService) {
@@ -35,7 +33,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                  @RequestParam(required = false, defaultValue = "20") int size) {
+                                     @RequestParam(required = false, defaultValue = "20") int size) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(conversionService.convert(this.userService.findAll(PageRequest.of(page, size)), PageDTO.class));
     }

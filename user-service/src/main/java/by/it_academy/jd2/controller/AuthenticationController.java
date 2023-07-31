@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class AuthenticationController {
-
     private final IAuthenticationService authService;
 
     public AuthenticationController(IAuthenticationService userAuthService) {

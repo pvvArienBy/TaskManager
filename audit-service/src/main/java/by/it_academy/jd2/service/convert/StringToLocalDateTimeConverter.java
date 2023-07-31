@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.convert;
 
-import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.enums.ErrorType;
+import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

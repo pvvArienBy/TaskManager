@@ -18,7 +18,6 @@ public class UserEntityToDtoConverter implements Converter<UserEntity, UserDTO> 
      */
     @Override
     public UserDTO convert(UserEntity item) {
-
         UserDTO dto = new UserDTO();
         dto.setUuid(item.getUuid());
         dto.setDtCreate(item.getDtCreate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());

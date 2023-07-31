@@ -52,10 +52,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new UserEntityToDtoConverter());
-        registry.addConverter(new UserCreateUpdateDtoToEntityConverter());
-        registry.addConverter(new UserRegistrationDtoToEntityConverter());
+        registry.addConverter(new AuditCreateDtoToEntityConverter());
+        registry.addConverter(new AuditEntityToDtoConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
-        registry.addConverter(new PageEntityToPageDtoConverter(new UserEntityToDtoConverter()));
+        registry.addConverter(new PageEntityToPageDtoConverter(new AuditEntityToDtoConverter()));
     }
 }
