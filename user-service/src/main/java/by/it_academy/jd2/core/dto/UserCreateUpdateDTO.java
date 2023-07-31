@@ -23,6 +23,7 @@ public class UserCreateUpdateDTO {
     @NotNull(message = "status не должен быть пустым")
     @Enumerated(EnumType.STRING)
     private EStatusUser status;
+    @NotBlank(message = "password не должен быть пустым")
     @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
 

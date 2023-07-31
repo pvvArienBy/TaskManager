@@ -1,7 +1,7 @@
 package by.it_academy.jd2.controller.advice;
 
-import by.it_academy.jd2.core.dto.ErrorDTO;
-import by.it_academy.jd2.core.dto.StructuredErrorDTO;
+import by.it_academy.jd2.core.errors.ErrorResponse;
+import by.it_academy.jd2.core.errors.StructuredErrorResponse;
 import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
@@ -34,10 +34,10 @@ import java.util.List;
 public class UserExceptionHandler {
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<StructuredErrorDTO> handleInvalidArgument(
+    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
             ConstraintViolationException ex) {
 
-        StructuredErrorDTO response = new StructuredErrorDTO(
+        StructuredErrorResponse response = new StructuredErrorResponse(
                 ErrorType.STRUCTURED_ERROR, new HashMap<>());
         ex.getConstraintViolations().stream().forEach(violation -> {
             response.getErrorMap().put(violation.getPropertyPath().toString(), violation.getMessage());
@@ -47,10 +47,10 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler({UniqueConstraintViolation.class})
-    public ResponseEntity<StructuredErrorDTO> handleInvalidArgument(
+    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
             UniqueConstraintViolation ex) {
 
-        StructuredErrorDTO response = new StructuredErrorDTO(
+        StructuredErrorResponse response = new StructuredErrorResponse(
                 ErrorType.STRUCTURED_ERROR, new HashMap<>());
 
         StackTraceElement[] stackTrace = ex.getStackTrace();
@@ -67,10 +67,10 @@ public class UserExceptionHandler {
             Error.class,
             EntityNotFoundException.class
     })
-    public ResponseEntity<List<ErrorDTO>> handleInnerError(Exception ex) {
-        List<ErrorDTO> errorList = new ArrayList<>();
+    public ResponseEntity<List<ErrorResponse>> handleInnerError(Exception ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
         String errorMessage = ex.getMessage();
-        ErrorDTO error = new ErrorDTO(ErrorType.ERROR, " " + errorMessage);
+        ErrorResponse error = new ErrorResponse(ErrorType.ERROR, " " + errorMessage);
         errorList.add(error);
 
         return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,9 +78,9 @@ public class UserExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<StructuredErrorDTO> handleJsonErrors(HttpMessageNotReadableException ex) {
+    public ResponseEntity<StructuredErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex) {
 
-        StructuredErrorDTO response = new StructuredErrorDTO(
+        StructuredErrorResponse response = new StructuredErrorResponse(
                 ErrorType.STRUCTURED_ERROR, new HashMap<>());
 
         if (ex.getMessage().contains("Enum class: [USER, ADMIN]")) {
@@ -93,14 +93,14 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<List<ErrorDTO>> handleAuthenticationException(AuthenticationException ex) {
-        List<ErrorDTO> errorList = new ArrayList<>();
-        ErrorDTO error;
+    public ResponseEntity<List<ErrorResponse>> handleAuthenticationException(AuthenticationException ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        ErrorResponse error;
 
         if (ex.getMessage().contains("Bad credentials")) {
-            error = new ErrorDTO(ErrorType.ERROR,
+            error = new ErrorResponse(ErrorType.ERROR,
                     "Логин или пароль содержат некорректные данные. Попробуйте ещё раз");
-        } else error = new ErrorDTO(ErrorType.ERROR, ex.getMessage());
+        } else error = new ErrorResponse(ErrorType.ERROR, ex.getMessage());
 
         errorList.add(error);
 
@@ -108,12 +108,12 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StructuredErrorDTO> authorizationInvalidArgument(
+    public ResponseEntity<StructuredErrorResponse> authorizationInvalidArgument(
             MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<ObjectError> allErrors = bindingResult.getAllErrors();
 
-        StructuredErrorDTO response = new StructuredErrorDTO(ErrorType.STRUCTURED_ERROR, new HashMap<>());
+        StructuredErrorResponse response = new StructuredErrorResponse(ErrorType.STRUCTURED_ERROR, new HashMap<>());
 
         for (ObjectError error : allErrors) {
             String fieldName = error instanceof FieldError ? ((FieldError) error).getField() : error.getObjectName();
@@ -124,14 +124,14 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(NotCorrectValueException.class)
-    public ResponseEntity<List<ErrorDTO>> handleNotCorrectValueException(NotCorrectValueException ex) {
+    public ResponseEntity<List<ErrorResponse>> handleNotCorrectValueException(NotCorrectValueException ex) {
         return new ResponseEntity(ex.getValues(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<List<ErrorDTO>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        List<ErrorDTO> errorList = new ArrayList<>();
-        errorList.add(new ErrorDTO(ErrorType.ERROR,
+    public ResponseEntity<List<ErrorResponse>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
                 "Не корректные данные в передаваемом параметре - " + ex.getName()));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
@@ -139,7 +139,7 @@ public class UserExceptionHandler {
 
     // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<List<ErrorDTO>> handleJwtException(ExpiredJwtException ex) {
+    public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
         System.out.println(ex.getMessage());
         System.out.println(ex.getCause().getMessage());
 //        System.out.println(ex.getHeader());
@@ -147,8 +147,8 @@ public class UserExceptionHandler {
 //        System.out.println(ex.getClaims());
         System.out.println(ex.getMessage());
         System.out.println(ex.getMessage());
-        List<ErrorDTO> errorList = new ArrayList<>();
-        errorList.add(new ErrorDTO(ErrorType.ERROR,
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
                 "JWT "));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
