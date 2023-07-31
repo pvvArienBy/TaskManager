@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        ObjectMapper objectMapper = jacksonBuilder().build(); // Используйте jacksonBuilder() здесь
+        ObjectMapper objectMapper = jacksonBuilder().build();
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(StructuredErrorResponse.class, new ErrorResponseJsonComponent.StructuredErrorResponseSerializer());
