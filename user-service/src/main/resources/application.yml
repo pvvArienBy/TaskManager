@@ -19,7 +19,7 @@ spring:
 
 
   application:
-    name: user-service
+    name: users
 
 #server:
 #  port: 0
