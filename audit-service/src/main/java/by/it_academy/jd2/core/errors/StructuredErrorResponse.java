@@ -1,18 +1,18 @@
-package by.it_academy.jd2.core.dto;
+package by.it_academy.jd2.core.errors;
 
 
 import by.it_academy.jd2.core.enums.ErrorType;
 
 import java.util.Map;
 
-public class StructuredErrorDTO {
+public class StructuredErrorResponse {
     private ErrorType errorType;
     private Map<String,String> errorMap;
 
-    public StructuredErrorDTO() {
+    public StructuredErrorResponse() {
     }
 
-    public StructuredErrorDTO(ErrorType errorType, Map<String, String> errorMap) {
+    public StructuredErrorResponse(ErrorType errorType, Map<String, String> errorMap) {
         this.errorType = errorType;
         this.errorMap = errorMap;
     }
