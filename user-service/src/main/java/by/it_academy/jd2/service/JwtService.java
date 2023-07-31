@@ -1,6 +1,6 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.ErrorDTO;
+import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import io.jsonwebtoken.Claims;
@@ -72,8 +72,8 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            List<ErrorDTO> errorResponse = new ArrayList<>();
-            errorResponse.add(new ErrorDTO(ErrorType.ERROR, "1"));
+            List<ErrorResponse> errorResponse = new ArrayList<>();
+            errorResponse.add(new ErrorResponse(ErrorType.ERROR, "1"));
             // TODO: 28.07.2023 problem
             throw new NotCorrectValueException(errorResponse);
         }
