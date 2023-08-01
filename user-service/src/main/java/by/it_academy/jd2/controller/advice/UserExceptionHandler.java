@@ -7,6 +7,7 @@ import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import by.it_academy.jd2.service.exceptions.UniqueConstraintViolation;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -140,6 +141,22 @@ public class UserExceptionHandler {
     // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getCause().getMessage());
+//        System.out.println(ex.getHeader());
+        System.out.println(ex.getSuppressed());
+//        System.out.println(ex.getClaims());
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
+                "JWT "));
+
+        return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<List<ErrorResponse>> handleSignatureException(SignatureException ex) {
         System.out.println(ex.getMessage());
         System.out.println(ex.getCause().getMessage());
 //        System.out.println(ex.getHeader());
