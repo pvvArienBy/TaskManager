@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneId;
 
 @Component
-public class UserEntityToDtoConverter implements Converter<UserEntity, UserDTO> {
+public class UserEntityToDtoConverter
+        implements Converter<UserEntity, UserDTO> {
 
     /**
      * Converts a UserEntity object to a UserDTO object.

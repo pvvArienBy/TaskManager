@@ -126,6 +126,17 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<List<ErrorResponse>> handleIllegalStateException(IllegalStateException ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        ErrorResponse  error = new ErrorResponse(ErrorType.ERROR, ex.getMessage());
+        errorList.add(error);
+
+        return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+
+
     @ExceptionHandler(NotCorrectValueException.class)
     public ResponseEntity<List<ErrorResponse>> handleNotCorrectValueException(NotCorrectValueException ex) {
         return new ResponseEntity(ex.getValues(), HttpStatus.FORBIDDEN);
