@@ -35,4 +35,16 @@ public class MailSenderService implements IMailSenderService {
             throw new IllegalStateException("failed to send email");
         }
     }
+
+    @Override
+    public boolean validation(String s) {
+        if (s == null) {
+            return false;
+        }
+
+        String regex = "/^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$/";
+        boolean isValid = s.matches(regex);
+
+        return isValid;
+    }
 }
