@@ -1,9 +1,8 @@
 package by.it_academy.jd2.controller;
 
-import by.it_academy.jd2.core.dto.PageDTO;
-import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
-import by.it_academy.jd2.core.dto.UserDTO;
+import by.it_academy.jd2.core.dto.*;
 import by.it_academy.jd2.dao.entity.UserEntity;
+import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +19,8 @@ public class UserController {
     private final IUserService userService;
     private final ConversionService conversionService;
 
-    public UserController(IUserService userService, ConversionService conversionService) {
+    public UserController(IUserService userService,
+                          ConversionService conversionService) {
         this.userService = userService;
         this.conversionService = conversionService;
     }
