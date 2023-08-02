@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ValidEmailValidator implements ConstraintValidator<ValidEmail, String> {
-
-    private  final IUserService userService;
+    private final IUserService userService;
 
     public ValidEmailValidator(IUserService userService) {
         this.userService = userService;
