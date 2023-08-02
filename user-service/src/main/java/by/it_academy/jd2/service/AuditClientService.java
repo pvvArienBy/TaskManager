@@ -1,26 +1,29 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.openfeignclient.TestAuditClient;
+import by.it_academy.jd2.core.dto.AuditCreateDTO;
+import by.it_academy.jd2.core.dto.UserCheckDTO;
 import by.it_academy.jd2.service.api.IAuditService;
-import org.springframework.http.ResponseEntity;
+import by.it_academy.jd2.service.feignapi.IAuditFeignClientService;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class AuditClientService implements IAuditService {
+    private final IAuditFeignClientService auditClient;
+    private final JwtService jwtService;
 
-    private final TestAuditClient auditClient;
-
-    public AuditClientService(TestAuditClient auditClient) {
+    public AuditClientService(IAuditFeignClientService auditClient, JwtService jwtService) {
         this.auditClient = auditClient;
+        this.jwtService = jwtService;
     }
 
     @Override
-    public AuditDTO test(UUID id) {
-        ResponseEntity<AuditDTO> auditResponseEntity = this.auditClient.findById(id);
-        AuditDTO dto = auditResponseEntity.getBody();
+    public UserCheckDTO meDetails(String token) {
+        UserCheckDTO dto = this.jwtService.meDetails(token);
         return dto;
+    }
+
+    @Override
+    public void send(AuditCreateDTO dto) {
+        this.auditClient.save(dto);
     }
 }
