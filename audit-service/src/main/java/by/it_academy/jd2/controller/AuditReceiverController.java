@@ -26,3 +26,4 @@ public class AuditReceiverController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
+
