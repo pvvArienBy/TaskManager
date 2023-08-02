@@ -1,6 +1,6 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.dao.api.IUserDao;
+import by.it_academy.jd2.service.api.IMyUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,20 +9,17 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final IUserDao userDao;
+    private final IMyUserDetailService userDetailService;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userDao
-                .findByMail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return this.userDetailService;
     }
 
     @Bean

@@ -7,6 +7,8 @@ import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
 import by.it_academy.jd2.service.exceptions.UniqueConstraintViolation;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,7 +128,7 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(NotCorrectValueException.class)
     public ResponseEntity<List<ErrorResponse>> handleNotCorrectValueException(NotCorrectValueException ex) {
-        return new ResponseEntity(ex.getValues(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(ex.getValues(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -152,5 +155,53 @@ public class UserExceptionHandler {
                 "JWT "));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<List<ErrorResponse>> handleSignatureException(SignatureException ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getCause().getMessage());
+//        System.out.println(ex.getHeader());
+        System.out.println(ex.getSuppressed());
+//        System.out.println(ex.getClaims());
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
+                "JWT "));
+
+        return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<List<ErrorResponse>> handleSignatureException(MalformedJwtException ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getCause().getMessage());
+//        System.out.println(ex.getHeader());
+        System.out.println(ex.getSuppressed());
+//        System.out.println(ex.getClaims());
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
+                "JWT "));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<List<ErrorResponse>> authenticationExceptionException(AccessDeniedException ex) {
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getCause().getMessage());
+//        System.out.println(ex.getHeader());
+        System.out.println(ex.getSuppressed());
+//        System.out.println(ex.getClaims());
+        System.out.println(ex.getMessage());
+        System.out.println(ex.getMessage());
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR,
+                "JWT "));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 }

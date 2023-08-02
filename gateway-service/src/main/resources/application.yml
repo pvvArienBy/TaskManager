@@ -1,0 +1,38 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: api-gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # включаем использование Eureka в качестве сервера обнаружения сервисов
+          lower-case-service-id: true # преобразуем имена сервисов к нижнему регистру
+  profiles:
+    active: dev # указываем профиль dev (может быть любым другим)
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka # адрес сервера обнаружения сервисов Eureka
+
+logging:
+  pattern:
+    console: "%C{1.} [%-5level] %d{HH:mm:ss} - %msg%n" # паттерн для логирования
+
+spring.cloud.gateway:
+  routes:
+    - id: users
+      uri: lb://users/
+      predicates:
+        - Path=/api/v1/users/**
+      filters:
+        - StripPrefix=2
+#    - id: audit
+#      uri: lb://audit/
+#      predicates:
+#        - Path=/api/v1/audit/**
+#      filters:
+#        - StripPrefix=2

@@ -4,6 +4,7 @@ import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
+import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IAuthenticationService;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,14 +15,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService implements IAuthenticationService {
     private final IUserService userService;
+    private final IAuditService auditService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
 
     public AuthenticationService(IUserService userService,
-                                 JwtService jwtService,
+                                 IAuditService auditService, JwtService jwtService,
                                  AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.auditService = auditService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
@@ -48,6 +51,9 @@ public class AuthenticationService implements IAuthenticationService {
         var user = userService.findByMail(dto.getMail())
                 .orElseThrow(() -> new UsernameNotFoundException("Объект не найден!"));
         var jwtToken = jwtService.generateToken(user);
+
+        this.auditService.send(this.userService.formAudit(user,"Аутентификация пользователя"));
+
         return TokenDTO.builder()
                 .token(jwtToken)
                 .build();

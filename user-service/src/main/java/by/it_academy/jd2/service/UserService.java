@@ -1,9 +1,11 @@
 package by.it_academy.jd2.service;
 
+import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.api.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
+import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
@@ -11,7 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -25,14 +26,14 @@ import java.util.UUID;
 public class UserService implements IUserService {
     private final IUserDao userDao;
     private final ConversionService conversionService;
-    private final PasswordEncoder passwordEncoder;
+    private final UserHolder userHolder;
+    private final IAuditService auditService;
 
-    public UserService(IUserDao userService,
-                       ConversionService conversionService,
-                       PasswordEncoder passwordEncoder) {
+    public UserService(IUserDao userService, ConversionService conversionService, UserHolder userHolder, IAuditService auditService) {
         this.userDao = userService;
         this.conversionService = conversionService;
-        this.passwordEncoder = passwordEncoder;
+        this.userHolder = userHolder;
+        this.auditService = auditService;
     }
 
     @Override
@@ -43,13 +44,18 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
+        this.auditService.send(formAudit("Запрашивал данные пользователя по UUID", uuid.toString()));
 
         return userOptional.orElseThrow(() -> new EntityNotFoundException("Объект не найден!"));
     }
 
     @Override
     public UserEntity save(UserCreateUpdateDTO item) {
-        return this.userDao.save(Objects.requireNonNull(conversionService.convert(item, UserEntity.class)));
+        UserEntity entity = this.userDao.save(
+                Objects.requireNonNull(
+                        conversionService.convert(item, UserEntity.class)));
+        this.auditService.send(formAudit("Создание нового пользователя под другим пользователем", entity.getUuid().toString()));
+        return entity;
     }
 
     @Override
@@ -66,7 +72,11 @@ public class UserService implements IUserService {
                 updEntity.setDtCreate(entity.getDtCreate());
                 updEntity.setDtUpdate(entity.getDtUpdate());
 
-                return this.userDao.save(updEntity);
+                UserEntity saveEntity = this.userDao.save(updEntity);
+
+                this.auditService.send(formAudit("Обновление данных пользователя", saveEntity.getUuid().toString()));
+
+                return saveEntity;
 
             } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
         } else throw new EntityNotFoundException("Такого объекта не существует!!!");
@@ -75,9 +85,11 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(@Valid UserRegistrationDTO item) {
 
-        UserEntity entity = Objects.requireNonNull(conversionService.convert(item, UserEntity.class));
-        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-        this.userDao.save(entity);
+        UserEntity entity = this.userDao.save(
+                Objects.requireNonNull(
+                        conversionService.convert(item, UserEntity.class)));
+
+        this.auditService.send(formAudit(entity,"Регистрация нового пользователя"));
 
         return entity;
     }
@@ -90,5 +102,29 @@ public class UserService implements IUserService {
     @Override
     public boolean existsByMail(String mail) {
         return this.userDao.existsByMail(mail);
+    }
+
+    @Override
+    public AuditCreateDTO formAudit(String text, String id) {
+        String username = this.userHolder.getUser().getUsername();
+
+        UserEntity entity = this.userDao.findByMail(username)
+                .orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
+
+        AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
+        dto.setText(text);
+        dto.setId(id);
+
+        return dto;
+    }
+
+    @Override
+    public AuditCreateDTO formAudit(UserEntity entity, String text) {
+        AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
+        assert dto != null;
+        dto.setText(text);
+        dto.setId(entity.getUuid().toString());
+
+        return dto;
     }
 }

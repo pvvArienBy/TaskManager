@@ -2,13 +2,12 @@ package by.it_academy.jd2.core.dto;
 
 import by.it_academy.jd2.core.enums.EssenceType;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class AuditDTO {
     private UUID uuid;
     private Long dtCreate;
-    private UserDTO user;
+    private UserCheckDTO user;
     private String text;
     private EssenceType type;
     private String id;
@@ -16,8 +15,7 @@ public class AuditDTO {
     public AuditDTO() {
     }
 
-    public AuditDTO(UUID uuid, Long dtCreate, UserDTO user,
-                    String text, EssenceType type, String id) {
+    public AuditDTO(UUID uuid, Long dtCreate, UserCheckDTO user, String text, EssenceType type, String id) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.user = user;
@@ -42,11 +40,11 @@ public class AuditDTO {
         this.dtCreate = dtCreate;
     }
 
-    public UserDTO getUser() {
+    public UserCheckDTO getUser() {
         return user;
     }
 
-    public void setUser(UserDTO user) {
+    public void setUser(UserCheckDTO user) {
         this.user = user;
     }
 
