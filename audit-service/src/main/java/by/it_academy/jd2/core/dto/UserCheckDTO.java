@@ -4,16 +4,16 @@ import by.it_academy.jd2.core.enums.ERole;
 
 import java.util.UUID;
 
-public class UserDTO {
+public class UserCheckDTO {
     private UUID uuid;
     private String mail;
     private String fio;
     private ERole role;
 
-    public UserDTO() {
+    public UserCheckDTO() {
     }
 
-    public UserDTO(UUID uuid, String mail, String fio, ERole role) {
+    public UserCheckDTO(UUID uuid, String mail, String fio, ERole role) {
         this.uuid = uuid;
         this.mail = mail;
         this.fio = fio;
