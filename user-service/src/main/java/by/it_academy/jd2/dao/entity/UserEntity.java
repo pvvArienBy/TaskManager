@@ -51,10 +51,22 @@ public class UserEntity implements Serializable, UserDetails {
     public UserEntity() {
     }
 
-    public UserEntity(UUID uuid, LocalDateTime createDate, LocalDateTime updateDate, String mail, String fio, ERole role, EStatusUser status, String password) {
+    public UserEntity(UUID uuid, LocalDateTime createDate, LocalDateTime updateDate,
+                      String mail, String fio, ERole role, EStatusUser status, String password) {
         this.uuid = uuid;
         this.dtCreate = createDate;
         this.dtUpdate = updateDate;
+        this.mail = mail;
+        this.fio = fio;
+        this.role = role;
+        this.status = status;
+        this.password = password;
+    }
+
+    public UserEntity(LocalDateTime dtCreate, LocalDateTime dtUpdate,
+                      String mail, String fio, ERole role, EStatusUser status, String password) {
+        this.dtCreate = dtCreate;
+        this.dtUpdate = dtUpdate;
         this.mail = mail;
         this.fio = fio;
         this.role = role;
@@ -79,7 +91,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return (status.equals(EStatusUser.ACTIVATED));
     }
 
     @Override
@@ -89,7 +101,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return (status.equals(EStatusUser.ACTIVATED));
     }
 
     public UUID getUuid() {

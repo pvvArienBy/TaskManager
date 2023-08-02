@@ -23,4 +23,5 @@ public interface IUserService extends ICRUDService<UserEntity, UserCreateUpdateD
 
     AuditCreateDTO formAudit(UserEntity entity, String text);
 
+    void enableUser(String mail);
 }
