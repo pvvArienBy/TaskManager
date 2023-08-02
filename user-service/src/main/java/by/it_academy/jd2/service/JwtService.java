@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -100,8 +101,7 @@ private final JWTProperty property;
 
     public UserCheckDTO meDetails (String token) {
         String jwt = token.substring(7);
-
-        validate(token);
+        validate(jwt);
 
         UserCheckDTO dto = new UserCheckDTO();
         dto.setUuid(UUID.fromString(extractClaim(jwt, claims -> claims.get("uuid", String.class))));
@@ -113,7 +113,12 @@ private final JWTProperty property;
     }
     public boolean validate(String token) {
         try {
-            Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .requireAudience("string")
+                    .setSigningKey(property.getSecret().getBytes(StandardCharsets.UTF_8))
+                    .build()
+                    .parse(token);
+
             return true;
         } catch (SignatureException ex) {
             //logger.error("Invalid JWT signature - {}", ex.getMessage());
