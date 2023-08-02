@@ -3,13 +3,11 @@ package by.it_academy.jd2.service;
 import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
+import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
 import by.it_academy.jd2.dao.entity.UserEntity;
-import by.it_academy.jd2.service.api.IAuditService;
-import by.it_academy.jd2.service.api.IAuthenticationService;
-import by.it_academy.jd2.service.api.IUserService;
+import by.it_academy.jd2.service.api.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,35 +22,32 @@ public class AuthenticationService implements IAuthenticationService {
     private final IAuditService auditService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final EmailValidatorService emailValidatorService;
     private final IConfirmationTokenService tokenService;
     private final IMailSenderService mailSenderService;
 
 
     public AuthenticationService(IUserService userService,
                                  IAuditService auditService, JwtService jwtService,
-                                 AuthenticationManager authenticationManager) {
+                                 AuthenticationManager authenticationManager,
+                                 IConfirmationTokenService tokenService,
+                                 IMailSenderService mailSenderService) {
         this.userService = userService;
         this.auditService = auditService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+        this.mailSenderService = mailSenderService;
     }
 
     @Override
     public TokenDTO registration(UserRegistrationDTO dto) {
-//        boolean isValidMail = this.emailValidatorService.test(dto.getMail());
-//
-//        if (!isValidMail) {
-//            throw new IllegalStateException("email not valid");
-//        }
+        boolean isValidMail = this.mailSenderService.validation(dto.getMail());
+
+        if (!isValidMail) {
+            throw new IllegalStateException("email not valid");
+        }
 
         return signInUser(dto);
-        UserEntity entity = userService.save(dto);
-        var jwtToken = jwtService.generateToken(entity);
-
-        return TokenDTO.builder()
-                .token(jwtToken)
-                .build();
     }
 
     @Override
@@ -68,20 +63,11 @@ public class AuthenticationService implements IAuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("Объект не найден!"));
         var jwtToken = jwtService.generateToken(user);
 
-        this.auditService.send(this.userService.formAudit(user,"Аутентификация пользователя"));
+        this.auditService.send(this.userService.formAudit(user, "Аутентификация пользователя"));
 
         return TokenDTO.builder()
                 .token(jwtToken)
                 .build();
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userService
-                .findByMail(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                String.format(USER_NAME_NOT_FOUND_MSG, username)));
     }
 
     public TokenDTO signInUser(UserRegistrationDTO dto) {
@@ -89,7 +75,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .findByMail(dto.getMail()).isPresent();
 
         if (userExist) {
-            throw new IllegalStateException("email already token");
+            throw new IllegalStateException("Пользователь с таким username уже зарегистриован");
         }
 
         UserEntity entity = userService.save(dto);
@@ -133,6 +119,7 @@ public class AuthenticationService implements IAuthenticationService {
         this.tokenService.setConfirmedAt(token);
         this.userService.enableUser(
                 confirmationToken.getUserEntity().getMail());
+
         return "confirmed";
     }
 
