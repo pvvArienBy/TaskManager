@@ -33,7 +33,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserCheckDTO> me (@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<UserCheckDTO> me(@RequestHeader("Authorization") String authorizationHeader) {
         UserCheckDTO dto = this.auditService.meDetails(authorizationHeader);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
