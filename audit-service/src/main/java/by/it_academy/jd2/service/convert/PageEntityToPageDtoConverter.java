@@ -2,7 +2,6 @@ package by.it_academy.jd2.service.convert;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
 import by.it_academy.jd2.core.dto.PageDTO;
-import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.dao.entity.AuditEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ public class PageEntityToPageDtoConverter
     public PageEntityToPageDtoConverter(AuditEntityToDtoConverter auditEntityToDtoConverter) {
         this.auditEntityToDtoConverter = auditEntityToDtoConverter;
     }
-
 
     @Override
     public PageDTO<AuditDTO> convert(Page<AuditEntity> page) {
