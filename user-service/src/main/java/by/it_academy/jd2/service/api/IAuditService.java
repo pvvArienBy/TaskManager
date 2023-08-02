@@ -1,10 +1,10 @@
 package by.it_academy.jd2.service.api;
 
-import by.it_academy.jd2.core.dto.AuditDTO;
-
-import java.util.UUID;
+import by.it_academy.jd2.core.dto.AuditCreateDTO;
+import by.it_academy.jd2.core.dto.UserCheckDTO;
 
 public interface IAuditService {
+    UserCheckDTO meDetails(String token);
 
-    AuditDTO test (UUID id);
+    void send(AuditCreateDTO dto);
 }
