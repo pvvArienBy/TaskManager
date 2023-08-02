@@ -47,7 +47,7 @@ public class UserService implements IUserService {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
         this.auditService.send(formAudit("Запрашивал данные пользователя по UUID", uuid.toString()));
 
-        return userOptional.orElseThrow(() -> new EntityNotFoundException("Объект не найден!"));
+        return userOptional.orElseThrow(() -> new EntityNotFoundException("Пользователь не найден!"));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
+        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
         if (entity.getDtUpdate() != null) {
             if (version.equals(entity.getDtUpdate())) {
                 UserEntity updEntity = conversionService.convert(item, UserEntity.class);
@@ -79,8 +79,8 @@ public class UserService implements IUserService {
 
                 return saveEntity;
 
-            } else throw new UpdateEntityException("Объект обновлён! Попробуйте ещё раз! ");
-        } else throw new EntityNotFoundException("Такого объекта не существует!!!");
+            } else throw new UpdateEntityException("Пользователь обновлён! Попробуйте ещё раз! ");
+        } else throw new EntityNotFoundException("Такого пользователя не существует!!!");
     }
 
     @Override
@@ -110,7 +110,7 @@ public class UserService implements IUserService {
         String username = this.userHolder.getUser().getUsername();
 
         UserEntity entity = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
+                .orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
 
         AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
         dto.setText(text);
@@ -132,7 +132,7 @@ public class UserService implements IUserService {
     @Override
     public void enableUser(String mail) {
         Optional<UserEntity> userOptional = userDao.findByMail(mail);
-        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого объекта не существует!"));
+        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
         entity.setStatus(EStatusUser.ACTIVATED);
         this.userDao.save(entity);
     }
