@@ -39,7 +39,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public TokenDTO registration(UserRegistrationDTO dto) {
+    public void registration(UserRegistrationDTO dto) {
         boolean userExist = this.userService
                 .findByMail(dto.getMail()).isPresent();
 
@@ -60,10 +60,6 @@ public class AuthenticationService implements IAuthenticationService {
 
         this.tokenService.save(confirmationToken);
         this.mailSenderService.send(dto, token);
-
-        return TokenDTO.builder()
-                .token(jwtToken)
-                .build();
     }
 
     @Override
@@ -76,10 +72,10 @@ public class AuthenticationService implements IAuthenticationService {
         );
 
         var user = userService.findByMail(dto.getMail())
-                .orElseThrow(() -> new UsernameNotFoundException("Объект не найден!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User is not found!"));
         var jwtToken = jwtService.generateToken(user);
 
-        this.auditService.send(this.userService.formAudit(user, "Аутентификация пользователя"));
+        this.auditService.send(this.userService.formAudit(user, "User authentication"));
 
         return TokenDTO.builder()
                 .token(jwtToken)
