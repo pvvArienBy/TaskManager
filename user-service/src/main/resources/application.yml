@@ -43,7 +43,7 @@ jwt:
   issuer: ITAcademy
 
 mail-set:
-  url: "http://localhost/api/v1/users/registration/confirm"
+  url: "http://localhost/api/v1/users/verification"
   mailfrom: itacademy@gmail.com
   htmlform: verification.html
 
