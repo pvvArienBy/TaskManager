@@ -14,16 +14,10 @@ import java.util.Map;
 
 @Service
 public class ThymeleafService implements IThymeleafService {
-
-
     private static final String MAIL_TEMPLATE_BASE_NAME = "mail/MailMessages";
-
     private static final String MAIL_TEMPLATE_PREFIX = "/templates/";
-
     private static final String MAIL_TEMPLATE_SUFFIX = ".html";
-
     private static final String UTF_8 = "UTF-8";
-
     private static TemplateEngine templateEngine;
 
     static{
@@ -52,6 +46,7 @@ public class ThymeleafService implements IThymeleafService {
     private static ResourceBundleMessageSource emailMessageSource() {
         final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename(MAIL_TEMPLATE_BASE_NAME);
+
         return messageSource;
     }
 
