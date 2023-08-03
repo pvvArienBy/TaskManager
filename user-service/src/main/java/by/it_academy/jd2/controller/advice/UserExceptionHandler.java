@@ -73,7 +73,7 @@ public class UserExceptionHandler {
     public ResponseEntity<List<ErrorResponse>> handleInnerError(Exception ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
         String errorMessage = ex.getMessage();
-        ErrorResponse error = new ErrorResponse(ErrorType.ERROR, " " + errorMessage);
+        ErrorResponse error = new ErrorResponse(ErrorType.ERROR, "+ " + errorMessage);
         errorList.add(error);
 
         return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -90,7 +90,7 @@ public class UserExceptionHandler {
             response.getErrorMap().put("save_role", "Не верно указан role!");
         } else if (ex.getMessage().contains("Enum class: [DEACTIVATED, ACTIVATED, WAITING_ACTIVATION]")) {
             response.getErrorMap().put("save_status", "Не верно указан status!");
-        } else response.getErrorMap().put(ex.getCause().toString(), ex.getMessage());
+        } else response.getErrorMap().put(ex.getCause().toString(), ex.getMessage() + "[HttpMessageNotReadableException]");
 
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
@@ -103,8 +103,12 @@ public class UserExceptionHandler {
         if (ex.getMessage().contains("Bad credentials")) {
             error = new ErrorResponse(ErrorType.ERROR,
                     "Логин или пароль содержат некорректные данные. Попробуйте ещё раз");
-        } else error = new ErrorResponse(ErrorType.ERROR, ex.getMessage());
-
+        } else if (ex.getMessage().contains("User is disabled")) {
+            error = new ErrorResponse(ErrorType.ERROR,
+                    "Требуется верификация, подтвердите регистрацию," +
+                            " письмо для подтверждения выслано вам на почту!");
+        } else error = new ErrorResponse(
+                ErrorType.ERROR, ex.getMessage() +"[AuthenticationException]");
         errorList.add(error);
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
@@ -129,7 +133,8 @@ public class UserExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<List<ErrorResponse>> handleIllegalStateException(IllegalStateException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        ErrorResponse  error = new ErrorResponse(ErrorType.ERROR, ex.getMessage());
+        ErrorResponse  error = new ErrorResponse(
+                ErrorType.ERROR, ex.getMessage());
         errorList.add(error);
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
@@ -139,7 +144,7 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(NotCorrectValueException.class)
     public ResponseEntity<List<ErrorResponse>> handleNotCorrectValueException(NotCorrectValueException ex) {
-        return new ResponseEntity(ex.getValues(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity(ex.getValues() + "[NotCorrectValueException]", HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -154,64 +159,37 @@ public class UserExceptionHandler {
     // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getCause().getMessage());
-//        System.out.println(ex.getHeader());
-        System.out.println(ex.getSuppressed());
-//        System.out.println(ex.getClaims());
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getMessage());
         List<ErrorResponse> errorList = new ArrayList<>();
         errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "JWT "));
+                "Exception ExpiredJwtException"));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<List<ErrorResponse>> handleSignatureException(SignatureException ex) {
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getCause().getMessage());
-//        System.out.println(ex.getHeader());
-        System.out.println(ex.getSuppressed());
-//        System.out.println(ex.getClaims());
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getMessage());
         List<ErrorResponse> errorList = new ArrayList<>();
         errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "JWT "));
+                "Exception SignatureException "));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleSignatureException(MalformedJwtException ex) {
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getCause().getMessage());
-//        System.out.println(ex.getHeader());
-        System.out.println(ex.getSuppressed());
-//        System.out.println(ex.getClaims());
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getMessage());
         List<ErrorResponse> errorList = new ArrayList<>();
         errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "JWT "));
+                "Exception MalformedJwtException "));
 
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<List<ErrorResponse>> authenticationExceptionException(AccessDeniedException ex) {
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getCause().getMessage());
-//        System.out.println(ex.getHeader());
-        System.out.println(ex.getSuppressed());
-//        System.out.println(ex.getClaims());
-        System.out.println(ex.getMessage());
-        System.out.println(ex.getMessage());
+
         List<ErrorResponse> errorList = new ArrayList<>();
         errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "JWT "));
+                "Exception AccessDeniedException "));
 
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
