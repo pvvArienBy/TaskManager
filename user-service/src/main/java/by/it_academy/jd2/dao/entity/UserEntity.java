@@ -1,6 +1,5 @@
 package by.it_academy.jd2.dao.entity;
 
-import by.it_academy.jd2.annotation.ValidEmail;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.*;
@@ -76,7 +75,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override

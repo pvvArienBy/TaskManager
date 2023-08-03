@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,8 +27,12 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/users/**")
-                                .permitAll()
+                                .requestMatchers("/users/registration/**").permitAll()
+                                .requestMatchers("/users/login/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/users").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/users").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/users/me").authenticated()
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session
