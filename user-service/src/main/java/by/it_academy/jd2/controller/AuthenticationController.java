@@ -1,9 +1,11 @@
 package by.it_academy.jd2.controller;
 
-import by.it_academy.jd2.core.dto.*;
+import by.it_academy.jd2.core.dto.TokenDTO;
+import by.it_academy.jd2.core.dto.UserDTO;
+import by.it_academy.jd2.core.dto.UserLoginDTO;
+import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.UserHolder;
-import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IAuthenticationService;
 import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
@@ -35,7 +37,7 @@ public class AuthenticationController {
 
     @PostMapping("/registration")
     public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
-       return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.registration(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.registration(dto));
     }
 
     @PostMapping("/login")
@@ -46,7 +48,7 @@ public class AuthenticationController {
     @GetMapping("/me")
     public ResponseEntity<UserDTO> details() {
 
-        String username  =this.userHolder.getUser()
+        String username = this.userHolder.getUser()
                 .getUsername();
         Optional<UserEntity> item = this.userService
                 .findByMail(username);
@@ -56,8 +58,8 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(conversionService.convert(entity, UserDTO.class));
     }
 
-    @GetMapping("/registration/confirm")
-    public ResponseEntity<?> confirm(@RequestParam("token") String token) {
-        return ResponseEntity.ok(this.authService.confirmToken(token));
+    @GetMapping("/verification")
+    public ResponseEntity<?> confirm(@RequestParam String code, @RequestParam String mail) {
+        return ResponseEntity.ok(this.authService.confirmToken(code, mail));
     }
 }
