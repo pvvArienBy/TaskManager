@@ -45,9 +45,9 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
-        this.auditService.send(formAudit("Запрашивал данные пользователя по UUID", uuid.toString()));
+        this.auditService.send(formAudit("Requested user data by UUID", uuid.toString()));
 
-        return userOptional.orElseThrow(() -> new EntityNotFoundException("Пользователь не найден!"));
+        return userOptional.orElseThrow(() -> new EntityNotFoundException("User is not found!"));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserService implements IUserService {
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
         this.auditService.send(formAudit(
-                "Создание нового пользователя под другим пользователем", entity.getUuid().toString()));
+                "Creating a new user under a different user", entity.getUuid().toString()));
         return entity;
     }
 
@@ -64,13 +64,13 @@ public class UserService implements IUserService {
     public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
-                "Такого пользователя не существует!"));
+                "This user does not exist!"));
         if (entity.getDtUpdate() != null) {
             if (version.equals(entity.getDtUpdate())) {
                 UserEntity updEntity = conversionService.convert(item, UserEntity.class);
                 if (updEntity == null) {
                     throw new IllegalArgumentException(
-                            "Не удалось преобразовать объект UserCreateDTO в UserEntity");
+                            "Failed to convert UserCreateDTO object to UserEntity");
                 }
                 updEntity.setUuid(entity.getUuid());
                 updEntity.setDtCreate(entity.getDtCreate());
@@ -79,12 +79,12 @@ public class UserService implements IUserService {
                 UserEntity saveEntity = this.userDao.save(updEntity);
 
                 this.auditService.send(formAudit(
-                        "Обновление данных пользователя", saveEntity.getUuid().toString()));
+                        "Updating User Data", saveEntity.getUuid().toString()));
 
                 return saveEntity;
 
-            } else throw new UpdateEntityException("Пользователь обновлён! Попробуйте ещё раз! ");
-        } else throw new EntityNotFoundException("Такого пользователя не существует!!!");
+            } else throw new UpdateEntityException("User updated! Try again! ");
+        } else throw new EntityNotFoundException("This user does not exist!");
     }
 
     @Override
@@ -94,7 +94,7 @@ public class UserService implements IUserService {
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
 
-        this.auditService.send(formAudit(entity,"Регистрация нового пользователя"));
+        this.auditService.send(formAudit(entity,"New User Registration"));
 
         return entity;
     }
@@ -114,7 +114,7 @@ public class UserService implements IUserService {
         String username = this.userHolder.getUser().getUsername();
 
         UserEntity entity = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
+                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
 
         AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
         dto.setText(text);
@@ -136,7 +136,9 @@ public class UserService implements IUserService {
     @Override
     public void enableUser(String mail) {
         Optional<UserEntity> userOptional = userDao.findByMail(mail);
-        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
+        UserEntity entity = userOptional
+                .orElseThrow(() -> new EntityNotFoundException("This user does not exist!"));
+
         entity.setStatus(EStatusUser.ACTIVATED);
         this.userDao.save(entity);
     }
