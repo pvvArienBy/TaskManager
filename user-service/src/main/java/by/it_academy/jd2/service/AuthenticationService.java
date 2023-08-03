@@ -40,13 +40,30 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public TokenDTO registration(UserRegistrationDTO dto) {
-        boolean isValidMail = this.mailSenderService.validation(dto.getMail());
+        boolean userExist = this.userService
+                .findByMail(dto.getMail()).isPresent();
 
-        if (!isValidMail) {
-            throw new IllegalStateException("email not valid!");
+        if (userExist) {
+            throw new IllegalStateException("User with this username is already registered");
         }
 
-        return signInUser(dto);
+        UserEntity entity = userService.save(dto);
+        var jwtToken = jwtService.generateToken(entity);
+
+        String token = UUID.randomUUID().toString();
+        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                entity
+        );
+
+        this.tokenService.save(confirmationToken);
+        this.mailSenderService.send(dto, token);
+
+        return TokenDTO.builder()
+                .token(jwtToken)
+                .build();
     }
 
     @Override
@@ -69,36 +86,13 @@ public class AuthenticationService implements IAuthenticationService {
                 .build();
     }
 
-    public TokenDTO signInUser(UserRegistrationDTO dto) {
-        boolean userExist = this.userService
-                .findByMail(dto.getMail()).isPresent();
-
-        if (userExist) {
-            throw new IllegalStateException("Пользователь с таким username уже зарегистриован");
-        }
-
-        UserEntity entity = userService.save(dto);
-        var jwtToken = jwtService.generateToken(entity);
-
-        String token = UUID.randomUUID().toString();
-        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
-                entity
-        );
-
-        this.tokenService.save(confirmationToken);
-        this.mailSenderService.send(dto, token);
-
-        return TokenDTO.builder()
-                .token(jwtToken)
-                .build();
-    }
-
     @Transactional
-    public String confirmToken(String token) {
+    public String confirmToken(String token, String mail) {
         ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
+
+        if (!mail.equals(confirmationToken.getUserEntity().getMail())) {
+            throw new IllegalStateException("Error validating data provided for verification!");
+        }
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException("email already confirmed");
@@ -114,6 +108,6 @@ public class AuthenticationService implements IAuthenticationService {
         this.userService.enableUser(
                 confirmationToken.getUserEntity().getMail());
 // TODO: 02.08.2023 need ref
-        return "confirmed";
+        return "User verified";
     }
 }
