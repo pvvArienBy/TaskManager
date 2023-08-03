@@ -44,7 +44,7 @@ public class MailSenderService implements IMailSenderService {
             helper.setTo(dto.getMail());
 
             Map<String, Object> variables = new HashMap<>();
-            variables.put("fio", dto.getFio());
+            variables.put("mail", dto.getMail());
             variables.put("token", token);
             variables.put("url", property.getUrl());
             helper.setText(thymeleafService.createContent(property.getHtmlform(), variables), true);
@@ -55,17 +55,5 @@ public class MailSenderService implements IMailSenderService {
             LOGGER.error("failed to send mail", e);
             throw new IllegalStateException("failed to send email");
         }
-    }
-
-    @Override
-    public boolean validation(String s) {
-        if (s == null) {
-            return false;
-        }
-
-        String regex = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
-        boolean isValid = s.matches(regex);
-
-        return isValid;
     }
 }
