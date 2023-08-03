@@ -32,7 +32,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/users/verification/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/users").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.GET,"/users").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/users/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/users/me").authenticated()
                                 .anyRequest()
                                 .authenticated())
