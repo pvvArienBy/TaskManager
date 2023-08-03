@@ -12,15 +12,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
-private final JWTProperty property;
+    private final JWTProperty property;
 
     public JwtService(JWTProperty property) {
         this.property = property;
@@ -99,7 +101,7 @@ private final JWTProperty property;
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public UserCheckDTO meDetails (String token) {
+    public UserCheckDTO meDetails(String token) {
         String jwt = token.substring(7);
         validate(jwt);
 
@@ -111,6 +113,7 @@ private final JWTProperty property;
 
         return dto;
     }
+
     public boolean validate(String token) {
         try {
             Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token);
