@@ -90,7 +90,7 @@ public class UserEntity implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return (status.equals(EStatusUser.ACTIVATED));
+        return (!status.equals(EStatusUser.DEACTIVATED));
     }
 
     @Override
