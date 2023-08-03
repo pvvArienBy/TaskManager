@@ -10,7 +10,8 @@ import jakarta.validation.constraints.*;
 
 public class UserCreateUpdateDTO {
     @NotBlank(message = "mail не должен быть пустым")
-    @Email(message = "Некорректный адрес электронной почты")
+    @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$",
+            message = "Некорректный адрес электронной почты!")
     @ValidEmail(message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
     private String mail;
     @NotBlank(message = "fio не должен быть пустым")

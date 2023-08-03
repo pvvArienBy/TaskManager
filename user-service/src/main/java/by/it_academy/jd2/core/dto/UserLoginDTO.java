@@ -2,11 +2,13 @@ package by.it_academy.jd2.core.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserLoginDTO {
     @NotBlank(message = "mail не должен быть пустым")
-    @Email(message = "Некорректный адрес электронной почты")
+    @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$",
+            message = "Некорректный адрес электронной почты!")
     private String mail;
     @Size(min = 6, max = 250, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
