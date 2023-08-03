@@ -3,6 +3,7 @@ package by.it_academy.jd2.dao.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "confirmation_token")
@@ -20,7 +21,7 @@ public class ConfirmationTokenEntity {
     )
     private Long id;
     @Column(nullable = false)
-    private String token;
+    private UUID token;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     @Column(nullable = false)
@@ -34,13 +35,13 @@ public class ConfirmationTokenEntity {
     public ConfirmationTokenEntity() {
     }
 
-    public ConfirmationTokenEntity(String token,
+    public ConfirmationTokenEntity(UUID token,
                                    LocalDateTime createdAt,
                                    LocalDateTime expiresAt,
                                    UserEntity userEntity) {
         this.token = token;
         this.createdAt = createdAt;
-        this.expiresAt = expiresAt;;
+        this.expiresAt = expiresAt;
         this.userEntity = userEntity;
     }
 
@@ -52,11 +53,11 @@ public class ConfirmationTokenEntity {
         this.id = id;
     }
 
-    public String getToken() {
+    public UUID getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(UUID token) {
         this.token = token;
     }
 

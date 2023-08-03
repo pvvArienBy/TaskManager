@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ConfirmationTokenService implements IConfirmationTokenService {
@@ -23,13 +24,13 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
     }
 
     @Override
-    public ConfirmationTokenEntity findByToken(String token) {
+    public ConfirmationTokenEntity findByToken(UUID token) {
         Optional<ConfirmationTokenEntity> userOptional = this.tokenDao.findByToken(token);
         return userOptional.orElseThrow(() -> new EntityNotFoundException("token not found!"));
     }
 
     @Override
-    public void setConfirmedAt(String token) {
+    public void setConfirmedAt(UUID token) {
         ConfirmationTokenEntity entity = findByToken(token);
         entity.setConfirmedAt(LocalDateTime.now());
         this.tokenDao.save(entity);

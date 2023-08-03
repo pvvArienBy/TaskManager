@@ -4,10 +4,12 @@ import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 
+import java.util.UUID;
+
 public interface IAuthenticationService {
     void registration(UserRegistrationDTO dto);
 
     TokenDTO authentication(UserLoginDTO dto);
 
-    String confirmToken(String token, String mail);
+    String confirmToken(UUID token, String mail);
 }

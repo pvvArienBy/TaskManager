@@ -48,9 +48,8 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         UserEntity entity = userService.save(dto);
-        var jwtToken = jwtService.generateToken(entity);
 
-        String token = UUID.randomUUID().toString();
+        UUID token = UUID.randomUUID();
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
                 LocalDateTime.now(),
@@ -59,7 +58,7 @@ public class AuthenticationService implements IAuthenticationService {
         );
 
         this.tokenService.save(confirmationToken);
-        this.mailSenderService.send(dto, token);
+        this.mailSenderService.send(dto, token.toString());
     }
 
     @Override
@@ -83,7 +82,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Transactional
-    public String confirmToken(String token, String mail) {
+    public String confirmToken(UUID token, String mail) {
         ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
 
         if (!mail.equals(confirmationToken.getUserEntity().getMail())) {

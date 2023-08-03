@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -60,7 +61,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/verification")
-    public ResponseEntity<?> confirm(@RequestParam String code, @RequestParam String mail) {
+    public ResponseEntity<?> confirm(@RequestParam UUID code, @RequestParam String mail) {
         return ResponseEntity.ok(this.authService.confirmToken(code, mail));
     }
 }
