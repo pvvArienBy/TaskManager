@@ -36,8 +36,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<TokenDTO> registration(@RequestBody UserRegistrationDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.registration(dto));
+    public ResponseEntity<?> registration(@RequestBody UserRegistrationDTO dto) {
+        this.authService.registration(dto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
