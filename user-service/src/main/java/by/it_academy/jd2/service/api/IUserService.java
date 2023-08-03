@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
-public interface IUserService extends ICRUDService<UserEntity, UserCreateUpdateDTO> {
+public interface IUserService extends ICRUService<UserEntity, UserCreateUpdateDTO> {
     UserEntity save(@Valid UserRegistrationDTO item);
 
     Optional<UserEntity> findByMail(String mail);

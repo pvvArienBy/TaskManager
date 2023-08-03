@@ -1,6 +1,9 @@
 package by.it_academy.jd2.service;
 
+import by.it_academy.jd2.config.properties.MailProperty;
+import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.service.api.IMailSenderService;
+import by.it_academy.jd2.service.api.IThymeleafService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
@@ -10,26 +13,44 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class MailSenderService implements IMailSenderService {
     private final static Logger LOGGER = LoggerFactory.getLogger(MailSenderService.class);
     private final JavaMailSender mailSender;
+    private final IThymeleafService thymeleafService;
+    private final MailProperty mailProperty;
 
-    public MailSenderService(JavaMailSender mailSender) {
+
+    public MailSenderService(JavaMailSender mailSender, IThymeleafService thymeleafService, MailProperty mailProperty) {
         this.mailSender = mailSender;
+        this.thymeleafService = thymeleafService;
+        this.mailProperty = mailProperty;
     }
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(UserRegistrationDTO dto, String token) {
         try {
             MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setText(email, true);
-            helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("vp@gmail.com");
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    mimeMessage,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+
+            helper.setTo(dto.getMail());
+
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("fio", dto.getFio());
+            variables.put("token", token);
+            variables.put("url", mailProperty.getUrl());
+            helper.setText(thymeleafService.createContent(mailProperty.getHtmlform(), variables), true);
+            helper.setFrom(mailProperty.getMailfrom());
             this.mailSender.send(mimeMessage);
+
         } catch (MessagingException e) {
             LOGGER.error("failed to send mail", e);
             throw new IllegalStateException("failed to send email");
@@ -42,7 +63,7 @@ public class MailSenderService implements IMailSenderService {
             return false;
         }
 
-        String regex = "/^[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}$/";
+        String regex = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
         boolean isValid = s.matches(regex);
 
         return isValid;

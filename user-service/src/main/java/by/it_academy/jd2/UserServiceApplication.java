@@ -1,6 +1,7 @@
 package by.it_academy.jd2;
 
 import by.it_academy.jd2.config.properties.JWTProperty;
+import by.it_academy.jd2.config.properties.MailProperty;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableFeignClients
 @EnableJpaRepositories
 @EnableTransactionManagement
-@EnableConfigurationProperties({JWTProperty.class})
+@EnableConfigurationProperties({JWTProperty.class, MailProperty.class})
 @SpringBootApplication
 public class UserServiceApplication {
 

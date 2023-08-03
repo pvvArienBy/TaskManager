@@ -42,4 +42,8 @@ jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
   issuer: ITAcademy
 
+mail-set:
+  url: "http://localhost/api/v1/users/registration/confirm"
+  mailfrom: itacademy@gmail.com
+  htmlform: verification.html
 
