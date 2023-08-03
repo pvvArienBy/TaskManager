@@ -13,7 +13,8 @@ public class UserRegistrationDTO {
     private String fio;
     @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
-    @ValidEmail(message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
+    @ValidEmail( message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
+    @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$", message = "Не верный формат email!")
     private String mail;
     @Size(min = 6, max = 255, message = "Пароль должен содержать от {min} до {max} символов")
     private String password;
