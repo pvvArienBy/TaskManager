@@ -108,7 +108,7 @@ public class UserExceptionHandler {
                     "Требуется верификация, подтвердите регистрацию," +
                             " письмо для подтверждения выслано вам на почту!");
         } else error = new ErrorResponse(
-                ErrorType.ERROR, ex.getMessage() +"[AuthenticationException]");
+                ErrorType.ERROR, ex.getMessage());
         errorList.add(error);
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
