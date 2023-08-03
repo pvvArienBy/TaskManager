@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public interface ICRUDService<T, S> {
+public interface ICRUService<T, S> {
 
     T findById(UUID uuid);
 
