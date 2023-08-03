@@ -57,7 +57,6 @@ public class JwtService {
 
                 .builder()
                 .setClaims(extraClaims)
-//                .setSubject(userEntity.getMail()) //todo check
                 .setIssuer(property.getIssuer())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
