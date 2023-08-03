@@ -9,5 +9,5 @@ public interface IAuthenticationService {
 
     TokenDTO authentication(UserLoginDTO dto);
 
-    String confirmToken(String token);
+    String confirmToken(String token, String mail);
 }
