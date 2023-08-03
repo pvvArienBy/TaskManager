@@ -113,11 +113,7 @@ private final JWTProperty property;
     }
     public boolean validate(String token) {
         try {
-            Jwts.parserBuilder()
-                    .requireAudience("string")
-                    .setSigningKey(property.getSecret().getBytes(StandardCharsets.UTF_8))
-                    .build()
-                    .parse(token);
+            Jwts.parser().setSigningKey(property.getSecret()).parseClaimsJws(token);
 
             return true;
         } catch (SignatureException ex) {
