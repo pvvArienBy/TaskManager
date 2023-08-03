@@ -22,13 +22,13 @@ public class MailSenderService implements IMailSenderService {
     private final static Logger LOGGER = LoggerFactory.getLogger(MailSenderService.class);
     private final JavaMailSender mailSender;
     private final IThymeleafService thymeleafService;
-    private final MailProperty mailProperty;
+    private final MailProperty property;
 
 
     public MailSenderService(JavaMailSender mailSender, IThymeleafService thymeleafService, MailProperty mailProperty) {
         this.mailSender = mailSender;
         this.thymeleafService = thymeleafService;
-        this.mailProperty = mailProperty;
+        this.property = mailProperty;
     }
 
     @Override
@@ -46,9 +46,9 @@ public class MailSenderService implements IMailSenderService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("fio", dto.getFio());
             variables.put("token", token);
-            variables.put("url", mailProperty.getUrl());
-            helper.setText(thymeleafService.createContent(mailProperty.getHtmlform(), variables), true);
-            helper.setFrom(mailProperty.getMailfrom());
+            variables.put("url", property.getUrl());
+            helper.setText(thymeleafService.createContent(property.getHtmlform(), variables), true);
+            helper.setFrom(property.getMailfrom());
             this.mailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
