@@ -55,19 +55,22 @@ public class UserService implements IUserService {
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
-        this.auditService.send(formAudit("Создание нового пользователя под другим пользователем", entity.getUuid().toString()));
+        this.auditService.send(formAudit(
+                "Создание нового пользователя под другим пользователем", entity.getUuid().toString()));
         return entity;
     }
 
     @Override
     public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException("Такого пользователя не существует!"));
+        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
+                "Такого пользователя не существует!"));
         if (entity.getDtUpdate() != null) {
             if (version.equals(entity.getDtUpdate())) {
                 UserEntity updEntity = conversionService.convert(item, UserEntity.class);
                 if (updEntity == null) {
-                    throw new IllegalArgumentException("Не удалось преобразовать объект UserCreateDTO в UserEntity");
+                    throw new IllegalArgumentException(
+                            "Не удалось преобразовать объект UserCreateDTO в UserEntity");
                 }
                 updEntity.setUuid(entity.getUuid());
                 updEntity.setDtCreate(entity.getDtCreate());
@@ -75,7 +78,8 @@ public class UserService implements IUserService {
 
                 UserEntity saveEntity = this.userDao.save(updEntity);
 
-                this.auditService.send(formAudit("Обновление данных пользователя", saveEntity.getUuid().toString()));
+                this.auditService.send(formAudit(
+                        "Обновление данных пользователя", saveEntity.getUuid().toString()));
 
                 return saveEntity;
 
