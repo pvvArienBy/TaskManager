@@ -1,4 +1,4 @@
-package by.it_academy.jd2.service.validator;
+package by.it_academy.jd2.service.validators;
 
 import by.it_academy.jd2.annotation.ValidEmail;
 import by.it_academy.jd2.service.api.IUserService;

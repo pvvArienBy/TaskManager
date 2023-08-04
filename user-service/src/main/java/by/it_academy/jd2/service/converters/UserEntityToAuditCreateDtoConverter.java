@@ -1,8 +1,7 @@
-package by.it_academy.jd2.service.convert;
+package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.core.dto.UserCheckDTO;
-import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.core.enums.EssenceType;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import org.springframework.core.convert.converter.Converter;

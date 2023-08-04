@@ -1,6 +1,6 @@
 package by.it_academy.jd2.annotation;
 
-import by.it_academy.jd2.service.validator.ValidEmailValidator;
+import by.it_academy.jd2.service.validators.ValidEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

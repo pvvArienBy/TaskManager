@@ -1,4 +1,4 @@
-package by.it_academy.jd2.service.util;
+package by.it_academy.jd2.service.utils;
 
 import by.it_academy.jd2.core.dto.TaskDTO;
 import by.it_academy.jd2.dao.entity.TaskEntity;

@@ -1,4 +1,4 @@
-package by.it_academy.jd2.service.exceptions;
+package by.it_academy.jd2.core.exceptions;
 
 import java.util.List;
 

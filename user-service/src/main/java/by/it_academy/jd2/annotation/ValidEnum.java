@@ -1,6 +1,6 @@
 package by.it_academy.jd2.annotation;
 
-import by.it_academy.jd2.service.validator.EnumValidator;
+import by.it_academy.jd2.service.validators.EnumValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

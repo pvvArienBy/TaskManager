@@ -1,4 +1,4 @@
-package by.it_academy.jd2.service.feignapi;
+package by.it_academy.jd2.service.api.feign;
 
 import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import org.springframework.cloud.openfeign.FeignClient;

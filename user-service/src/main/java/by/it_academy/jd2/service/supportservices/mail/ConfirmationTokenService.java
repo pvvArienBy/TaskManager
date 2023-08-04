@@ -3,7 +3,7 @@ package by.it_academy.jd2.service.supportservices.mail;
 import by.it_academy.jd2.dao.api.IConfirmationTokenDao;
 import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
 import by.it_academy.jd2.service.api.IConfirmationTokenService;
-import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
+import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
