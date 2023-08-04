@@ -9,15 +9,15 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuditClientService implements IAuditService {
+public class AuditService implements IAuditService {
     private final IAuditFeignClientService feignClientService;
     private final JwtService jwtService;
     private final ConversionService conversionService;
 
 
-    public AuditClientService(IAuditFeignClientService feignClientService,
-                              JwtService jwtService,
-                              ConversionService conversionService) {
+    public AuditService(IAuditFeignClientService feignClientService,
+                        JwtService jwtService,
+                        ConversionService conversionService) {
 
         this.feignClientService = feignClientService;
         this.jwtService = jwtService;
@@ -25,7 +25,7 @@ public class AuditClientService implements IAuditService {
     }
 
     @Override
-    public UserCheckDTO meDetails(String token) {
+    public UserCheckDTO meContextDetails(String token) {
         UserCheckDTO dto = this.jwtService.meDetails(token);
         return dto;
     }
