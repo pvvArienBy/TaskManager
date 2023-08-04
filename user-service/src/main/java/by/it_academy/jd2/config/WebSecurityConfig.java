@@ -27,11 +27,11 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/users/registration/**").permitAll()
-                                .requestMatchers("/users/login/**").permitAll()
+                                .requestMatchers("/users/registration").permitAll()
+                                .requestMatchers("/users/login").permitAll()
                                 .requestMatchers("/users/verification/**").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/users").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/users/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/users/me").authenticated()
                                 .anyRequest()
