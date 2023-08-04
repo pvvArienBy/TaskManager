@@ -9,6 +9,7 @@ import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.exceptions.UpdateEntityException;
+import by.it_academy.jd2.service.supportservices.authentification.UserHolder;
 import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;

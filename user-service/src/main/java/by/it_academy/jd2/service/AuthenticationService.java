@@ -7,6 +7,8 @@ import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.*;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
+import by.it_academy.jd2.service.supportservices.authentification.JwtService;
+import by.it_academy.jd2.service.supportservices.authentification.UserHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

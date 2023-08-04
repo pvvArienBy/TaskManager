@@ -1,4 +1,4 @@
-package by.it_academy.jd2.service;
+package by.it_academy.jd2.service.supportservices.mail;
 
 import by.it_academy.jd2.dao.api.IConfirmationTokenDao;
 import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;

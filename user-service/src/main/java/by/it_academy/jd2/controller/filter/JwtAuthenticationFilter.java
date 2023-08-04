@@ -1,6 +1,6 @@
 package by.it_academy.jd2.controller.filter;
 
-import by.it_academy.jd2.service.JwtService;
+import by.it_academy.jd2.service.supportservices.authentification.JwtService;
 import by.it_academy.jd2.service.api.IMyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

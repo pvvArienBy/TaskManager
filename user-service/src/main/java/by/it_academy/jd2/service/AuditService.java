@@ -5,6 +5,7 @@ import by.it_academy.jd2.core.dto.UserCheckDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.feignapi.IAuditFeignClientService;
+import by.it_academy.jd2.service.supportservices.authentification.JwtService;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
