@@ -25,6 +25,12 @@ import java.util.UUID;
 @Service
 @Validated
 public class UserService implements IUserService {
+    private static final String USER_UPDATER = "Updating user data";
+    private static final String USER_NOT_FOUND = "User is not found";
+    private static final String NEW_USER_CREATED = "Creating a new user under a different user";
+    private static final String USER_UPDATED = "User updated! Try again";
+    private static final String NEW_USER_REGISTRATION = "New user registration";
+    private static final String REQUESTED_DATA_UUID = "Requested user data by UUID";
     private final IUserDao userDao;
     private final ConversionService conversionService;
     private final IAuditService auditService;
@@ -46,17 +52,20 @@ public class UserService implements IUserService {
         return this.userDao.findAll(pageRequest);
     }
 
+    @Transactional
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
+        UserEntity entity = userOptional
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
         String username = this.userHolder.getUser().getUsername();
         UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, "Requested user data by UUID", uuid.toString());
+        this.auditService.save(editor, REQUESTED_DATA_UUID, uuid.toString());
 
-        return userOptional.orElseThrow(() -> new EntityNotFoundException("User is not found!"));
+        return entity;
     }
 
     @Transactional
@@ -68,9 +77,9 @@ public class UserService implements IUserService {
 
         String username = this.userHolder.getUser().getUsername();
         UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, "Creating a new user under a different user", entity.getUuid().toString());
+        this.auditService.save(editor, NEW_USER_CREATED, entity.getUuid().toString());
 
         return entity;
     }
@@ -80,10 +89,10 @@ public class UserService implements IUserService {
     public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
-                "This user does not exist!"));
+                USER_NOT_FOUND));
 
         if (!version.equals(entity.getDtUpdate())) {
-            throw new UpdateEntityException("User updated! Try again! ");
+            throw new UpdateEntityException(USER_UPDATED);
         }
 
         UserEntity updEntity = conversionService.convert(item, UserEntity.class);
@@ -96,9 +105,9 @@ public class UserService implements IUserService {
 
         String username = this.userHolder.getUser().getUsername();
         UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, "Updating User Data", entity.getUuid().toString());
+        this.auditService.save(editor, USER_UPDATER, entity.getUuid().toString());
 
         return saveEntity;
     }
@@ -111,7 +120,7 @@ public class UserService implements IUserService {
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
 
-        this.auditService.save(entity, "New User Registration");
+        this.auditService.save(entity, NEW_USER_REGISTRATION);
 
         return entity;
     }
@@ -131,7 +140,7 @@ public class UserService implements IUserService {
     public void activated(String mail) {
         Optional<UserEntity> userOptional = userDao.findByMail(mail);
         UserEntity entity = userOptional
-                .orElseThrow(() -> new EntityNotFoundException("This user does not exist!"));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
         entity.setStatus(EStatusUser.ACTIVATED);
         this.userDao.save(entity);

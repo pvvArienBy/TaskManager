@@ -19,6 +19,7 @@ import java.util.Map;
 
 @Service
 public class MailSenderService implements IMailSenderService {
+    private static final String FAILED_TO_SEND_EMAIL = "failed to send email";
     private final JavaMailSender mailSender;
     private final IThymeleafService thymeleafService;
     private final MailProperty property;
@@ -52,7 +53,7 @@ public class MailSenderService implements IMailSenderService {
             this.mailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            throw new IllegalStateException("failed to send email");
+            throw new IllegalStateException(FAILED_TO_SEND_EMAIL);
         }
     }
 }

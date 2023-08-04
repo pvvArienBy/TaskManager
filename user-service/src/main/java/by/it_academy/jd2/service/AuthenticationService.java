@@ -17,6 +17,12 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
+    private static final String USER_NOT_FOUND = "User is not found";
+    private static final String USERNAME_ALREADY_REGISTERED = "User with this username is already registered";
+    private static final String USER_AUTHENTICATION = "User authentication";
+    private static final String VALIDATING_VERIFICATION_DATA = "Problem validating data provided for verification!";
+    private static final String EMAIL_ALREADY_CONFIRMED = "email already confirmed";
+    private static final String TOKEN_EXPIRED = "token expired";
     private final IUserService userService;
     private final IAuditService auditService;
     private final JwtService jwtService;
@@ -45,7 +51,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .findByMail(dto.getMail()).isPresent();
 
         if (userExist) {
-            throw new IllegalStateException("User with this username is already registered");
+            throw new IllegalStateException(USERNAME_ALREADY_REGISTERED);
         }
 
         UserEntity entity = userService.save(dto);
@@ -73,10 +79,10 @@ public class AuthenticationService implements IAuthenticationService {
         );
 
         var user = userService.findByMail(dto.getMail())
-                .orElseThrow(() -> new UsernameNotFoundException("User is not found!"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
         var jwtToken = jwtService.generateToken(user);
 
-        this.auditService.save(user, "User authentication");
+        this.auditService.save(user, USER_AUTHENTICATION);
 
         return TokenDTO.builder()
                 .token(jwtToken)
@@ -89,17 +95,17 @@ public class AuthenticationService implements IAuthenticationService {
         ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
 
         if (!mail.equals(confirmationToken.getUserEntity().getMail())) {
-            throw new IllegalStateException("Error validating data provided for verification!");
+            throw new IllegalStateException(VALIDATING_VERIFICATION_DATA);
         }
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new IllegalStateException(EMAIL_ALREADY_CONFIRMED);
         }
 
         LocalDateTime expireAt = confirmationToken.getExpiresAt();
 
         if (expireAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new IllegalStateException(TOKEN_EXPIRED);
         }
 
         this.tokenService.setConfirmedAt(token);

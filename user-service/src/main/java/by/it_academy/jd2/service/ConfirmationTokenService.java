@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Service
 public class ConfirmationTokenService implements IConfirmationTokenService {
+    private static final String TOKEN_NOT_FOUND = "token not found!";
     private final IConfirmationTokenDao tokenDao;
 
     public ConfirmationTokenService(IConfirmationTokenDao tokenDao) {
@@ -26,7 +27,7 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
     @Override
     public ConfirmationTokenEntity findByToken(UUID token) {
         Optional<ConfirmationTokenEntity> userOptional = this.tokenDao.findByToken(token);
-        return userOptional.orElseThrow(() -> new EntityNotFoundException("token not found!"));
+        return userOptional.orElseThrow(() -> new EntityNotFoundException(TOKEN_NOT_FOUND));
     }
 
     @Override
