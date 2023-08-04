@@ -38,6 +38,7 @@ public class AuthenticationService implements IAuthenticationService {
         this.mailSenderService = mailSenderService;
     }
 
+    @Transactional
     @Override
     public void registration(UserRegistrationDTO dto) {
         boolean userExist = this.userService
@@ -61,6 +62,7 @@ public class AuthenticationService implements IAuthenticationService {
         this.mailSenderService.send(dto, token.toString());
     }
 
+    @Transactional
     @Override
     public TokenDTO authentication(UserLoginDTO dto) {
         this.authenticationManager.authenticate(
@@ -74,7 +76,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User is not found!"));
         var jwtToken = jwtService.generateToken(user);
 
-        this.auditService.send(this.userService.formAudit(user, "User authentication"));
+        this.auditService.save(user, "User authentication");
 
         return TokenDTO.builder()
                 .token(jwtToken)
@@ -82,6 +84,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Transactional
+    @Override
     public String confirmToken(UUID token, String mail) {
         ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
 
@@ -100,7 +103,7 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         this.tokenService.setConfirmedAt(token);
-        this.userService.enableUser(
+        this.userService.activated(
                 confirmationToken.getUserEntity().getMail());
 // TODO: 02.08.2023 need ref
         return "User verified";
