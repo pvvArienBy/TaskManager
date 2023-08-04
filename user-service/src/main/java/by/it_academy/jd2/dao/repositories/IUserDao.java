@@ -1,4 +1,4 @@
-package by.it_academy.jd2.dao.api;
+package by.it_academy.jd2.dao.repositories;
 
 import by.it_academy.jd2.dao.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

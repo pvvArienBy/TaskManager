@@ -1,6 +1,6 @@
 package by.it_academy.jd2.dao.db;
 
-import by.it_academy.jd2.dao.api.IFileDao;
+import by.it_academy.jd2.dao.repositories.IFileDao;
 import by.it_academy.jd2.dao.entity.FileEntity;
 
 public class FileJDBCDao implements IFileDao {

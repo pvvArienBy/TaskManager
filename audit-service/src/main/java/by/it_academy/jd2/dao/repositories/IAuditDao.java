@@ -1,4 +1,4 @@
-package by.it_academy.jd2.dao.api;
+package by.it_academy.jd2.dao.repositories;
 
 import by.it_academy.jd2.dao.entity.AuditEntity;
 import org.springframework.data.domain.Page;

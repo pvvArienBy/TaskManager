@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "AUDIT")
-public interface IAuditFeignClientService {
+public interface IAuditClientService {
     @PostMapping("/internal")
     ResponseEntity<?> save(@RequestBody AuditCreateDTO dto);
 }

@@ -1,4 +1,4 @@
-package by.it_academy.jd2.dao.api;
+package by.it_academy.jd2.dao.repositories;
 
 public interface ICRDDao <T> {
 

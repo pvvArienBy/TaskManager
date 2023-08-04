@@ -3,7 +3,7 @@ package by.it_academy.jd2.service;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.core.enums.EStatusUser;
-import by.it_academy.jd2.dao.api.IUserDao;
+import by.it_academy.jd2.dao.repositories.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IUserService;
@@ -64,7 +64,7 @@ public class UserService implements IUserService {
         UserEntity editor = this.userDao.findByMail(username)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, REQUESTED_DATA_UUID, uuid.toString());
+        this.auditService.send(editor, REQUESTED_DATA_UUID, uuid.toString());
 
         return entity;
     }
@@ -80,7 +80,20 @@ public class UserService implements IUserService {
         UserEntity editor = this.userDao.findByMail(username)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, NEW_USER_CREATED, entity.getUuid().toString());
+        this.auditService.send(editor, NEW_USER_CREATED, entity.getUuid().toString());
+
+        return entity;
+    }
+
+    @Transactional
+    @Override
+    public UserEntity save(@Valid UserRegistrationDTO item) {
+
+        UserEntity entity = this.userDao.save(
+                Objects.requireNonNull(
+                        conversionService.convert(item, UserEntity.class)));
+
+        this.auditService.send(entity, NEW_USER_REGISTRATION);
 
         return entity;
     }
@@ -108,22 +121,9 @@ public class UserService implements IUserService {
         UserEntity editor = this.userDao.findByMail(username)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        this.auditService.save(editor, USER_UPDATER, entity.getUuid().toString());
+        this.auditService.send(editor, USER_UPDATER, entity.getUuid().toString());
 
         return saveEntity;
-    }
-
-    @Transactional
-    @Override
-    public UserEntity save(@Valid UserRegistrationDTO item) {
-
-        UserEntity entity = this.userDao.save(
-                Objects.requireNonNull(
-                        conversionService.convert(item, UserEntity.class)));
-
-        this.auditService.save(entity, NEW_USER_REGISTRATION);
-
-        return entity;
     }
 
     @Override
@@ -135,7 +135,6 @@ public class UserService implements IUserService {
     public boolean existsByMail(String mail) {
         return this.userDao.existsByMail(mail);
     }
-
 
     @Override
     public void activated(String mail) {

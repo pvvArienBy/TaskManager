@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "confirmation_token")
-public class ConfirmationTokenEntity {
+public class TokenEntity {
     @SequenceGenerator(
             name = "confirmation_token_sequence",
             sequenceName = "confirmation_token_sequence",
@@ -32,13 +32,13 @@ public class ConfirmationTokenEntity {
                 name = "user_uuid")
     private UserEntity userEntity;
 
-    public ConfirmationTokenEntity() {
+    public TokenEntity() {
     }
 
-    public ConfirmationTokenEntity(UUID token,
-                                   LocalDateTime createdAt,
-                                   LocalDateTime expiresAt,
-                                   UserEntity userEntity) {
+    public TokenEntity(UUID token,
+                       LocalDateTime createdAt,
+                       LocalDateTime expiresAt,
+                       UserEntity userEntity) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

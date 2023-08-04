@@ -3,7 +3,7 @@ package by.it_academy.jd2.service;
 import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
-import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
+import by.it_academy.jd2.dao.entity.TokenEntity;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.*;
 import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
@@ -64,7 +64,7 @@ public class AuthenticationService implements IAuthenticationService {
         UserEntity entity = userService.save(dto);
 
         UUID token = UUID.randomUUID();
-        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
+        TokenEntity confirmationToken = new TokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
@@ -89,7 +89,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
         var jwtToken = jwtService.generateToken(user);
 
-        this.auditService.save(user, USER_AUTHENTICATION);
+        this.auditService.send(user, USER_AUTHENTICATION);
 
         return TokenDTO.builder()
                 .token(jwtToken)
@@ -99,7 +99,7 @@ public class AuthenticationService implements IAuthenticationService {
     @Transactional
     @Override
     public String confirmToken(UUID token, String mail) {
-        ConfirmationTokenEntity confirmationToken = tokenService.findByToken(token);
+        TokenEntity confirmationToken = tokenService.findByToken(token);
 
         if (!mail.equals(confirmationToken.getUserEntity().getMail())) {
             throw new IllegalStateException(VALIDATING_VERIFICATION_DATA);
@@ -124,10 +124,8 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public UserEntity meDetails() {
-        String username = this.userHolder.getUser()
-                .getUsername();
-        Optional<UserEntity> item = this.userService
-                .findByMail(username);
+        String username = this.userHolder.getUser().getUsername();
+        Optional<UserEntity> item = this.userService.findByMail(username);
         UserEntity entity = item.orElseThrow(() ->
                 new EntityNotFoundException(DATA_FROM_CONTEXT_ERROR));
 

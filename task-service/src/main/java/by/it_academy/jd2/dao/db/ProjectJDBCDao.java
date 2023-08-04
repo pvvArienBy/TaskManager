@@ -1,6 +1,6 @@
 package by.it_academy.jd2.dao.db;
 
-import by.it_academy.jd2.dao.api.IProjectDao;
+import by.it_academy.jd2.dao.repositories.IProjectDao;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 
 import java.util.List;

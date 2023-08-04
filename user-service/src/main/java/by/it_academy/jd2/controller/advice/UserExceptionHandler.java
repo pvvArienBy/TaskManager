@@ -3,7 +3,6 @@ package by.it_academy.jd2.controller.advice;
 import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.errors.StructuredErrorResponse;
-import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.core.exceptions.NotCorrectValueException;
 import by.it_academy.jd2.core.exceptions.UniqueConstraintViolation;
 import by.it_academy.jd2.core.exceptions.UpdateEntityException;
@@ -36,6 +35,8 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class UserExceptionHandler {
+    private static final String INCORRECT_QUERY_CHARACTERS = "The characters in the query were entered incorrectly. Change the request and try again.";
+    private static final String INTERNAL_SERVER_ERROR = "An internal server error has occurred. Please contact support.";
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
@@ -46,20 +47,6 @@ public class UserExceptionHandler {
         ex.getConstraintViolations().stream().forEach(violation -> {
             response.getErrorMap().put(violation.getPropertyPath().toString(), violation.getMessage());
         });
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({UniqueConstraintViolation.class})
-    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
-            UniqueConstraintViolation ex) {
-
-        StructuredErrorResponse response = new StructuredErrorResponse(
-                ErrorType.STRUCTURED_ERROR, new HashMap<>());
-
-        StackTraceElement[] stackTrace = ex.getStackTrace();
-        String methodName = stackTrace[0].getMethodName() + "." + ex.getMessageField();
-        response.getErrorMap().put(methodName, ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -121,7 +108,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<List<ErrorResponse>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getName()));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, INCORRECT_QUERY_CHARACTERS));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
@@ -174,14 +161,27 @@ public class UserExceptionHandler {
             IndexOutOfBoundsException.class,
             ArithmeticException.class,
             Error.class,
-            EntityNotFoundException.class
     })
     public ResponseEntity<List<ErrorResponse>> handleInnerError(Exception ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        String errorMessage = ex.getMessage();
-        ErrorResponse error = new ErrorResponse(ErrorType.ERROR, "+ " + errorMessage);
+        ErrorResponse error = new ErrorResponse(
+                ErrorType.ERROR, INTERNAL_SERVER_ERROR);
         errorList.add(error);
 
         return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({UniqueConstraintViolation.class})
+    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
+            UniqueConstraintViolation ex) {
+
+        StructuredErrorResponse response = new StructuredErrorResponse(
+                ErrorType.STRUCTURED_ERROR, new HashMap<>());
+
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        String methodName = stackTrace[0].getMethodName() + ex.getMessageField();
+        response.getErrorMap().put(methodName, ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

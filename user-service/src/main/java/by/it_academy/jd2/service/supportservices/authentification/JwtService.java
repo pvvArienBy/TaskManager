@@ -100,7 +100,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public UserCheckDTO meDetails(String token) {
+    public UserCheckDTO meContextDetails(String token) {
         String jwt = token.substring(7);
         validate(jwt);
 

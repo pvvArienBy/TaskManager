@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.supportservices.mail;
 
-import by.it_academy.jd2.dao.api.IConfirmationTokenDao;
-import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
+import by.it_academy.jd2.dao.repositories.IConfirmationTokenDao;
+import by.it_academy.jd2.dao.entity.TokenEntity;
 import by.it_academy.jd2.service.api.IConfirmationTokenService;
 import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,19 +20,19 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
     }
 
     @Override
-    public void save(ConfirmationTokenEntity token) {
+    public void save(TokenEntity token) {
         this.tokenDao.save(token);
     }
 
     @Override
-    public ConfirmationTokenEntity findByToken(UUID token) {
-        Optional<ConfirmationTokenEntity> userOptional = this.tokenDao.findByToken(token);
+    public TokenEntity findByToken(UUID token) {
+        Optional<TokenEntity> userOptional = this.tokenDao.findByToken(token);
         return userOptional.orElseThrow(() -> new EntityNotFoundException(TOKEN_NOT_FOUND));
     }
 
     @Override
     public void setConfirmedAt(UUID token) {
-        ConfirmationTokenEntity entity = findByToken(token);
+        TokenEntity entity = findByToken(token);
         entity.setConfirmedAt(LocalDateTime.now());
         this.tokenDao.save(entity);
     }

@@ -6,7 +6,7 @@ import by.it_academy.jd2.dao.entity.UserEntity;
 public interface IAuditService {
     UserCheckDTO meContextDetails(String token);
 
-    void save(UserEntity entity, String text, String id);
+    void send(UserEntity entity, String text, String id);
 
-    void save(UserEntity entity, String text);
+    void send(UserEntity entity, String text);
 }
