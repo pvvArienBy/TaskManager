@@ -6,6 +6,7 @@ import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.*;
+import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,25 +25,28 @@ public class AuthenticationService implements IAuthenticationService {
     private static final String VALIDATING_VERIFICATION_DATA = "Problem validating data provided for verification!";
     private static final String EMAIL_ALREADY_CONFIRMED = "email already confirmed";
     private static final String TOKEN_EXPIRED = "token expired";
+    private static final String DATA_FROM_CONTEXT_ERROR = "Data from context error, please try again after new user authorization!";
     private final IUserService userService;
     private final IAuditService auditService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final IConfirmationTokenService tokenService;
     private final IMailSenderService mailSenderService;
+    private final UserHolder userHolder;
 
 
     public AuthenticationService(IUserService userService,
                                  IAuditService auditService, JwtService jwtService,
                                  AuthenticationManager authenticationManager,
                                  IConfirmationTokenService tokenService,
-                                 IMailSenderService mailSenderService) {
+                                 IMailSenderService mailSenderService, UserHolder userHolder) {
         this.userService = userService;
         this.auditService = auditService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.mailSenderService = mailSenderService;
+        this.userHolder = userHolder;
     }
 
     @Transactional
@@ -113,5 +118,17 @@ public class AuthenticationService implements IAuthenticationService {
                 confirmationToken.getUserEntity().getMail());
 // TODO: 02.08.2023 need ref
         return "User verified";
+    }
+
+    @Override
+    public UserEntity meDetails() {
+        String username = this.userHolder.getUser()
+                .getUsername();
+        Optional<UserEntity> item = this.userService
+                .findByMail(username);
+        UserEntity entity = item.orElseThrow(() ->
+                new EntityNotFoundException(DATA_FROM_CONTEXT_ERROR));
+
+        return entity;
     }
 }
