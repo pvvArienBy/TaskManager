@@ -1,6 +1,5 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.core.enums.EStatusUser;
@@ -15,6 +14,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
@@ -27,14 +27,18 @@ import java.util.UUID;
 public class UserService implements IUserService {
     private final IUserDao userDao;
     private final ConversionService conversionService;
-    private final UserHolder userHolder;
     private final IAuditService auditService;
+    private final UserHolder userHolder;
 
-    public UserService(IUserDao userService, ConversionService conversionService, UserHolder userHolder, IAuditService auditService) {
+    public UserService(IUserDao userService,
+                       ConversionService conversionService,
+                       IAuditService auditService,
+                       UserHolder userHolder) {
+
         this.userDao = userService;
         this.conversionService = conversionService;
-        this.userHolder = userHolder;
         this.auditService = auditService;
+        this.userHolder = userHolder;
     }
 
     @Override
@@ -45,48 +49,61 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findById(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
-        this.auditService.send(formAudit("Requested user data by UUID", uuid.toString()));
+
+        String username = this.userHolder.getUser().getUsername();
+        UserEntity editor = this.userDao.findByMail(username)
+                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+
+        this.auditService.save(editor, "Requested user data by UUID", uuid.toString());
 
         return userOptional.orElseThrow(() -> new EntityNotFoundException("User is not found!"));
     }
 
+    @Transactional
     @Override
     public UserEntity save(UserCreateUpdateDTO item) {
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
-        this.auditService.send(formAudit(
-                "Creating a new user under a different user", entity.getUuid().toString()));
+
+        String username = this.userHolder.getUser().getUsername();
+        UserEntity editor = this.userDao.findByMail(username)
+                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+
+        this.auditService.save(editor, "Creating a new user under a different user", entity.getUuid().toString());
+
         return entity;
     }
 
+    @Transactional
     @Override
     public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
                 "This user does not exist!"));
-        if (entity.getDtUpdate() != null) {
-            if (version.equals(entity.getDtUpdate())) {
-                UserEntity updEntity = conversionService.convert(item, UserEntity.class);
-                if (updEntity == null) {
-                    throw new IllegalArgumentException(
-                            "Failed to convert UserCreateDTO object to UserEntity");
-                }
-                updEntity.setUuid(entity.getUuid());
-                updEntity.setDtCreate(entity.getDtCreate());
-                updEntity.setDtUpdate(entity.getDtUpdate());
 
-                UserEntity saveEntity = this.userDao.save(updEntity);
+        if (!version.equals(entity.getDtUpdate())) {
+            throw new UpdateEntityException("User updated! Try again! ");
+        }
 
-                this.auditService.send(formAudit(
-                        "Updating User Data", saveEntity.getUuid().toString()));
+        UserEntity updEntity = conversionService.convert(item, UserEntity.class);
 
-                return saveEntity;
+        updEntity.setUuid(entity.getUuid());
+        updEntity.setDtCreate(entity.getDtCreate());
+        updEntity.setDtUpdate(entity.getDtUpdate());
 
-            } else throw new UpdateEntityException("User updated! Try again! ");
-        } else throw new EntityNotFoundException("This user does not exist!");
+        UserEntity saveEntity = this.userDao.save(updEntity);
+
+        String username = this.userHolder.getUser().getUsername();
+        UserEntity editor = this.userDao.findByMail(username)
+                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
+
+        this.auditService.save(editor, "Updating User Data", entity.getUuid().toString());
+
+        return saveEntity;
     }
 
+    @Transactional
     @Override
     public UserEntity save(@Valid UserRegistrationDTO item) {
 
@@ -94,7 +111,7 @@ public class UserService implements IUserService {
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
 
-        this.auditService.send(formAudit(entity,"New User Registration"));
+        this.auditService.save(entity, "New User Registration");
 
         return entity;
     }
@@ -109,32 +126,9 @@ public class UserService implements IUserService {
         return this.userDao.existsByMail(mail);
     }
 
-    @Override
-    public AuditCreateDTO formAudit(String text, String id) {
-        String username = this.userHolder.getUser().getUsername();
-
-        UserEntity entity = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException("his user does not exist!"));
-
-        AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
-        dto.setText(text);
-        dto.setId(id);
-
-        return dto;
-    }
 
     @Override
-    public AuditCreateDTO formAudit(UserEntity entity, String text) {
-        AuditCreateDTO dto = this.conversionService.convert(entity, AuditCreateDTO.class);
-        assert dto != null;
-        dto.setText(text);
-        dto.setId(entity.getUuid().toString());
-
-        return dto;
-    }
-
-    @Override
-    public void enableUser(String mail) {
+    public void activated(String mail) {
         Optional<UserEntity> userOptional = userDao.findByMail(mail);
         UserEntity entity = userOptional
                 .orElseThrow(() -> new EntityNotFoundException("This user does not exist!"));
