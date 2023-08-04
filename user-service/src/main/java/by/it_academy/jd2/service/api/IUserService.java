@@ -19,9 +19,5 @@ public interface IUserService extends ICRUService<UserEntity, UserCreateUpdateDT
 
     Page<UserEntity> findAll(PageRequest of);
 
-    AuditCreateDTO formAudit(String text, String id);
-
-    AuditCreateDTO formAudit(UserEntity entity, String text);
-
-    void enableUser(String mail);
+    void activated(String mail);
 }

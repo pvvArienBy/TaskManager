@@ -19,7 +19,6 @@ import java.util.Map;
 
 @Service
 public class MailSenderService implements IMailSenderService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(MailSenderService.class);
     private final JavaMailSender mailSender;
     private final IThymeleafService thymeleafService;
     private final MailProperty property;
@@ -31,8 +30,8 @@ public class MailSenderService implements IMailSenderService {
         this.property = mailProperty;
     }
 
-    @Override
     @Async
+    @Override
     public void send(UserRegistrationDTO dto, String token) {
         try {
             MimeMessage mimeMessage = this.mailSender.createMimeMessage();
@@ -49,10 +48,10 @@ public class MailSenderService implements IMailSenderService {
             variables.put("url", property.getUrl());
             helper.setText(thymeleafService.createContent(property.getHtmlform(), variables), true);
             helper.setFrom(property.getMailfrom());
+
             this.mailSender.send(mimeMessage);
 
         } catch (MessagingException e) {
-            LOGGER.error("failed to send mail", e);
             throw new IllegalStateException("failed to send email");
         }
     }
