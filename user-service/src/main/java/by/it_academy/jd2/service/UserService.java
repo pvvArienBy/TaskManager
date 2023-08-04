@@ -48,13 +48,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Page<UserEntity> findAll(PageRequest pageRequest) {
+    public Page<UserEntity> getAll(PageRequest pageRequest) {
         return this.userDao.findAll(pageRequest);
     }
 
     @Transactional
     @Override
-    public UserEntity findById(UUID uuid) {
+    public UserEntity get(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
         UserEntity entity = userOptional
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
@@ -86,7 +86,7 @@ public class UserService implements IUserService {
 
     @Transactional
     @Override
-    public UserEntity save(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
+    public UserEntity update(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
         Optional<UserEntity> userOptional = userDao.findById(uuid);
         UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
                 USER_NOT_FOUND));
