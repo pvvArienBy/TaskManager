@@ -28,6 +28,7 @@ public class AuthenticationService implements IAuthenticationService {
     private static final String EMAIL_ALREADY_CONFIRMED = "email already confirmed";
     private static final String TOKEN_EXPIRED = "token expired";
     private static final String DATA_FROM_CONTEXT_ERROR = "Data from context error, please try again after new user authorization!";
+
     private final IUserService userService;
     private final IAuditService auditService;
     private final JwtService jwtService;
@@ -85,9 +86,9 @@ public class AuthenticationService implements IAuthenticationService {
                 )
         );
 
-        var user = userService.findByMail(dto.getMail())
+        UserEntity user = userService.findByMail(dto.getMail())
                 .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND));
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
 
         this.auditService.send(user, USER_AUTHENTICATION);
 

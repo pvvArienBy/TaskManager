@@ -32,6 +32,7 @@ public class UserService implements IUserService {
     private static final String USER_UPDATED = "User updated! Try again";
     private static final String NEW_USER_REGISTRATION = "New user registration";
     private static final String REQUESTED_DATA_UUID = "Requested user data by UUID";
+
     private final IUserDao userDao;
     private final ConversionService conversionService;
     private final IAuditService auditService;
