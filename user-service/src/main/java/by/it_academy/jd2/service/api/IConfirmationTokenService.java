@@ -1,11 +1,13 @@
 package by.it_academy.jd2.service.api;
 
-import by.it_academy.jd2.dao.entity.ConfirmationTokenEntity;
+import by.it_academy.jd2.dao.entity.TokenEntity;
+
+import java.util.UUID;
 
 public interface IConfirmationTokenService {
-    void save(ConfirmationTokenEntity token);
+    void save(TokenEntity token);
 
-    ConfirmationTokenEntity findByToken (String token);
+    TokenEntity findByToken (UUID token);
 
-    void setConfirmedAt (String token);
+    void setConfirmedAt (UUID token);
 }

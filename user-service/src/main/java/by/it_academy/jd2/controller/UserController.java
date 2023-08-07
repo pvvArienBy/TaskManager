@@ -2,7 +2,6 @@ package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.*;
 import by.it_academy.jd2.dao.entity.UserEntity;
-import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IUserService;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +26,7 @@ public class UserController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<UserDTO> findById(@PathVariable UUID uuid) {
-        UserDTO userDTO = conversionService.convert(this.userService.findById(uuid), UserDTO.class);
+        UserDTO userDTO = conversionService.convert(this.userService.get(uuid), UserDTO.class);
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
 
@@ -35,7 +34,7 @@ public class UserController {
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") int page,
                                      @RequestParam(required = false, defaultValue = "20") int size) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(conversionService.convert(this.userService.findAll(PageRequest.of(page, size)), PageDTO.class));
+                .body(conversionService.convert(this.userService.getAll(PageRequest.of(page, size)), PageDTO.class));
     }
 
     @PostMapping
@@ -46,8 +45,10 @@ public class UserController {
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
-    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid, @PathVariable LocalDateTime dt_update, @RequestBody UserCreateUpdateDTO dto) {
-        UserEntity userEntity = this.userService.save(uuid, dt_update, dto);
+    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,
+                                        @PathVariable("dt_update") LocalDateTime dtUpdate,
+                                        @RequestBody UserCreateUpdateDTO dto) {
+        UserEntity userEntity = this.userService.update(uuid, dtUpdate, dto);
         UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);

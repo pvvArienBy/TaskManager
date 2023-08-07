@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public interface ICRUService<T, S> {
 
-    T findById(UUID uuid);
+    T get(UUID uuid);
 
     T save(@Valid S item);
 
-    T save(UUID uuid, LocalDateTime version, S item);
+    T update(UUID uuid, LocalDateTime version, S item);
 }
 

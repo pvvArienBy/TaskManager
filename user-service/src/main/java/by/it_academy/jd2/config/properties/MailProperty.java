@@ -11,4 +11,5 @@ public class MailProperty {
     private String url;
     private String mailfrom;
     private String htmlform;
+    private String subject;
 }

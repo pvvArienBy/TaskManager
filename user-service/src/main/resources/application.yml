@@ -20,23 +20,37 @@ spring:
   application:
     name: users
 
+#  mail:
+#    host: localhost
+#    port: 1025
+#    username: hello
+#    password: hello
+#    properties:
+#      mail:
+#        smtp:
+#          ssl:
+#            trust: "*"
+#          auth: true
+#          starttls:
+#            enable: true
+#          connectiontimeout: 5000
+#          timeout: 3000
+#          writetimeout: 5000
   mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
-
+    host: smtp.mail.ru
+    port: 465
+    username: l2mypers03@mail.ru
+    password: "6jaRa5gdhC7HN1j7amha7SD"
     properties:
+      "mail.smtp.ssl.enable": true
       mail:
+        encoding: UTF-8
+        transport:
+          protocol: smtp
         smtp:
-          ssl:
-            trust: "*"
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
 
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
@@ -44,6 +58,7 @@ jwt:
 
 mail-set:
   url: "http://localhost/api/v1/users/verification"
-  mailfrom: itacademy@gmail.com
+  mailfrom: l2mypers03@mail.ru
   htmlform: verification.html
+  subject: "TaskManager - letter confirmation"
 

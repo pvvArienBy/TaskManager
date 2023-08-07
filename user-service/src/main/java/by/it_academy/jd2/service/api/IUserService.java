@@ -1,6 +1,5 @@
 package by.it_academy.jd2.service.api;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -17,11 +16,7 @@ public interface IUserService extends ICRUService<UserEntity, UserCreateUpdateDT
 
     boolean existsByMail(String mail);
 
-    Page<UserEntity> findAll(PageRequest of);
+    Page<UserEntity> getAll(PageRequest of);
 
-    AuditCreateDTO formAudit(String text, String id);
-
-    AuditCreateDTO formAudit(UserEntity entity, String text);
-
-    void enableUser(String mail);
+    void activated(String mail);
 }

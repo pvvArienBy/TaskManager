@@ -2,7 +2,7 @@ package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.CoordinatesDTO;
 import by.it_academy.jd2.core.dto.ProjectCreateDTO;
-import by.it_academy.jd2.dao.api.IProjectDao;
+import by.it_academy.jd2.dao.repositories.IProjectDao;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.service.api.IProjectService;
 import org.springframework.stereotype.Service;

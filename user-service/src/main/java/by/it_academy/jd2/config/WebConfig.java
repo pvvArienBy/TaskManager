@@ -2,8 +2,8 @@ package by.it_academy.jd2.config;
 
 import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.errors.StructuredErrorResponse;
-import by.it_academy.jd2.service.convert.*;
-import by.it_academy.jd2.service.util.ErrorResponseJsonComponent;
+import by.it_academy.jd2.service.converters.*;
+import by.it_academy.jd2.service.utils.ErrorResponseJsonComponent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -15,7 +15,6 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,13 +24,6 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-
-    private final PasswordEncoder passwordEncoder;
-
-    public WebConfig(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -59,7 +51,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new UserEntityToDtoConverter());
         registry.addConverter(new UserCreateUpdateDtoToEntityConverter());
-        registry.addConverter(new UserRegistrationDtoToEntityConverter(passwordEncoder));
+        registry.addConverter(new UserRegistrationDtoToEntityConverter());
         registry.addConverter(new StringToLocalDateTimeConverter());
         registry.addConverter(new PageEntityToPageDtoConverter(new UserEntityToDtoConverter()));
         registry.addConverter(new UserEntityToAuditCreateDtoConverter());

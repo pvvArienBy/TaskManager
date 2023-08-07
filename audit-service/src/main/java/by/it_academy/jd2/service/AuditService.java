@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.AuditCreateDTO;
-import by.it_academy.jd2.dao.api.IAuditDao;
+import by.it_academy.jd2.dao.repositories.IAuditDao;
 import by.it_academy.jd2.dao.entity.AuditEntity;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;

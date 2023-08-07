@@ -5,39 +5,31 @@ import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
-import by.it_academy.jd2.service.UserHolder;
 import by.it_academy.jd2.service.api.IAuthenticationService;
-import by.it_academy.jd2.service.api.IUserService;
-import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
 public class AuthenticationController {
     private final IAuthenticationService authService;
-    private final IUserService userService;
     private final ConversionService conversionService;
-    private final UserHolder userHolder;
 
     public AuthenticationController(IAuthenticationService authService,
-                                    IUserService userService,
-                                    ConversionService conversionService,
-                                    UserHolder userHolder) {
+                                    ConversionService conversionService) {
         this.authService = authService;
-        this.userService = userService;
         this.conversionService = conversionService;
-        this.userHolder = userHolder;
     }
 
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody UserRegistrationDTO dto) {
         this.authService.registration(dto);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -47,20 +39,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> details() {
-
-        String username = this.userHolder.getUser()
-                .getUsername();
-        Optional<UserEntity> item = this.userService
-                .findByMail(username);
-        UserEntity entity = item.orElseThrow(() -> new EntityNotFoundException(
-                "Ошибка данных из контекста, попробуйте еще раз после новой авторизации пользователя!"));
+    public ResponseEntity<UserDTO> meDetails() {
+        UserEntity entity = this.authService.meDetails();
 
         return ResponseEntity.status(HttpStatus.OK).body(conversionService.convert(entity, UserDTO.class));
     }
 
     @GetMapping("/verification")
-    public ResponseEntity<?> confirm(@RequestParam String code, @RequestParam String mail) {
+    public ResponseEntity<?> confirm(@RequestParam UUID code, @RequestParam String mail) {
         return ResponseEntity.ok(this.authService.confirmToken(code, mail));
     }
 }

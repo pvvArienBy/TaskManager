@@ -1,11 +1,11 @@
 package by.it_academy.jd2.controller.advice;
 
+import by.it_academy.jd2.core.enums.ErrorType;
 import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.errors.StructuredErrorResponse;
-import by.it_academy.jd2.core.enums.ErrorType;
-import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
-import by.it_academy.jd2.service.exceptions.NotCorrectValueException;
-import by.it_academy.jd2.service.exceptions.UniqueConstraintViolation;
+import by.it_academy.jd2.core.exceptions.NotCorrectValueException;
+import by.it_academy.jd2.core.exceptions.UniqueConstraintViolation;
+import by.it_academy.jd2.core.exceptions.UpdateEntityException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -15,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +35,8 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class UserExceptionHandler {
+    private static final String INCORRECT_QUERY_CHARACTERS = "The characters in the query were entered incorrectly. Change the request and try again.";
+    private static final String INTERNAL_SERVER_ERROR = "An internal server error has occurred. Please contact support.";
 
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
@@ -49,36 +51,6 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({UniqueConstraintViolation.class})
-    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
-            UniqueConstraintViolation ex) {
-
-        StructuredErrorResponse response = new StructuredErrorResponse(
-                ErrorType.STRUCTURED_ERROR, new HashMap<>());
-
-        StackTraceElement[] stackTrace = ex.getStackTrace();
-        String methodName = stackTrace[0].getMethodName() + "." + ex.getMessageField();
-        response.getErrorMap().put(methodName, ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class,
-            IOException.class,
-            IndexOutOfBoundsException.class,
-            ArithmeticException.class,
-            Error.class,
-            EntityNotFoundException.class
-    })
-    public ResponseEntity<List<ErrorResponse>> handleInnerError(Exception ex) {
-        List<ErrorResponse> errorList = new ArrayList<>();
-        String errorMessage = ex.getMessage();
-        ErrorResponse error = new ErrorResponse(ErrorType.ERROR, "+ " + errorMessage);
-        errorList.add(error);
-
-        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StructuredErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex) {
@@ -86,11 +58,7 @@ public class UserExceptionHandler {
         StructuredErrorResponse response = new StructuredErrorResponse(
                 ErrorType.STRUCTURED_ERROR, new HashMap<>());
 
-        if (ex.getMessage().contains("Enum class: [USER, ADMIN]")) {
-            response.getErrorMap().put("save_role", "Не верно указан role!");
-        } else if (ex.getMessage().contains("Enum class: [DEACTIVATED, ACTIVATED, WAITING_ACTIVATION]")) {
-            response.getErrorMap().put("save_status", "Не верно указан status!");
-        } else response.getErrorMap().put(ex.getCause().toString(), ex.getMessage() + "[HttpMessageNotReadableException]");
+        response.getErrorMap().put(ex.getCause().toString(), ex.getMessage());
 
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
@@ -98,16 +66,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<List<ErrorResponse>> handleAuthenticationException(AuthenticationException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        ErrorResponse error;
-
-        if (ex.getMessage().contains("Bad credentials")) {
-            error = new ErrorResponse(ErrorType.ERROR,
-                    "Логин или пароль содержат некорректные данные. Попробуйте ещё раз");
-        } else if (ex.getMessage().contains("User is disabled")) {
-            error = new ErrorResponse(ErrorType.ERROR,
-                    "Требуется верификация, подтвердите регистрацию," +
-                            " письмо для подтверждения выслано вам на почту!");
-        } else error = new ErrorResponse(
+        ErrorResponse error = new ErrorResponse(
                 ErrorType.ERROR, ex.getMessage());
         errorList.add(error);
 
@@ -124,7 +83,7 @@ public class UserExceptionHandler {
 
         for (ObjectError error : allErrors) {
             String fieldName = error instanceof FieldError ? ((FieldError) error).getField() : error.getObjectName();
-            response.getErrorMap().put("authorization." + fieldName, error.getDefaultMessage());
+            response.getErrorMap().put(fieldName, error.getDefaultMessage());
         }
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -133,7 +92,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<List<ErrorResponse>> handleIllegalStateException(IllegalStateException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        ErrorResponse  error = new ErrorResponse(
+        ErrorResponse error = new ErrorResponse(
                 ErrorType.ERROR, ex.getMessage());
         errorList.add(error);
 
@@ -141,17 +100,15 @@ public class UserExceptionHandler {
     }
 
 
-
     @ExceptionHandler(NotCorrectValueException.class)
     public ResponseEntity<List<ErrorResponse>> handleNotCorrectValueException(NotCorrectValueException ex) {
-        return new ResponseEntity(ex.getValues() + "[NotCorrectValueException]", HttpStatus.FORBIDDEN);
+        return new ResponseEntity(ex.getValues(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<List<ErrorResponse>> handleArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "Не корректные данные в передаваемом параметре - " + ex.getName()));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, INCORRECT_QUERY_CHARACTERS));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
@@ -160,8 +117,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "Exception ExpiredJwtException"));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getCause().getMessage()));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
@@ -169,8 +125,7 @@ public class UserExceptionHandler {
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<List<ErrorResponse>> handleSignatureException(SignatureException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "Exception SignatureException "));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getCause().getMessage()));
 
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
@@ -178,19 +133,55 @@ public class UserExceptionHandler {
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleSignatureException(MalformedJwtException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "Exception MalformedJwtException "));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getCause().getMessage()));
 
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<List<ErrorResponse>> authenticationExceptionException(AccessDeniedException ex) {
+    public ResponseEntity<List<ErrorResponse>> authenticationException(AccessDeniedException ex) {
 
         List<ErrorResponse> errorList = new ArrayList<>();
-        errorList.add(new ErrorResponse(ErrorType.ERROR,
-                "Exception AccessDeniedException "));
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getCause().getMessage()));
 
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(UpdateEntityException.class)
+    public ResponseEntity<List<ErrorResponse>> handleUpdateEntityException(UpdateEntityException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class,
+            IOException.class,
+            IndexOutOfBoundsException.class,
+            ArithmeticException.class,
+            Error.class,
+    })
+    public ResponseEntity<List<ErrorResponse>> handleInnerError(Exception ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        ErrorResponse error = new ErrorResponse(
+                ErrorType.ERROR, INTERNAL_SERVER_ERROR);
+        errorList.add(error);
+
+        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({UniqueConstraintViolation.class})
+    public ResponseEntity<StructuredErrorResponse> handleInvalidArgument(
+            UniqueConstraintViolation ex) {
+
+        StructuredErrorResponse response = new StructuredErrorResponse(
+                ErrorType.STRUCTURED_ERROR, new HashMap<>());
+
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        String methodName = stackTrace[0].getMethodName() + ex.getMessageField();
+        response.getErrorMap().put(methodName, ex.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
