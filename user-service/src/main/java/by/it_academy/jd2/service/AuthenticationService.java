@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -76,7 +75,7 @@ public class AuthenticationService implements IAuthenticationService {
         this.mailSenderService.send(dto, token.toString());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public TokenDTO authentication(UserLoginDTO dto) {
         this.authenticationManager.authenticate(
@@ -101,8 +100,9 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public String confirmToken(UUID token, String mail) {
         TokenEntity confirmationToken = tokenService.findByToken(token);
+        String confirmationMail = confirmationToken.getUserEntity().getMail();
 
-        if (!mail.equals(confirmationToken.getUserEntity().getMail())) {
+        if (!mail.equals(confirmationMail)) {
             throw new IllegalStateException(VALIDATING_VERIFICATION_DATA);
         }
 
@@ -117,19 +117,20 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         this.tokenService.setConfirmedAt(token);
-        this.userService.activated(
-                confirmationToken.getUserEntity().getMail());
+        this.userService.activated(confirmationMail);
 // TODO: 02.08.2023 need ref
         return "User verified";
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserEntity meDetails() {
-        String username = this.userHolder.getUser().getUsername();
-        Optional<UserEntity> item = this.userService.findByMail(username);
-        UserEntity entity = item.orElseThrow(() ->
-                new EntityNotFoundException(DATA_FROM_CONTEXT_ERROR));
-
-        return entity;
+        return this.userService
+                .findByMail(
+                        this.userHolder
+                                .getUser()
+                                .getUsername())
+                .orElseThrow(()
+                        -> new EntityNotFoundException(DATA_FROM_CONTEXT_ERROR));
     }
 }
