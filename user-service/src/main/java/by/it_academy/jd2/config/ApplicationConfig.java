@@ -1,6 +1,7 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.service.api.IMyUserDetailService;
+import by.it_academy.jd2.service.api.IUserService;
+import by.it_academy.jd2.service.supportservices.authentification.MyUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,26 +9,23 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final IMyUserDetailService userDetailService;
-
     @Bean
-    public UserDetailsService userDetailsService() {
-        return this.userDetailService;
+    public MyUserDetailsService userDetailsService(IUserService userService) {
+        return new MyUserDetailsService(userService);
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(MyUserDetailsService myUserDetailService,
+                                                         PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
-        authProvider.setUserDetailsService(userDetailsService());
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(myUserDetailService);
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
