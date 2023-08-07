@@ -26,8 +26,9 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
 
     @Override
     public TokenEntity findByToken(UUID token) {
-        Optional<TokenEntity> userOptional = this.tokenDao.findByToken(token);
-        return userOptional.orElseThrow(() -> new EntityNotFoundException(TOKEN_NOT_FOUND));
+        return this.tokenDao.findByToken(token)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(TOKEN_NOT_FOUND));
     }
 
     @Override
