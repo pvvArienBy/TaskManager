@@ -1,7 +1,7 @@
 package by.it_academy.jd2.controller.filter;
 
 import by.it_academy.jd2.service.supportservices.authentification.JwtService;
-import by.it_academy.jd2.service.api.IMyUserDetailService;
+import by.it_academy.jd2.service.supportservices.authentification.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final IMyUserDetailService userDetailsService;
+    private final MyUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
