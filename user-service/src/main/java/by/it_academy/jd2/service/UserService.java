@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -37,24 +38,27 @@ public class UserService implements IUserService {
     private final ConversionService conversionService;
     private final IAuditService auditService;
     private final UserHolder userHolder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(IUserDao userService,
                        ConversionService conversionService,
                        IAuditService auditService,
-                       UserHolder userHolder) {
+                       UserHolder userHolder, PasswordEncoder passwordEncoder) {
 
         this.userDao = userService;
         this.conversionService = conversionService;
         this.auditService = auditService;
         this.userHolder = userHolder;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<UserEntity> getAll(PageRequest pageRequest) {
         return this.userDao.findAll(pageRequest);
     }
 
-    @Transactional
+    @Transactional //todo   @Transactional(readOnly = true)?
     @Override
     public UserEntity get(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
@@ -73,6 +77,7 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public UserEntity save(UserCreateUpdateDTO item) {
+        item.setPassword(passwordEncoder.encode(item.getPassword()));
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
@@ -89,11 +94,10 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public UserEntity save(@Valid UserRegistrationDTO item) {
-
+        item.setPassword(passwordEncoder.encode(item.getPassword()));
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
-
         this.auditService.send(entity, NEW_USER_REGISTRATION);
 
         return entity;
@@ -127,16 +131,19 @@ public class UserService implements IUserService {
         return saveEntity;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<UserEntity> findByMail(String mail) {
         return this.userDao.findByMail(mail);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean existsByMail(String mail) {
         return this.userDao.existsByMail(mail);
     }
 
+    @Transactional
     @Override
     public void activated(String mail) {
         Optional<UserEntity> userOptional = userDao.findByMail(mail);
