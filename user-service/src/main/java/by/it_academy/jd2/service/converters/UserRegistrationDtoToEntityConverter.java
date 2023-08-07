@@ -6,7 +6,6 @@ import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -14,8 +13,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class UserRegistrationDtoToEntityConverter implements Converter<UserRegistrationDTO, UserEntity> {
-    private final PasswordEncoder passwordEncoder;
-
     /**
      * Converts a UserCreateDTO object to a UserEntity object.
      *
@@ -30,7 +27,7 @@ public class UserRegistrationDtoToEntityConverter implements Converter<UserRegis
         entity.setFio(dto.getFio());
         entity.setRole(ERole.USER);
         entity.setStatus(EStatusUser.WAITING_ACTIVATION);
-        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        entity.setPassword(dto.getPassword());
 
         return entity;
     }
