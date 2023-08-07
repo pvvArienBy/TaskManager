@@ -26,7 +26,9 @@ public class MailSenderService implements IMailSenderService {
     private final MailProperty property;
 
 
-    public MailSenderService(JavaMailSender mailSender, IThymeleafService thymeleafService, MailProperty mailProperty) {
+    public MailSenderService(JavaMailSender mailSender,
+                             IThymeleafService thymeleafService,
+                             MailProperty mailProperty) {
         this.mailSender = mailSender;
         this.thymeleafService = thymeleafService;
         this.property = mailProperty;
@@ -50,6 +52,7 @@ public class MailSenderService implements IMailSenderService {
             variables.put("url", property.getUrl());
             helper.setText(thymeleafService.createContent(property.getHtmlform(), variables), true);
             helper.setFrom(property.getMailfrom());
+            helper.setSubject(property.getSubject());
 
             this.mailSender.send(mimeMessage);
 
