@@ -19,4 +19,6 @@ public interface IUserService extends ICRUService<UserEntity, UserCreateUpdateDT
     Page<UserEntity> getAll(PageRequest of);
 
     void activated(String mail);
+
+    UserEntity getMe();
 }

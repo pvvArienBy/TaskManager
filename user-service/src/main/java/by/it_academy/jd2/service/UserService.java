@@ -2,6 +2,7 @@ package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
+import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.dao.repositories.IUserDao;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -65,11 +66,7 @@ public class UserService implements IUserService {
         UserEntity entity = userOptional
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        String username = this.userHolder.getUser().getUsername();
-        UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
-
-        this.auditService.send(editor, REQUESTED_DATA_UUID, uuid.toString());
+        this.auditService.send(getMe(), REQUESTED_DATA_UUID, uuid.toString());
 
         return entity;
     }
@@ -81,12 +78,9 @@ public class UserService implements IUserService {
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
+        entity.setUuid(UUID.randomUUID());
 
-        String username = this.userHolder.getUser().getUsername();
-        UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
-
-        this.auditService.send(editor, NEW_USER_CREATED, entity.getUuid().toString());
+        this.auditService.send(getMe(), NEW_USER_CREATED, entity.getUuid().toString());
 
         return entity;
     }
@@ -98,6 +92,10 @@ public class UserService implements IUserService {
         UserEntity entity = this.userDao.save(
                 Objects.requireNonNull(
                         conversionService.convert(item, UserEntity.class)));
+        entity.setUuid(UUID.randomUUID());
+        entity.setRole(ERole.USER);
+        entity.setStatus(EStatusUser.WAITING_ACTIVATION);
+
         this.auditService.send(entity, NEW_USER_REGISTRATION);
 
         return entity;
@@ -114,19 +112,15 @@ public class UserService implements IUserService {
             throw new UpdateEntityException(USER_UPDATED);
         }
 
-        UserEntity updEntity = conversionService.convert(item, UserEntity.class);
+        entity.setMail(item.getMail());
+        entity.setFio(item.getFio());
+        entity.setRole(item.getRole());
+        entity.setStatus(item.getStatus());
+        entity.setPassword(item.getPassword());
 
-        updEntity.setUuid(entity.getUuid());
-        updEntity.setDtCreate(entity.getDtCreate());
-        updEntity.setDtUpdate(entity.getDtUpdate());
+        UserEntity saveEntity = this.userDao.save(entity);
 
-        UserEntity saveEntity = this.userDao.save(updEntity);
-
-        String username = this.userHolder.getUser().getUsername();
-        UserEntity editor = this.userDao.findByMail(username)
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
-
-        this.auditService.send(editor, USER_UPDATER, entity.getUuid().toString());
+        this.auditService.send(getMe(), USER_UPDATER, entity.getUuid().toString());
 
         return saveEntity;
     }
@@ -152,5 +146,16 @@ public class UserService implements IUserService {
 
         entity.setStatus(EStatusUser.ACTIVATED);
         this.userDao.save(entity);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserEntity getMe() {
+        return this.userDao
+                .findByMail(this.userHolder
+                        .getUser()
+                        .getUsername())
+                .orElseThrow(()
+                        -> new EntityNotFoundException(USER_NOT_FOUND));
     }
 }
