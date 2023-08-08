@@ -3,10 +3,10 @@ package by.it_academy.jd2.service;
 import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
+import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.dao.entity.TokenEntity;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.*;
-import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.service.supportservices.authentification.JwtService;
 import by.it_academy.jd2.service.supportservices.authentification.UserHolder;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +27,7 @@ public class AuthenticationService implements IAuthenticationService {
     private static final String EMAIL_ALREADY_CONFIRMED = "email already confirmed";
     private static final String TOKEN_EXPIRED = "token expired";
     private static final String DATA_FROM_CONTEXT_ERROR = "Data from context error, please try again after new user authorization!";
+    private static final String USER_VERIFIED = "User verified";
 
     private final IUserService userService;
     private final IAuditService auditService;
@@ -118,8 +119,8 @@ public class AuthenticationService implements IAuthenticationService {
 
         this.tokenService.setConfirmedAt(token);
         this.userService.activated(confirmationMail);
-// TODO: 02.08.2023 need ref
-        return "User verified";
+
+        return USER_VERIFIED;
     }
 
     @Transactional(readOnly = true)
