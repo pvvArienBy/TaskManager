@@ -22,11 +22,8 @@ public class UserRegistrationDtoToEntityConverter implements Converter<UserRegis
     @Override
     public UserEntity convert(UserRegistrationDTO dto) {
         UserEntity entity = new UserEntity();
-        entity.setUuid(UUID.randomUUID());
         entity.setMail(dto.getMail());
         entity.setFio(dto.getFio());
-        entity.setRole(ERole.USER);
-        entity.setStatus(EStatusUser.WAITING_ACTIVATION);
         entity.setPassword(dto.getPassword());
 
         return entity;

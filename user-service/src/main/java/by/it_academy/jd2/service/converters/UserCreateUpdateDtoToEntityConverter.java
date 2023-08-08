@@ -19,7 +19,6 @@ public class UserCreateUpdateDtoToEntityConverter implements Converter<UserCreat
     @Override
     public UserEntity convert(UserCreateUpdateDTO dto) {
         UserEntity entity = new UserEntity();
-        entity.setUuid(UUID.randomUUID());
         entity.setMail(dto.getMail());
         entity.setFio(dto.getFio());
         entity.setRole(dto.getRole());
