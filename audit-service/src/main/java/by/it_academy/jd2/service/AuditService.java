@@ -1,21 +1,23 @@
 package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.AuditCreateDTO;
-import by.it_academy.jd2.dao.repositories.IAuditDao;
 import by.it_academy.jd2.dao.entity.AuditEntity;
+import by.it_academy.jd2.dao.repositories.IAuditDao;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class AuditService implements IAuditService {
+    private static final String RECORD_NOT_FOUND_ERROR = "Record not found, please try again!";
+
     private final IAuditDao auditDao;
     private final ConversionService conversionService;
 
@@ -24,18 +26,22 @@ public class AuditService implements IAuditService {
         this.conversionService = conversionService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<AuditEntity> findAll(PageRequest pageRequest) {
         return this.auditDao.findAll(pageRequest);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public AuditEntity findById(UUID uuid) {
-        Optional<AuditEntity> userOptional = this.auditDao.findById(uuid);
-
-        return userOptional.orElseThrow(() -> new EntityNotFoundException("Объект не найден!"));
+        return this.auditDao
+                .findById(uuid)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(RECORD_NOT_FOUND_ERROR));
     }
 
+    @Transactional
     @Override
     public AuditEntity save(AuditCreateDTO item) {
         return this.auditDao.save(
