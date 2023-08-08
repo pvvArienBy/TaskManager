@@ -2,6 +2,7 @@ package by.it_academy.jd2.dao.entity;
 
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,24 +28,26 @@ public class UserEntity implements Serializable, UserDetails {
     @Id
     private UUID uuid;
     @CreationTimestamp
-    @Column(name = "date_create")
+    @Column(name = "date_create", nullable = false)
     private LocalDateTime dtCreate;
     @Version
     @UpdateTimestamp
-    @Column(name = "date_update")
+    @Column(name = "date_update",nullable = false)
     private LocalDateTime dtUpdate;
-    @NotBlank(message = "mail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
+    @Column(nullable = false)
     private String mail;
-    @NotBlank(message = "fio не должен быть пустым")
     @Size(max = 255)
     @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
+    @Column(nullable = false)
     private String fio;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ERole role;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EStatusUser status;
-    @NotBlank
+    @Column(nullable = false)
     private String password;
 
     public UserEntity() {
