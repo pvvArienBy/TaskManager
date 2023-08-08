@@ -1,18 +1,13 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.dao.entity.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
-@RequiredArgsConstructor
-public class UserRegistrationDtoToEntityConverter implements Converter<UserRegistrationDTO, UserEntity> {
+public class UserRegistrationDtoToEntityConverter
+        implements Converter<UserRegistrationDTO, UserEntity> {
     /**
      * Converts a UserCreateDTO object to a UserEntity object.
      *

@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.converters;
 
-import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.enums.ErrorType;
+import by.it_academy.jd2.core.errors.ErrorResponse;
 import by.it_academy.jd2.core.exceptions.NotCorrectValueException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 public class StringToLocalDateTimeConverter
         implements Converter<String, LocalDateTime> {
-
     @Override
     public LocalDateTime convert(String source) {
         try {
@@ -23,7 +22,7 @@ public class StringToLocalDateTimeConverter
             return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         } catch (NumberFormatException e) {
             List<ErrorResponse> errorResponse = new ArrayList<>();
-            errorResponse.add(new ErrorResponse(ErrorType.ERROR,"Дата не корректна. Должны быть цифры!"));
+            errorResponse.add(new ErrorResponse(ErrorType.ERROR, "Дата не корректна. Должны быть цифры!"));
             throw new NotCorrectValueException(errorResponse);
         }
     }

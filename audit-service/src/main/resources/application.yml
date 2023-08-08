@@ -17,3 +17,6 @@ spring:
         show_sql: true
     open-in-view: true
 
+jwt:
+  secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
+  issuer: ITAcademy

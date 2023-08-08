@@ -75,11 +75,12 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(UserCreateUpdateDTO item) {
         item.setPassword(passwordEncoder.encode(item.getPassword()));
-        UserEntity entity = this.userDao.save(
-                Objects.requireNonNull(
-                        conversionService.convert(item, UserEntity.class)));
+        UserEntity entity = Objects.requireNonNull(
+                        conversionService
+                                .convert(item, UserEntity.class));
         entity.setUuid(UUID.randomUUID());
 
+        this.userDao.save(entity);
         this.auditService.send(getMe(), NEW_USER_CREATED, entity.getUuid().toString());
 
         return entity;
@@ -89,13 +90,14 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(@Valid UserRegistrationDTO item) {
         item.setPassword(passwordEncoder.encode(item.getPassword()));
-        UserEntity entity = this.userDao.save(
-                Objects.requireNonNull(
-                        conversionService.convert(item, UserEntity.class)));
+        UserEntity entity =  Objects.requireNonNull(
+                conversionService
+                        .convert(item, UserEntity.class));
         entity.setUuid(UUID.randomUUID());
         entity.setRole(ERole.USER);
         entity.setStatus(EStatusUser.WAITING_ACTIVATION);
 
+        this.userDao.save(entity);
         this.auditService.send(entity, NEW_USER_REGISTRATION);
 
         return entity;

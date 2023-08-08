@@ -5,10 +5,9 @@ import by.it_academy.jd2.dao.entity.UserEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
-public class UserCreateUpdateDtoToEntityConverter implements Converter<UserCreateUpdateDTO, UserEntity> {
+public class UserCreateUpdateDtoToEntityConverter
+        implements Converter<UserCreateUpdateDTO, UserEntity> {
 
     /**
      * Converts a UserCreateDTO object to a UserEntity object.

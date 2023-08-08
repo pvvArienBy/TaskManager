@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Component
-public class UserEntityToAuditCreateDtoConverter implements Converter<UserEntity, AuditCreateDTO> {
+public class UserEntityToAuditCreateDtoConverter
+        implements Converter<UserEntity, AuditCreateDTO> {
 
     /**
      * Converts a UserEntity object to a AuditCreateDTO object.
