@@ -1,7 +1,5 @@
 package by.it_academy.jd2.core.exceptions;
 
-
-//todo actuality?
 public class UpdateEntityException extends RuntimeException{
 
     public UpdateEntityException() {

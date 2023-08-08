@@ -4,12 +4,12 @@ import by.it_academy.jd2.core.dto.UserCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.core.enums.EStatusUser;
-import by.it_academy.jd2.dao.repositories.IUserDao;
-import by.it_academy.jd2.dao.entity.UserEntity;
-import by.it_academy.jd2.service.api.IAuditService;
-import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
 import by.it_academy.jd2.core.exceptions.UpdateEntityException;
+import by.it_academy.jd2.dao.entity.UserEntity;
+import by.it_academy.jd2.dao.repositories.IUserDao;
+import by.it_academy.jd2.service.api.IAuditService;
+import by.it_academy.jd2.service.api.IUserService;
 import by.it_academy.jd2.service.supportservices.authentification.UserHolder;
 import jakarta.validation.Valid;
 import org.springframework.core.convert.ConversionService;
@@ -59,7 +59,7 @@ public class UserService implements IUserService {
         return this.userDao.findAll(pageRequest);
     }
 
-    @Transactional //todo   @Transactional(readOnly = true)?
+    @Transactional(readOnly = true)
     @Override
     public UserEntity get(UUID uuid) {
         Optional<UserEntity> userOptional = this.userDao.findById(uuid);
@@ -76,8 +76,8 @@ public class UserService implements IUserService {
     public UserEntity save(UserCreateUpdateDTO item) {
         item.setPassword(passwordEncoder.encode(item.getPassword()));
         UserEntity entity = Objects.requireNonNull(
-                        conversionService
-                                .convert(item, UserEntity.class));
+                conversionService
+                        .convert(item, UserEntity.class));
         entity.setUuid(UUID.randomUUID());
 
         this.userDao.save(entity);
@@ -90,7 +90,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity save(@Valid UserRegistrationDTO item) {
         item.setPassword(passwordEncoder.encode(item.getPassword()));
-        UserEntity entity =  Objects.requireNonNull(
+        UserEntity entity = Objects.requireNonNull(
                 conversionService
                         .convert(item, UserEntity.class));
         entity.setUuid(UUID.randomUUID());

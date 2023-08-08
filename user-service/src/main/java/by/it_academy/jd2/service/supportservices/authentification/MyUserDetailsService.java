@@ -21,7 +21,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> userOptional = this.userService.findByMail(username);
-        return userOptional.orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+        return this.userService
+                .findByMail(username)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(USER_NOT_FOUND));
     }
 }
