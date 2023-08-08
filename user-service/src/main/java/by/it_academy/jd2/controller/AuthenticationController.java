@@ -39,7 +39,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDTO> meDetails() {
+    public ResponseEntity<UserDTO> meDetails(@RequestHeader("Authorization") String authorizationHeader) {
         UserEntity entity = this.authService.meDetails();
 
         return ResponseEntity.status(HttpStatus.OK).body(conversionService.convert(entity, UserDTO.class));
