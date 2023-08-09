@@ -1,11 +1,11 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
-import by.it_academy.jd2.core.dto.UserCheckDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.feign.IAuditClientService;
 import by.it_academy.jd2.service.supportservices.authentification.JwtService;
+import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
+import org.example.mylib.tm.itacademy.dto.UserCheckDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 

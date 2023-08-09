@@ -1,10 +1,10 @@
 package by.it_academy.jd2.dao.entity;
 
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EssenceType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import org.example.mylib.tm.itacademy.enums.ERole;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;

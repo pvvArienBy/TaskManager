@@ -1,10 +1,10 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.dao.entity.AuditEntity;
 import by.it_academy.jd2.dao.repositories.IAuditDao;
 import by.it_academy.jd2.service.api.IAuditService;
-import by.it_academy.jd2.service.exceptions.EntityNotFoundException;
+import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
+import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

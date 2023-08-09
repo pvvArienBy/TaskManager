@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.core.dto.PageDTO;
 import by.it_academy.jd2.dao.entity.AuditEntity;
+import org.example.mylib.tm.itacademy.dto.PageDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;

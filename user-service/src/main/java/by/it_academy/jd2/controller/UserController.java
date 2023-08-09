@@ -3,6 +3,8 @@ package by.it_academy.jd2.controller;
 import by.it_academy.jd2.core.dto.*;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
+import org.example.mylib.tm.itacademy.dto.PageDTO;
+import org.example.mylib.tm.itacademy.dto.UserDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

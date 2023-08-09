@@ -1,6 +1,7 @@
 package by.it_academy.jd2.core.dto;
 
-import by.it_academy.jd2.core.enums.EssenceType;
+import org.example.mylib.tm.itacademy.dto.UserCheckDTO;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 
 import java.util.UUID;
 

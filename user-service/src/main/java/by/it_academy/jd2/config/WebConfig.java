@@ -1,7 +1,5 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.core.errors.ErrorResponse;
-import by.it_academy.jd2.core.errors.StructuredErrorResponse;
 import by.it_academy.jd2.service.converters.*;
 import by.it_academy.jd2.service.utils.ErrorResponseJsonComponent;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +7,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.example.mylib.tm.itacademy.errors.ErrorResponse;
+import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

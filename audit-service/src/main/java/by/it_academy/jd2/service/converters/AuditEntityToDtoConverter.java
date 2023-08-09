@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.core.dto.UserCheckDTO;
 import by.it_academy.jd2.dao.entity.AuditEntity;
+import org.example.mylib.tm.itacademy.dto.UserCheckDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

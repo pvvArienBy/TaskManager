@@ -1,15 +1,15 @@
 package by.it_academy.jd2.controller.advice;
 
-import by.it_academy.jd2.core.enums.ErrorType;
-import by.it_academy.jd2.core.errors.ErrorResponse;
-import by.it_academy.jd2.core.errors.StructuredErrorResponse;
-import by.it_academy.jd2.core.exceptions.NotCorrectValueException;
-import by.it_academy.jd2.core.exceptions.UniqueConstraintViolation;
-import by.it_academy.jd2.core.exceptions.UpdateEntityException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ConstraintViolationException;
+import org.example.mylib.tm.itacademy.enums.ErrorType;
+import org.example.mylib.tm.itacademy.errors.ErrorResponse;
+import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
+import org.example.mylib.tm.itacademy.exceptions.NotCorrectValueException;
+import org.example.mylib.tm.itacademy.exceptions.UniqueConstraintViolation;
+import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;

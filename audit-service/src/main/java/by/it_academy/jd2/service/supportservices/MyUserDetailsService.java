@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service.supportservices;
 
-import by.it_academy.jd2.core.dto.UserDTO;
-import by.it_academy.jd2.core.enums.EStatusUser;
 import by.it_academy.jd2.service.api.feign.IUserClientService;
+import org.example.mylib.tm.itacademy.dto.UserDTO;
+import org.example.mylib.tm.itacademy.enums.EStatusUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

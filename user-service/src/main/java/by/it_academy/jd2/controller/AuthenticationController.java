@@ -1,12 +1,12 @@
 package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.TokenDTO;
-import by.it_academy.jd2.core.dto.UserDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IAuthenticationService;
 import jakarta.validation.Valid;
+import org.example.mylib.tm.itacademy.dto.UserDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

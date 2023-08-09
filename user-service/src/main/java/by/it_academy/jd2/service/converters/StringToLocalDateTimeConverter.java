@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service.converters;
 
-import by.it_academy.jd2.core.enums.ErrorType;
-import by.it_academy.jd2.core.errors.ErrorResponse;
-import by.it_academy.jd2.core.exceptions.NotCorrectValueException;
+import org.example.mylib.tm.itacademy.enums.ErrorType;
+import org.example.mylib.tm.itacademy.errors.ErrorResponse;
+import org.example.mylib.tm.itacademy.exceptions.NotCorrectValueException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

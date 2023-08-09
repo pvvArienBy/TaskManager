@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.api;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.dao.entity.AuditEntity;
+import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 

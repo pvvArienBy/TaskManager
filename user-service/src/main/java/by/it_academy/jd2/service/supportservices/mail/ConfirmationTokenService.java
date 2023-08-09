@@ -1,13 +1,12 @@
 package by.it_academy.jd2.service.supportservices.mail;
 
-import by.it_academy.jd2.dao.repositories.IConfirmationTokenDao;
 import by.it_academy.jd2.dao.entity.TokenEntity;
+import by.it_academy.jd2.dao.repositories.IConfirmationTokenDao;
 import by.it_academy.jd2.service.api.IConfirmationTokenService;
-import by.it_academy.jd2.core.exceptions.EntityNotFoundException;
+import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

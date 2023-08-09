@@ -1,9 +1,9 @@
 package by.it_academy.jd2.service.converters;
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
-import by.it_academy.jd2.core.dto.UserCheckDTO;
-import by.it_academy.jd2.core.enums.EssenceType;
 import by.it_academy.jd2.dao.entity.UserEntity;
+import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
+import org.example.mylib.tm.itacademy.dto.UserCheckDTO;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

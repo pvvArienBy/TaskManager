@@ -5,19 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>by.it-academy.jd2</groupId>
+        <artifactId>TaskManager</artifactId>
+        <version>1.3.5</version>
     </parent>
 
-    <groupId>by.it-academy.jd2</groupId>
     <artifactId>audit-service</artifactId>
     <version>1.3.1-SNAPSHOT</version>
     <name>audit-service</name>
 
-    <description>it-academy final project </description>
-
+    <description>it-academy final project</description>
 
     <properties>
         <java.version>17</java.version>
@@ -91,19 +88,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.example.mylib.tm.itacademy</groupId>
+            <artifactId>tm.itacademy</artifactId>
+        </dependency>
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

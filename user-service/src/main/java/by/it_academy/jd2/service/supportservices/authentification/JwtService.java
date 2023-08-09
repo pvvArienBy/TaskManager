@@ -1,12 +1,12 @@
 package by.it_academy.jd2.service.supportservices.authentification;
 
 import by.it_academy.jd2.config.properties.JWTProperty;
-import by.it_academy.jd2.core.dto.UserCheckDTO;
-import by.it_academy.jd2.core.enums.ERole;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.mylib.tm.itacademy.dto.UserCheckDTO;
+import org.example.mylib.tm.itacademy.enums.ERole;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
