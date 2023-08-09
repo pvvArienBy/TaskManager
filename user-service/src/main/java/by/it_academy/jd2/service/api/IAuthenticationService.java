@@ -14,5 +14,5 @@ public interface IAuthenticationService {
 
     String confirmToken(UUID token, String mail);
 
-    public UserEntity meDetails();
+    UserEntity meDetails();
 }

@@ -1,8 +1,8 @@
 package by.it_academy.jd2.controller;
 
 
-import by.it_academy.jd2.core.dto.AuditCreateDTO;
 import by.it_academy.jd2.service.api.IAuditService;
+import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

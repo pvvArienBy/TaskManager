@@ -1,8 +1,8 @@
 package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.core.dto.PageDTO;
 import by.it_academy.jd2.service.api.IAuditService;
+import org.example.mylib.tm.itacademy.dto.PageDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;

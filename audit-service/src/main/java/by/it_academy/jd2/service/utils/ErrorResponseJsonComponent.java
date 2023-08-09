@@ -1,10 +1,10 @@
 package by.it_academy.jd2.service.utils;
 
-import by.it_academy.jd2.core.errors.ErrorResponse;
-import by.it_academy.jd2.core.errors.StructuredErrorResponse;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.example.mylib.tm.itacademy.errors.ErrorResponse;
+import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.boot.jackson.JsonObjectSerializer;
 

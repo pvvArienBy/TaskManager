@@ -1,7 +1,6 @@
-package by.it_academy.jd2.service.supportservices.authentification;
+package by.it_academy.jd2.service.supportservices;
 
 import by.it_academy.jd2.config.properties.JWTProperty;
-import by.it_academy.jd2.dao.entity.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -14,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Service
@@ -41,29 +37,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserEntity userEntity) {
-        return generateToken(new HashMap<>(), userEntity);
-    }
-
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserEntity userEntity
-    ) {
-        extraClaims.put("uuid", userEntity.getUuid());
-        extraClaims.put("mail", userEntity.getMail());
-        extraClaims.put("fio", userEntity.getFio());
-        extraClaims.put("role", userEntity.getRole());
-        return Jwts
-
-                .builder()
-                .setClaims(extraClaims)
-                .setIssuer(property.getIssuer())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUserName(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -78,7 +51,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        Claims body = null;
+        Claims body;
         try {
             body = Jwts
                     .parserBuilder()
@@ -88,7 +61,7 @@ public class JwtService {
                     .getBody();
         } catch (ExpiredJwtException | MalformedJwtException e) {
             SecurityContextHolder.getContext().setAuthentication(null);
-            throw new AccessDeniedException("Invalid token");// TODO: 01.08.2023 Check trouble
+            throw new AccessDeniedException("Invalid token");
         }
 
         return body;

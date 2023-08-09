@@ -1,13 +1,11 @@
 package by.it_academy.jd2.dao.entity;
 
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EStatusUser;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.example.mylib.tm.itacademy.enums.ERole;
+import org.example.mylib.tm.itacademy.enums.EStatusUser;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +30,7 @@ public class UserEntity implements Serializable, UserDetails {
     private LocalDateTime dtCreate;
     @Version
     @UpdateTimestamp
-    @Column(name = "date_update",nullable = false)
+    @Column(name = "date_update", nullable = false)
     private LocalDateTime dtUpdate;
     @Email(message = "Некорректный адрес электронной почты")
     @Column(nullable = false)

@@ -1,12 +1,14 @@
 package by.it_academy.jd2.core.dto;
 
 import by.it_academy.jd2.annotation.ValidEmail;
-import by.it_academy.jd2.annotation.ValidEnum;
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EStatusUser;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.example.mylib.tm.itacademy.enums.ERole;
+import org.example.mylib.tm.itacademy.enums.EStatusUser;
 
 public class UserCreateUpdateDTO {
     @NotBlank(message = "mail не должен быть пустым")

@@ -1,12 +1,10 @@
 package by.it_academy.jd2.dao.entity;
 
-import by.it_academy.jd2.core.enums.ERole;
-import by.it_academy.jd2.core.enums.EssenceType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.example.mylib.tm.itacademy.enums.ERole;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
@@ -23,18 +21,13 @@ public class AuditEntity implements Serializable {
     @CreationTimestamp
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
-//    @NotBlank(message = "userUuid не должен быть пустым")
     private UUID userUuid;
-    @NotBlank(message = "userMail не должен быть пустым")
     @Email(message = "Некорректный адрес электронной почты")
     private String userMail;
-    @NotBlank(message = "UserFio не должен быть пустым")
     @Size(max = 255)
-    @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
     private String userFio;
     @Enumerated(EnumType.STRING)
     private ERole userRole;
-    @NotBlank(message = "text не должен быть пустым")
     @Size(max = 255)
     private String text;
     @Enumerated(EnumType.STRING)
