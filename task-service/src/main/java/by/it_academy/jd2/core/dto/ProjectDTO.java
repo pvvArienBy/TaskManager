@@ -1,39 +1,59 @@
 package by.it_academy.jd2.core.dto;
 
+import by.it_academy.jd2.core.dto.UserRefDTO;
+import by.it_academy.jd2.core.enums.EProjectStatus;
+
 import java.util.List;
+import java.util.UUID;
 
 public class ProjectDTO {
-
-    private Long id;
-
+    private UUID uuid;
+    private Long dtCreate;
+    private Long dtUpdate;
     private String name;
-
     private String description;
-
-    private Long creator;
-
-    private List<Long> users;
-
-    private Long version;
+    private UserRefDTO manager;
+    private List<UserRefDTO> staff;
+    private EProjectStatus status;
 
     public ProjectDTO() {
     }
 
-    public ProjectDTO(Long id, String name, String description, Long creator, List<Long> users, Long version) {
-        this.id = id;
+    public ProjectDTO(UUID uuid, Long dtCreate, Long dtUpdate,
+                      String name, String description, UserRefDTO manager,
+                      List<UserRefDTO> staff, EProjectStatus status) {
+        this.uuid = uuid;
+        this.dtCreate = dtCreate;
+        this.dtUpdate = dtUpdate;
         this.name = name;
         this.description = description;
-        this.creator = creator;
-        this.users = users;
-        this.version = version;
+        this.manager = manager;
+        this.staff = staff;
+        this.status = status;
     }
 
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public Long getDtCreate() {
+        return dtCreate;
+    }
+
+    public void setDtCreate(Long dtCreate) {
+        this.dtCreate = dtCreate;
+    }
+
+    public Long getDtUpdate() {
+        return dtUpdate;
+    }
+
+    public void setDtUpdate(Long dtUpdate) {
+        this.dtUpdate = dtUpdate;
     }
 
     public String getName() {
@@ -52,27 +72,27 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public Long getCreator() {
-        return creator;
+    public UserRefDTO getManager() {
+        return manager;
     }
 
-    public void setCreator(Long creator) {
-        this.creator = creator;
+    public void setManager(UserRefDTO manager) {
+        this.manager = manager;
     }
 
-    public List<Long> getUsers() {
-        return users;
+    public List<UserRefDTO> getStaff() {
+        return staff;
     }
 
-    public void setUsers(List<Long> users) {
-        this.users = users;
+    public void setStaff(List<UserRefDTO> staff) {
+        this.staff = staff;
     }
 
-    public Long getVersion() {
-        return version;
+    public EProjectStatus getStatus() {
+        return status;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
+    public void setStatus(EProjectStatus status) {
+        this.status = status;
     }
 }
