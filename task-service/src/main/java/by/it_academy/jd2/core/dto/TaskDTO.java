@@ -1,59 +1,67 @@
 package by.it_academy.jd2.core.dto;
 
-import by.it_academy.jd2.core.enums.ECategory;
-import by.it_academy.jd2.core.enums.EPriority;
-import by.it_academy.jd2.core.enums.EStatusTask;
+import by.it_academy.jd2.core.dto.ProjectRefDTO;
+import by.it_academy.jd2.core.dto.UserRefDTO;
+import by.it_academy.jd2.core.enums.ETaskStatus;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.UUID;
 
 public class TaskDTO {
-
-    private Long id;
-
+    private UUID uuid;
+    private Long dtCreate;
+    private Long dtUpdate;
+    private ProjectRefDTO project;
     private String title;
-
     private String description;
-
-    private ProjectDTO project;
-
-    private Long performer;
-
-    private EStatusTask status;
-
-    private EPriority priority ;
-
-    private ECategory category ;
-
-    private LocalDate term ;
-
-    private List<FileDTO> files;
-
-    private Long version;
+    private ETaskStatus status;
+    private UserRefDTO implementer;
 
     public TaskDTO() {
     }
 
-    public TaskDTO(Long id, String title, String description, ProjectDTO project, Long performer, EStatusTask status, EPriority priority, ECategory category, LocalDate term, List<FileDTO> files, Long version) {
-        this.id = id;
+    public TaskDTO(UUID uuid, Long dtCreate, Long dtUpdate,
+                   ProjectRefDTO project, String title, String description,
+                   ETaskStatus status, UserRefDTO implementer) {
+        this.uuid = uuid;
+        this.dtCreate = dtCreate;
+        this.dtUpdate = dtUpdate;
+        this.project = project;
         this.title = title;
         this.description = description;
-        this.project = project;
-        this.performer = performer;
         this.status = status;
-        this.priority = priority;
-        this.category = category;
-        this.term = term;
-        this.files = files;
-        this.version = version;
+        this.implementer = implementer;
     }
 
-    public Long getId() {
-        return id;
+    public UUID getUuid() {
+        return uuid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public Long getDtCreate() {
+        return dtCreate;
+    }
+
+    public void setDtCreate(Long dtCreate) {
+        this.dtCreate = dtCreate;
+    }
+
+    public Long getDtUpdate() {
+        return dtUpdate;
+    }
+
+    public void setDtUpdate(Long dtUpdate) {
+        this.dtUpdate = dtUpdate;
+    }
+
+    public ProjectRefDTO getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectRefDTO project) {
+        this.project = project;
     }
 
     public String getTitle() {
@@ -72,67 +80,19 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public ProjectDTO getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectDTO project) {
-        this.project = project;
-    }
-
-    public Long getPerformer() {
-        return performer;
-    }
-
-    public void setPerformer(Long performer) {
-        this.performer = performer;
-    }
-
-    public EStatusTask getStatus() {
+    public ETaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EStatusTask status) {
+    public void setStatus(ETaskStatus status) {
         this.status = status;
     }
 
-    public EPriority getPriority() {
-        return priority;
+    public UserRefDTO getImplementer() {
+        return implementer;
     }
 
-    public void setPriority(EPriority priority) {
-        this.priority = priority;
-    }
-
-    public ECategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(ECategory category) {
-        this.category = category;
-    }
-
-    public LocalDate getTerm() {
-        return term;
-    }
-
-    public void setTerm(LocalDate term) {
-        this.term = term;
-    }
-
-    public List<FileDTO> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<FileDTO> files) {
-        this.files = files;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
+    public void setImplementer(UserRefDTO implementer) {
+        this.implementer = implementer;
     }
 }
