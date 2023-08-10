@@ -1,7 +1,5 @@
 package by.it_academy.jd2.core.dto;
 
-import by.it_academy.jd2.core.dto.ProjectRefDTO;
-import by.it_academy.jd2.core.dto.UserRefDTO;
 import by.it_academy.jd2.core.enums.ETaskStatus;
 
 import java.util.UUID;
