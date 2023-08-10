@@ -44,7 +44,7 @@ public class AuditService implements IAuditService {
     @Transactional
     @Override
     public AuditEntity save(AuditCreateDTO item) {
-        return this.auditDao.save(
+        return this.auditDao.saveAndFlush(
                 Objects.requireNonNull(
                         this.conversionService.convert(
                                 item, AuditEntity.class)));
