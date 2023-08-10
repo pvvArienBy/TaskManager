@@ -66,7 +66,7 @@ public class ProjectService implements IProjectService {
                         .convert(item, ProjectEntity.class));
         entity.setUuid(UUID.randomUUID());
 
-        this.projectDao.save(entity);
+        this.projectDao.saveAndFlush(entity);
         this.auditService.send(
                 NEW_PROJECT_CREATED, entity.getUuid().toString(), EssenceType.PROJECT);
         return entity;
@@ -90,7 +90,7 @@ public class ProjectService implements IProjectService {
         entity.setStaff(item.getStaff().stream().map(UserRefDTO::getUuid).collect(Collectors.toList()));
         entity.setStatus(item.getStatus());
 
-        ProjectEntity saveEntity = this.projectDao.save(entity);
+        ProjectEntity saveEntity = this.projectDao.saveAndFlush(entity);
         this.auditService.send(PROJECT_UPDATER, uuid.toString(), EssenceType.PROJECT);
 
         return saveEntity;

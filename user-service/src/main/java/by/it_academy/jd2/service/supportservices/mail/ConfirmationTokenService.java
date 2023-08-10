@@ -5,6 +5,7 @@ import by.it_academy.jd2.dao.repositories.IConfirmationTokenDao;
 import by.it_academy.jd2.service.api.IConfirmationTokenService;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,11 +19,13 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
         this.tokenDao = tokenDao;
     }
 
+    @Transactional
     @Override
     public void save(TokenEntity token) {
-        this.tokenDao.save(token);
+        this.tokenDao.saveAndFlush(token);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public TokenEntity findByToken(UUID token) {
         return this.tokenDao.findByToken(token)
@@ -30,10 +33,11 @@ public class ConfirmationTokenService implements IConfirmationTokenService {
                         -> new EntityNotFoundException(TOKEN_NOT_FOUND));
     }
 
+    @Transactional
     @Override
     public void setConfirmedAt(UUID token) {
         TokenEntity entity = findByToken(token);
         entity.setConfirmedAt(LocalDateTime.now());
-        this.tokenDao.save(entity);
+        this.tokenDao.saveAndFlush(entity);
     }
 }

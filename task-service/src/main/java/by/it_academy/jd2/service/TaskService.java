@@ -67,7 +67,7 @@ public class TaskService implements ITaskService {
                         .convert(item, TaskEntity.class));
         entity.setUuid(UUID.randomUUID());
 
-        this.taskDao.save(entity);
+        this.taskDao.saveAndFlush(entity);
         this.auditService.send(
                 NEW_TASK_CREATED, entity.getUuid().toString(), EssenceType.TASK);
 
@@ -92,7 +92,7 @@ public class TaskService implements ITaskService {
         entity.setStatus(item.getStatus());
         entity.setImplementer(item.getImplementer().getUuid());
 
-        TaskEntity saveEntity = this.taskDao.save(entity);
+        TaskEntity saveEntity = this.taskDao.saveAndFlush(entity);
         this.auditService.send(TASK_UPDATER, uuid.toString(), EssenceType.TASK);
 
         return saveEntity;
@@ -112,7 +112,7 @@ public class TaskService implements ITaskService {
 
         entity.setStatus(status);
 
-        TaskEntity saveEntity = this.taskDao.save(entity);
+        TaskEntity saveEntity = this.taskDao.saveAndFlush(entity);
         this.auditService.send(TASK_UPDATER, uuid.toString(), EssenceType.TASK);
 
         return saveEntity;

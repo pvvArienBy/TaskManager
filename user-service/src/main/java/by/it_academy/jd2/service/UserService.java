@@ -81,7 +81,7 @@ public class UserService implements IUserService {
                         .convert(item, UserEntity.class));
         entity.setUuid(UUID.randomUUID());
 
-        this.userDao.save(entity);
+        this.userDao.saveAndFlush(entity);
         this.auditService.send(getMe(), NEW_USER_CREATED, entity.getUuid().toString());
 
         return entity;
@@ -98,7 +98,7 @@ public class UserService implements IUserService {
         entity.setRole(ERole.USER);
         entity.setStatus(EStatusUser.WAITING_ACTIVATION);
 
-        this.userDao.save(entity);
+        this.userDao.saveAndFlush(entity);
         this.auditService.send(entity, NEW_USER_REGISTRATION);
 
         return entity;
@@ -122,7 +122,7 @@ public class UserService implements IUserService {
         entity.setStatus(item.getStatus());
         entity.setPassword(item.getPassword());
 
-        UserEntity saveEntity = this.userDao.save(entity);
+        UserEntity saveEntity = this.userDao.saveAndFlush(entity);
 
         this.auditService.send(getMe(), USER_UPDATER, entity.getUuid().toString());
 
