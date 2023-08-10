@@ -5,7 +5,6 @@ import by.it_academy.jd2.core.dto.ProjectDTO;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.service.api.IProjectService;
 import org.example.mylib.tm.itacademy.dto.PageDTO;
-import org.example.mylib.tm.itacademy.dto.UserDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -27,9 +26,9 @@ public class ProjectController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<UserDTO> findById(@PathVariable UUID uuid) {
-        UserDTO userDTO = conversionService.convert(this.projectService.get(uuid), UserDTO.class);
-        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+    public ResponseEntity<ProjectDTO> findById(@PathVariable UUID uuid) {
+        ProjectDTO projectDTO = conversionService.convert(this.projectService.get(uuid), ProjectDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(projectDTO);
     }
 
     @GetMapping
@@ -47,11 +46,11 @@ public class ProjectController {
     }
 
     @PutMapping("/{uuid}/dt_update/{dt_update}")
-    public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,
-                                        @PathVariable("dt_update") LocalDateTime dtUpdate,
-                                        @RequestBody ProjectCreateUpdateDTO dto) {
+    public ResponseEntity<ProjectDTO> save(@PathVariable UUID uuid,
+                                           @PathVariable("dt_update") LocalDateTime dtUpdate,
+                                           @RequestBody ProjectCreateUpdateDTO dto) {
         ProjectEntity projectEntity = this.projectService.update(uuid, dtUpdate, dto);
-        UserDTO projectDTO = conversionService.convert(projectEntity, ProjectDTO.class);
+        ProjectDTO projectDTO = conversionService.convert(projectEntity, ProjectDTO.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(projectDTO);
     }
