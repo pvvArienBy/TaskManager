@@ -16,15 +16,15 @@ import java.util.UUID;
 @Entity
 @Table(name = "projects")
 public class ProjectEntity implements Serializable {
-    static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 2L;
     @Id
     private UUID uuid;
     @CreationTimestamp
-    @Column(name = "date_create", nullable = false)
+    @Column(name = "date_create")
     private LocalDateTime dtCreate;
     @Version
     @UpdateTimestamp
-    @Column(name = "date_update", nullable = false)
+    @Column(name = "date_update")
     private LocalDateTime dtUpdate;
     @Size(max = 255)
     @Column(nullable = false)
@@ -35,8 +35,8 @@ public class ProjectEntity implements Serializable {
     @JoinColumn( name = "manager_uuid", nullable = false)
     private UUID manager;
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "project_users", joinColumns = @JoinColumn(name = "id_project"))
-    @Column(name = "id_user")
+    @CollectionTable(name = "project_staff", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "staff")
     private List<UUID> staff;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
