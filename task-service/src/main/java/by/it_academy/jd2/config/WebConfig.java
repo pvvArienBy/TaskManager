@@ -1,9 +1,6 @@
 package by.it_academy.jd2.config;
 
-import by.it_academy.jd2.service.converters.ProjectCreateUpdateDtoToEntityConverter;
-import by.it_academy.jd2.service.converters.ProjectEntityToDtoConverter;
-import by.it_academy.jd2.service.converters.TaskCreateUpdateDtoToEntityConverter;
-import by.it_academy.jd2.service.converters.TaskEntityToDtoConverter;
+import by.it_academy.jd2.service.converters.*;
 import by.it_academy.jd2.service.utils.ErrorResponseJsonComponent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -56,5 +53,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addConverter(new ProjectEntityToDtoConverter());
         registry.addConverter(new TaskCreateUpdateDtoToEntityConverter());
         registry.addConverter(new TaskEntityToDtoConverter());
+        registry.addConverter(new StringToLocalDateTimeConverter());
+        registry.addConverter(new PageEntityToPageDtoConverter(
+                new ProjectEntityToDtoConverter(), new TaskEntityToDtoConverter()));
     }
 }
