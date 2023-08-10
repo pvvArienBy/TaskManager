@@ -33,6 +33,14 @@ public class UserCreateUpdateDTO {
     public UserCreateUpdateDTO() {
     }
 
+    public UserCreateUpdateDTO(String mail, String fio, ERole role, EStatusUser status, String password) {
+        this.mail = mail;
+        this.fio = fio;
+        this.role = role;
+        this.status = status;
+        this.password = password;
+    }
+
     public String getMail() {
         return mail;
     }
