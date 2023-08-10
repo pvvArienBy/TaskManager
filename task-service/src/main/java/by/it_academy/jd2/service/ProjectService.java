@@ -4,8 +4,9 @@ import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
 import by.it_academy.jd2.core.dto.UserRefDTO;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.dao.repositories.IProjectDao;
+import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IProjectService;
-import by.it_academy.jd2.service.supportservices.UserHolder;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
@@ -25,20 +26,17 @@ public class ProjectService implements IProjectService {
     private static final String PROJECT_NOT_FOUND = "Project is not found";
     private static final String NEW_PROJECT_CREATED = "Creating a new project under a different project";
     private static final String PROJECT_UPDATED = "Project updated! Try again";
-    private static final String NEW_PROJECT_OPENING = "New project opening";
     private static final String REQUESTED_DATA_UUID = "Requested project data by UUID";
 
     private final IProjectDao projectDao;
+    private final IAuditService auditService;
     private final ConversionService conversionService;
-    private final UserHolder userHolder;
-
 
     public ProjectService(IProjectDao projectDao,
-                          ConversionService conversionService,
-                          UserHolder userHolder) {
+                          IAuditService auditService, ConversionService conversionService) {
         this.projectDao = projectDao;
+        this.auditService = auditService;
         this.conversionService = conversionService;
-        this.userHolder = userHolder;
     }
 
     @Transactional(readOnly = true)
@@ -55,8 +53,7 @@ public class ProjectService implements IProjectService {
                 .orElseThrow(()
                         -> new EntityNotFoundException(PROJECT_NOT_FOUND));
 
-//        this.auditService.send(getMe(), REQUESTED_DATA_UUID, uuid.toString());
-        // TODO: 09.08.2023 аудит
+        this.auditService.send(REQUESTED_DATA_UUID, uuid.toString(), EssenceType.PROJECT);
 
         return entity;
     }
@@ -70,8 +67,8 @@ public class ProjectService implements IProjectService {
         entity.setUuid(UUID.randomUUID());
 
         this.projectDao.save(entity);
-//        this.auditService.send(getMe(), NEW_PROJECT_CREATED, entity.getUuid().toString());
-        // TODO: 09.08.2023 аудит
+        this.auditService.send(
+                NEW_PROJECT_CREATED, entity.getUuid().toString(), EssenceType.PROJECT);
         return entity;
     }
 
@@ -84,7 +81,7 @@ public class ProjectService implements IProjectService {
                         -> new EntityNotFoundException(PROJECT_NOT_FOUND));
 
         if (!version.equals(entity.getDtUpdate())) {
-            throw new UpdateEntityException(PROJECT_UPDATER);
+            throw new UpdateEntityException(PROJECT_UPDATED);
         }
 
         entity.setName(item.getName());
@@ -94,21 +91,8 @@ public class ProjectService implements IProjectService {
         entity.setStatus(item.getStatus());
 
         ProjectEntity saveEntity = this.projectDao.save(entity);
+        this.auditService.send(PROJECT_UPDATER, uuid.toString(), EssenceType.PROJECT);
 
-//        this.auditService.send(getMe(), PROJECT_UPDATER, entity.getUuid().toString());
-        // TODO: 09.08.2023 аудит
         return saveEntity;
     }
-
-    // TODO: 09.08.2023 получить данные о текущем пользователе
-//    @Transactional(readOnly = true)
-//    @Override
-//    public ProjectEntity getMe() {
-//        return this.projectDao
-//                .findByMail(this.userHolder
-//                        .getUser()
-//                        .getUsername())
-//                .orElseThrow(()
-//                        -> new EntityNotFoundException(USER_NOT_FOUND));
-//    }
 }

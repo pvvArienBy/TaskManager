@@ -4,8 +4,10 @@ import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
 import by.it_academy.jd2.core.enums.ETaskStatus;
 import by.it_academy.jd2.dao.entity.TaskEntity;
 import by.it_academy.jd2.dao.repositories.ITaskDao;
+import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.ITaskService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
+import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
@@ -28,16 +30,15 @@ public class TaskService implements ITaskService {
 
     private final ITaskDao taskDao;
     private final ConversionService conversionService;
-    private final UserHolder userHolder;
+    private final IAuditService auditService;
 
     public TaskService(ITaskDao taskDao,
                        ConversionService conversionService,
-                       UserHolder userHolder) {
+                       IAuditService auditService) {
         this.taskDao = taskDao;
         this.conversionService = conversionService;
-        this.userHolder = userHolder;
+        this.auditService = auditService;
     }
-
 
     @Transactional(readOnly = true)
     @Override
@@ -53,8 +54,8 @@ public class TaskService implements ITaskService {
                 .orElseThrow(()
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
-//        this.auditService.send(getMe(), REQUESTED_DATA_UUID, uuid.toString());
-// TODO: 09.08.2023 аудит
+        this.auditService.send(REQUESTED_DATA_UUID, uuid.toString(), EssenceType.TASK);
+
         return entity;
     }
 
@@ -67,8 +68,9 @@ public class TaskService implements ITaskService {
         entity.setUuid(UUID.randomUUID());
 
         this.taskDao.save(entity);
-//        this.auditService.send(getMe(), NEW_TASK_CREATED, entity.getUuid().toString());
-// TODO: 09.08.2023 аудит
+        this.auditService.send(
+                NEW_TASK_CREATED, entity.getUuid().toString(), EssenceType.TASK);
+
         return entity;
     }
 
@@ -81,7 +83,7 @@ public class TaskService implements ITaskService {
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
         if (!version.equals(entity.getDtUpdate())) {
-            throw new UpdateEntityException(TASK_UPDATER);
+            throw new UpdateEntityException(TASK_UPDATED);
         }
 
         entity.setProject(item.getProject().getUuid());
@@ -91,9 +93,8 @@ public class TaskService implements ITaskService {
         entity.setImplementer(item.getImplementer().getUuid());
 
         TaskEntity saveEntity = this.taskDao.save(entity);
+        this.auditService.send(TASK_UPDATER, uuid.toString(), EssenceType.TASK);
 
-//        this.auditService.send(getMe(), PROJECT_UPDATER, entity.getUuid().toString());
-        // TODO: 09.08.2023 аудит
         return saveEntity;
     }
 
@@ -106,15 +107,14 @@ public class TaskService implements ITaskService {
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
         if (!version.equals(entity.getDtUpdate())) {
-            throw new UpdateEntityException(TASK_UPDATER);
+            throw new UpdateEntityException(TASK_UPDATED);
         }
 
         entity.setStatus(status);
 
         TaskEntity saveEntity = this.taskDao.save(entity);
+        this.auditService.send(TASK_UPDATER, uuid.toString(), EssenceType.TASK);
 
-//        this.auditService.send(getMe(), PROJECT_UPDATER, entity.getUuid().toString());
-        // TODO: 09.08.2023 аудит
         return saveEntity;
     }
 }
