@@ -10,9 +10,9 @@ public class UserCreateUpdateDtoToEntityConverter
         implements Converter<UserCreateUpdateDTO, UserEntity> {
 
     /**
-     * Converts a UserCreateDTO object to a UserEntity object.
+     * Converts a UserCreateUpdateDTO object to a UserEntity object.
      *
-     * @param dto the UserCreateDTO object to convert
+     * @param dto the UserCreateUpdateDTO object to convert
      * @return the converted UserEntity object
      */
     @Override

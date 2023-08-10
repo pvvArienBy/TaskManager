@@ -1,57 +1,37 @@
 package by.it_academy.jd2.core.dto;
 
 import by.it_academy.jd2.core.enums.ETaskStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import java.util.UUID;
-
-public class TaskDTO {
-    private UUID uuid;
-    private Long dtCreate;
-    private Long dtUpdate;
+public class TaskCreateUpdateDTO {
+    @NotBlank(message = "project не должен быть пустым")
     private ProjectRefDTO project;
+    @NotBlank(message = "title не должен быть пустым")
+    @Size(max = 255)
     private String title;
+    @NotBlank(message = "description не должен быть пустым")
+    @Size(max = 1000)
     private String description;
+    @NotNull(message = "status не должен быть пустым")
+    @Enumerated(EnumType.STRING)
     private ETaskStatus status;
+    @NotBlank(message = "implementer не должен быть пустым")
     private UserRefDTO implementer;
 
-    public TaskDTO() {
+    public TaskCreateUpdateDTO() {
     }
 
-    public TaskDTO(UUID uuid, Long dtCreate, Long dtUpdate,
-                   ProjectRefDTO project, String title, String description,
-                   ETaskStatus status, UserRefDTO implementer) {
-        this.uuid = uuid;
-        this.dtCreate = dtCreate;
-        this.dtUpdate = dtUpdate;
+    public TaskCreateUpdateDTO(ProjectRefDTO project, String title, String description,
+                               ETaskStatus status, UserRefDTO implementer) {
         this.project = project;
         this.title = title;
         this.description = description;
         this.status = status;
         this.implementer = implementer;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public Long getDtCreate() {
-        return dtCreate;
-    }
-
-    public void setDtCreate(Long dtCreate) {
-        this.dtCreate = dtCreate;
-    }
-
-    public Long getDtUpdate() {
-        return dtUpdate;
-    }
-
-    public void setDtUpdate(Long dtUpdate) {
-        this.dtUpdate = dtUpdate;
     }
 
     public ProjectRefDTO getProject() {
@@ -94,3 +74,6 @@ public class TaskDTO {
         this.implementer = implementer;
     }
 }
+
+
+

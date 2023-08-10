@@ -1,58 +1,38 @@
 package by.it_academy.jd2.core.dto;
 
 import by.it_academy.jd2.core.enums.EProjectStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
-import java.util.UUID;
 
-public class ProjectDTO {
-    private UUID uuid;
-    private Long dtCreate;
-    private Long dtUpdate;
+public class ProjectCreateUpdateDTO {
+    @NotBlank(message = "name не должен быть пустым")
+    @Size(max = 255)
     private String name;
+    @NotBlank(message = "description не должен быть пустым")
+    @Size(max = 1000)
     private String description;
+    @NotBlank(message = "manager не должен быть пустым")
     private UserRefDTO manager;
     private List<UserRefDTO> staff;
+    @NotNull(message = "status не должен быть пустым")
+    @Enumerated(EnumType.STRING)
     private EProjectStatus status;
 
-    public ProjectDTO() {
+    public ProjectCreateUpdateDTO() {
     }
 
-    public ProjectDTO(UUID uuid, Long dtCreate, Long dtUpdate,
-                      String name, String description, UserRefDTO manager,
-                      List<UserRefDTO> staff, EProjectStatus status) {
-        this.uuid = uuid;
-        this.dtCreate = dtCreate;
-        this.dtUpdate = dtUpdate;
+    public ProjectCreateUpdateDTO(String name, String description, UserRefDTO manager,
+                                  List<UserRefDTO> staff, EProjectStatus status) {
         this.name = name;
         this.description = description;
         this.manager = manager;
         this.staff = staff;
         this.status = status;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public Long getDtCreate() {
-        return dtCreate;
-    }
-
-    public void setDtCreate(Long dtCreate) {
-        this.dtCreate = dtCreate;
-    }
-
-    public Long getDtUpdate() {
-        return dtUpdate;
-    }
-
-    public void setDtUpdate(Long dtUpdate) {
-        this.dtUpdate = dtUpdate;
     }
 
     public String getName() {
@@ -95,3 +75,6 @@ public class ProjectDTO {
         this.status = status;
     }
 }
+
+
+

@@ -1,10 +1,16 @@
 package by.it_academy.jd2.service.api;
 
-import by.it_academy.jd2.core.dto.CoordinatesDTO;
-import by.it_academy.jd2.core.dto.archtoDeelee.TaskCreateDTO;
+import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
+import by.it_academy.jd2.core.enums.ETaskStatus;
 import by.it_academy.jd2.dao.entity.TaskEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
-public interface ITaskService extends ICRUDService <TaskEntity, TaskCreateDTO, CoordinatesDTO>, IFilterService <TaskEntity>{
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-    boolean validateCoordinatesParam(String id);
+public interface ITaskService extends ICRUService<TaskEntity, TaskCreateUpdateDTO> {
+    Page<TaskEntity> getAll(PageRequest pageRequest);
+    TaskEntity update(UUID uuid, LocalDateTime version, ETaskStatus status);
+
 }
