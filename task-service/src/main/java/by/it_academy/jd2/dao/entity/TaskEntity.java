@@ -19,11 +19,11 @@ public class TaskEntity implements Serializable {
     @Id
     private UUID uuid;
     @CreationTimestamp
-    @Column(name = "date_create", nullable = false)
+    @Column(name = "date_create")
     private LocalDateTime dtCreate;
     @Version
     @UpdateTimestamp
-    @Column(name = "date_update", nullable = false)
+    @Column(name = "date_update")
     private LocalDateTime dtUpdate;
     @JoinColumn(name = "project_uuid", nullable = false)
     private UUID project;
