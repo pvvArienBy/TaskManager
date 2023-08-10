@@ -62,9 +62,10 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     @Override
     public UserEntity get(UUID uuid) {
-        Optional<UserEntity> userOptional = this.userDao.findById(uuid);
-        UserEntity entity = userOptional
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+        UserEntity entity =  this.userDao
+                .findById(uuid)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(USER_NOT_FOUND));
 
         this.auditService.send(getMe(), REQUESTED_DATA_UUID, uuid.toString());
 
@@ -106,9 +107,10 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public UserEntity update(UUID uuid, LocalDateTime version, UserCreateUpdateDTO item) {
-        Optional<UserEntity> userOptional = userDao.findById(uuid);
-        UserEntity entity = userOptional.orElseThrow(() -> new EntityNotFoundException(
-                USER_NOT_FOUND));
+        UserEntity entity = userDao
+                .findById(uuid)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(USER_NOT_FOUND));
 
         if (!version.equals(entity.getDtUpdate())) {
             throw new UpdateEntityException(USER_UPDATED);
@@ -142,9 +144,10 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void activated(String mail) {
-        Optional<UserEntity> userOptional = userDao.findByMail(mail);
-        UserEntity entity = userOptional
-                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+        UserEntity entity = userDao
+                .findByMail(mail)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(USER_NOT_FOUND));
 
         entity.setStatus(EStatusUser.ACTIVATED);
         this.userDao.save(entity);
