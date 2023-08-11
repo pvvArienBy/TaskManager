@@ -13,11 +13,11 @@ public class ProjectCreateUpdateDTO {
     @NotBlank(message = "name не должен быть пустым")
     @Size(max = 255)
     private String name;
-    @NotBlank(message = "description не должен быть пустым")
     @Size(max = 1000)
     private String description;
     @NotBlank(message = "manager не должен быть пустым")
     private UserRefDTO manager;
+    @NotBlank(message = "staff не должен быть пустым")
     private List<UserRefDTO> staff;
     @NotNull(message = "status не должен быть пустым")
     @Enumerated(EnumType.STRING)
