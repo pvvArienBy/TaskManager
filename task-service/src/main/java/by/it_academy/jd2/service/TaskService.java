@@ -45,15 +45,22 @@ public class TaskService implements ITaskService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<TaskEntity> getAll(PageRequest pageRequest, List<UUID> project) {
-        if (project != null && !project.isEmpty()) {
-            Page<TaskEntity> tasks =  this.taskDao.findByProjectUuids(project, pageRequest);
-            if (tasks.isEmpty()) {
-                return Page.empty(pageRequest);
-            }
+    public Page<TaskEntity> getAll(PageRequest pageRequest,
+                                   List<UUID> project,
+                                   List<UUID> implementer) {
+        if (!project.isEmpty() && implementer.isEmpty()) {
+            return taskDao.findByProjectIn(project, pageRequest);
         }
 
-        return this.taskDao.findAll(pageRequest);
+        if (project.isEmpty() && !implementer.isEmpty()) {
+            return taskDao.findByImplementerIn(implementer, pageRequest);
+        }
+
+        if (!project.isEmpty() && !implementer.isEmpty()) {
+            return taskDao.findByProjectInAndImplementerIn(project, implementer, pageRequest);
+        }
+
+        return taskDao.findAll(pageRequest);
     }
 
     @Transactional(readOnly = true)

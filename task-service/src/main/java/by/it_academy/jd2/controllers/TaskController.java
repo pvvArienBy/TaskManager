@@ -36,11 +36,12 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") int page,
                                      @RequestParam(required = false, defaultValue = "20") int size,
-                                     @RequestParam(required = false) List<UUID> project) {
+                                     @RequestParam(required = false, defaultValue = "") List<UUID> project,
+                                     @RequestParam(required = false, defaultValue = "") List<UUID> implementer) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(conversionService.convert(
                         this.taskService.getAll(
-                                PageRequest.of(page, size), project), PageDTO.class));
+                                PageRequest.of(page, size), project,implementer), PageDTO.class));
     }
 
     @PostMapping

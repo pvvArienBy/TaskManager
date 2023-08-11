@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ITaskService extends ICRUService<TaskEntity, TaskCreateUpdateDTO> {
-    Page<TaskEntity> getAll(PageRequest pageRequest, List<UUID> project);
+    Page<TaskEntity> getAll(PageRequest pageRequest, List<UUID> project, List<UUID> implementer);
     TaskEntity update(UUID uuid, LocalDateTime version, ETaskStatus status);
 
 }
