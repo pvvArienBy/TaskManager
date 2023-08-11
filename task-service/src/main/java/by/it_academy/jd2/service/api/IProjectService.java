@@ -7,6 +7,6 @@ import org.springframework.data.domain.PageRequest;
 
 
 public interface IProjectService extends ICRUService<ProjectEntity, ProjectCreateUpdateDTO> {
-    Page<ProjectEntity> getAll(PageRequest pageRequest);
+    Page<ProjectEntity> getAll(PageRequest pageRequest, Boolean archived);
 
 }
