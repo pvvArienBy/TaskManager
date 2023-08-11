@@ -4,22 +4,19 @@ import by.it_academy.jd2.core.enums.ETaskStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+// TODO: 11.08.2023 описание и статус и implementer могут быть null // project NotNull
 public class TaskCreateUpdateDTO {
     @NotBlank(message = "project не должен быть пустым")
     private ProjectRefDTO project;
     @NotBlank(message = "title не должен быть пустым")
     @Size(max = 255)
     private String title;
-    @NotBlank(message = "description не должен быть пустым")
     @Size(max = 1000)
     private String description;
-    @NotNull(message = "status не должен быть пустым")
     @Enumerated(EnumType.STRING)
     private ETaskStatus status;
-    @NotBlank(message = "implementer не должен быть пустым")
     private UserRefDTO implementer;
 
     public TaskCreateUpdateDTO() {
