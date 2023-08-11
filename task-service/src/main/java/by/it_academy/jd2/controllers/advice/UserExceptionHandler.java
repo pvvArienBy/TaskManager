@@ -1,5 +1,7 @@
 package by.it_academy.jd2.controllers.advice;
 
+import by.it_academy.jd2.core.dto.CustomValidationException;
+import by.it_academy.jd2.core.dto.ResultNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -47,6 +49,18 @@ public class UserExceptionHandler {
         ex.getConstraintViolations().stream().forEach(violation -> {
             response.getErrorMap().put(violation.getPropertyPath().toString(), violation.getMessage());
         });
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({CustomValidationException.class})
+    public ResponseEntity<StructuredErrorResponse> invalidFieldException(
+            CustomValidationException ex) {
+
+        StructuredErrorResponse response = new StructuredErrorResponse(
+                ErrorType.STRUCTURED_ERROR, new HashMap<>());
+
+        response.setErrorMap(ex.getErrors());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -183,5 +197,15 @@ public class UserExceptionHandler {
         response.getErrorMap().put(methodName, ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ResultNotFoundException.class})
+    public ResponseEntity<List<ErrorResponse>> handleResultError(ResultNotFoundException ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        ErrorResponse error = new ErrorResponse(
+                ErrorType.ERROR, ex.getMessage());
+        errorList.add(error);
+
+        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
