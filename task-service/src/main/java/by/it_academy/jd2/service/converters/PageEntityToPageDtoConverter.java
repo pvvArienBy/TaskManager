@@ -26,7 +26,19 @@ public class PageEntityToPageDtoConverter
 
     @Override
     public PageDTO<?> convert(Page<?> page) {
-        if (page.getContent().get(0) instanceof TaskEntity) {
+        if (page.isEmpty()) {
+            Page<TaskEntity> entityPage = (Page<TaskEntity>) page;
+            PageDTO<TaskDTO> dto = new PageDTO<>();
+            dto.setNumber(entityPage.getNumber());
+            dto.setSize(entityPage.getSize());
+            dto.setTotalPages(entityPage.getTotalPages());
+            dto.setTotalElements(entityPage.getTotalElements());
+            dto.setFirst(entityPage.isFirst());
+            dto.setNumberOfElements(entityPage.getNumberOfElements());
+            dto.setLast(entityPage.isLast());
+            dto.setContent(entityPage.getContent().stream().map(taskEntityToDtoConverter::convert).collect(Collectors.toList()));
+            return dto;
+        } else if (page.getContent().get(0) instanceof TaskEntity) {
             @SuppressWarnings("unchecked")
             Page<TaskEntity> entityPage = (Page<TaskEntity>) page;
             PageDTO<TaskDTO> dto = new PageDTO<>();
