@@ -1,11 +1,12 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
-import by.it_academy.jd2.core.dto.UserRefDTO;
+import by.it_academy.jd2.core.dto.*;
+import by.it_academy.jd2.core.enums.EProjectStatus;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.dao.repositories.IProjectDao;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IProjectService;
+import by.it_academy.jd2.service.api.feign.IUserClientService;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
@@ -16,8 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,22 +27,28 @@ public class ProjectService implements IProjectService {
     private static final String NEW_PROJECT_CREATED = "Creating a new project under a different project";
     private static final String PROJECT_UPDATED = "Project updated! Try again";
     private static final String REQUESTED_DATA_UUID = "Requested project data by UUID";
+    private static final String RESULT_NOT_FOUND = "RESULT is not found";
 
     private final IProjectDao projectDao;
     private final IAuditService auditService;
+    private final IUserClientService userClientService;
     private final ConversionService conversionService;
 
     public ProjectService(IProjectDao projectDao,
-                          IAuditService auditService, ConversionService conversionService) {
+                          IAuditService auditService, IUserClientService userClientService, ConversionService conversionService) {
         this.projectDao = projectDao;
         this.auditService = auditService;
+        this.userClientService = userClientService;
         this.conversionService = conversionService;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<ProjectEntity> getAll(PageRequest pageRequest) {
-        return this.projectDao.findAll(pageRequest);
+    public Page<ProjectEntity> getAll(PageRequest pageRequest, Boolean archived) {
+        if (archived) {
+            return this.projectDao.findAll(pageRequest);
+        }
+        return this.projectDao.findByStatusNotLike(EProjectStatus.ARCHIVE, pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +67,7 @@ public class ProjectService implements IProjectService {
     @Transactional
     @Override
     public ProjectEntity save(ProjectCreateUpdateDTO item) {
+        checkUsers(item);
         ProjectEntity entity = Objects.requireNonNull(
                 conversionService
                         .convert(item, ProjectEntity.class));
@@ -94,5 +101,34 @@ public class ProjectService implements IProjectService {
         this.auditService.send(PROJECT_UPDATER, uuid.toString(), EssenceType.PROJECT);
 
         return saveEntity;
+    }
+
+    private void checkUsers(ProjectCreateUpdateDTO item) {
+        UsersVerificationDTO usersVerificationDTO = new UsersVerificationDTO();
+        usersVerificationDTO.setManager(item.getManager().getUuid());
+        usersVerificationDTO.setStaff(item.getStaff().stream().map(UserRefDTO::getUuid).collect(Collectors.toList()));
+        ResultUsersVerificationDTO resultDTO = Optional
+                .ofNullable(
+                        this.userClientService
+                                .checkForProject(usersVerificationDTO)
+                                .getBody())
+                .orElseThrow(()
+                        -> new ResultNotFoundException(RESULT_NOT_FOUND));
+
+
+        Map<String, String> errorMap = new HashMap<>();  //// TODO: 11.08.2023 в отдельный метод
+
+        if (!resultDTO.isManagerCheck()) {
+            errorMap.put("manager.field", "not found in the system");
+        }
+        if (!resultDTO.isManagerCheckRole()) {
+            errorMap.put("manager.role_field", "The user does not have the specified role");
+        }
+        if (!resultDTO.isListUsersCheck()) {
+            errorMap.put("staff.field", "the list has invalid users");
+        }
+        if (!errorMap.isEmpty()) {
+            throw new CustomValidationException(errorMap);
+        }
     }
 }
