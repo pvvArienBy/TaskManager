@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import org.example.mylib.tm.itacademy.enums.ERole;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class AuditEntity implements Serializable {
     static final long serialVersionUID = 1L;
     @Id
     private UUID uuid;
-    @CreationTimestamp
+    @CreationTimestamp(source = SourceType.DB)
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
     private UUID userUuid;
