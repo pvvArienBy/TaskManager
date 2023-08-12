@@ -7,6 +7,8 @@ import by.it_academy.jd2.dao.repositories.IProjectDao;
 import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IProjectService;
 import by.it_academy.jd2.service.api.feign.IUserClientService;
+import by.it_academy.jd2.service.supportservices.JwtService;
+import by.it_academy.jd2.service.supportservices.UserHolder;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
@@ -33,18 +35,36 @@ public class ProjectService implements IProjectService {
     private final IAuditService auditService;
     private final IUserClientService userClientService;
     private final ConversionService conversionService;
+    private final UserHolder userHolder;
+    private final JwtService jwtService;
 
-    public ProjectService(IProjectDao projectDao,
-                          IAuditService auditService, IUserClientService userClientService, ConversionService conversionService) {
+    public ProjectService(IProjectDao projectDao, IAuditService auditService,
+                          IUserClientService userClientService, ConversionService conversionService,
+                          UserHolder userHolder, JwtService jwtService) {
         this.projectDao = projectDao;
         this.auditService = auditService;
         this.userClientService = userClientService;
         this.conversionService = conversionService;
+        this.userHolder = userHolder;
+        this.jwtService = jwtService;
     }
 
     @Transactional(readOnly = true)
     @Override
     public Page<ProjectEntity> getAll(PageRequest pageRequest, Boolean archived) {
+        if (!userHolder.checkAdminRole()) {
+            UUID meUuid = UUID.fromString(this.jwtService
+                    .extractUuid(userHolder.getToken()));
+
+            if (archived) {
+                return this.projectDao
+                        .findByManagerOrStaff(meUuid, meUuid, pageRequest);
+            }
+
+            return this.projectDao
+                    .findByManagerOrStaffOrAndStatusIsNotLike(meUuid, meUuid, EProjectStatus.ARCHIVE, pageRequest);
+        }
+
         if (archived) {
             return this.projectDao.findAll(pageRequest);
         }
@@ -130,5 +150,31 @@ public class ProjectService implements IProjectService {
         if (!errorMap.isEmpty()) {
             throw new CustomValidationException(errorMap);
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<UUID> getMyList() {
+        UUID meUuid = UUID.fromString(
+                this.jwtService.extractUuid(userHolder.getToken()));
+
+        return this.projectDao.findByManagerOrStaff(meUuid, meUuid).stream()
+                .map(ProjectEntity::getUuid)
+                .toList();
+    }
+
+    @Override
+    public boolean existsByUuidAndStaffContaining(UUID projectUuid, UUID staffUuid) {
+        return this.projectDao.existsByUuidAndStaffContaining(projectUuid, staffUuid);
+    }
+
+    @Override
+    public boolean existsByManager(UUID managerUuid) {
+        return this.projectDao.existsByManager(managerUuid);
+    }
+
+    @Override
+    public boolean existsById(UUID uuid) {
+        return this.projectDao.existsById(uuid);
     }
 }
