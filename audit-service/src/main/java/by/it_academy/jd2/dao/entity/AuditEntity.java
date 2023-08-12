@@ -23,7 +23,7 @@ public class AuditEntity implements Serializable {
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
     private UUID userUuid;
-    @Email(message = "Некорректный адрес электронной почты")
+    @Email(message = "Incorrect email address")
     private String userMail;
     @Size(max = 255)
     private String userFio;

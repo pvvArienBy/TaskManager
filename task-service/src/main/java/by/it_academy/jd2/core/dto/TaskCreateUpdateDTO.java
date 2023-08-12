@@ -8,9 +8,9 @@ import jakarta.validation.constraints.Size;
 
 // TODO: 11.08.2023 описание и статус и implementer могут быть null // project NotNull
 public class TaskCreateUpdateDTO {
-    @NotBlank(message = "project не должен быть пустым")
+    @NotBlank(message = "project - must not be empty")
     private ProjectRefDTO project;
-    @NotBlank(message = "title не должен быть пустым")
+    @NotBlank(message = "title - must not be empty")
     @Size(max = 255)
     private String title;
     @Size(max = 1000)

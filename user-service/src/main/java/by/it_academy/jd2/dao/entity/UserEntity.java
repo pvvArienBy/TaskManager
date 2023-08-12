@@ -33,7 +33,6 @@ public class UserEntity implements Serializable, UserDetails {
     @UpdateTimestamp(source = SourceType.DB)
     @Column(name = "date_update", nullable = false)
     private LocalDateTime dtUpdate;
-    @Email(message = "Некорректный адрес электронной почты")
     @Column(nullable = false)
     private String mail;
     @Size(max = 255)

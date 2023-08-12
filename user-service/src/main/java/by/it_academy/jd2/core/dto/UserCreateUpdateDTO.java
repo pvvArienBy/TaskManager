@@ -11,23 +11,23 @@ import org.example.mylib.tm.itacademy.enums.ERole;
 import org.example.mylib.tm.itacademy.enums.EStatusUser;
 
 public class UserCreateUpdateDTO {
-    @NotBlank(message = "mail не должен быть пустым")
+    @NotBlank(message = "mail - must not be empty")
     @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$",
-            message = "Некорректный адрес электронной почты!")
-    @ValidEmail(message = "mail - ${validatedValue} уже существует! Выберите другой mail.")
+            message = "Invalid email address!")
+    @ValidEmail(message = "mail - ${validatedValue} already exists! Choose another mail.")
     private String mail;
-    @NotBlank(message = "fio не должен быть пустым")
+    @NotBlank(message = "fio - must not be empty")
     @Size(max = 255)
-    @Pattern(regexp = "^[^\\d]+$", message = "fio не должно содержать цифр")
+    @Pattern(regexp = "^[^\\d]+$", message = "fio - must not be empty")
     private String fio;
-    @NotNull(message = "role не должен быть пустым")
+    @NotNull(message = "role - must not be empty")
     @Enumerated(EnumType.STRING)
     private ERole role;
-    @NotNull(message = "status не должен быть пустым")
+    @NotNull(message = "status - must not be empty")
     @Enumerated(EnumType.STRING)
     private EStatusUser status;
-    @NotBlank(message = "password не должен быть пустым")
-    @Size(min = 6, max = 30, message = "Пароль должен содержать от {min} до {max} символов")
+    @NotBlank(message = "password - must not be empty")
+    @Size(min = 6, max = 30, message = "Password must contain between {min} and {max} characters")
     private String password;
 
     public UserCreateUpdateDTO() {
