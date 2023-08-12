@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.example.mylib.tm.itacademy.enums.ERole;
 import org.example.mylib.tm.itacademy.enums.EStatusUser;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,18 +26,17 @@ public class UserEntity implements Serializable, UserDetails {
     static final long serialVersionUID = 9L;
     @Id
     private UUID uuid;
-    @CreationTimestamp
+    @CreationTimestamp(source = SourceType.DB)
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dtCreate;
     @Version
-    @UpdateTimestamp
+    @UpdateTimestamp(source = SourceType.DB)
     @Column(name = "date_update", nullable = false)
     private LocalDateTime dtUpdate;
     @Email(message = "Некорректный адрес электронной почты")
     @Column(nullable = false)
     private String mail;
     @Size(max = 255)
-    @Pattern(regexp = "^[^\\d]+$", message = "ФИО не должно содержать цифр")
     @Column(nullable = false)
     private String fio;
     @Enumerated(EnumType.STRING)
