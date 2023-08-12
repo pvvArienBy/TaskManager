@@ -11,6 +11,7 @@ import by.it_academy.jd2.service.supportservices.JwtService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
 import org.example.mylib.tm.itacademy.dto.ResultUsersVerificationDTO;
 import org.example.mylib.tm.itacademy.dto.UsersVerificationDTO;
+import org.example.mylib.tm.itacademy.enums.EFieldsErrorInfo;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
@@ -34,6 +35,9 @@ public class ProjectService implements IProjectService {
     private static final String PROJECT_UPDATED = "Project updated! Try again";
     private static final String REQUESTED_DATA_UUID = "Requested project data by UUID";
     private static final String RESULT_NOT_FOUND = "RESULT is not found";
+    public static final String NOT_FOUND_MESSAGE = "not found in the system";
+    public static final String ROLE_NOT_FOUND_MESSAGE = "The user does not have the specified role";
+    public static final String INVALID_USERS_MESSAGE = "the list has invalid users";
 
     private final IProjectDao projectDao;
     private final IAuditService auditService;
@@ -139,17 +143,16 @@ public class ProjectService implements IProjectService {
                 .orElseThrow(()
                         -> new ResultNotFoundException(RESULT_NOT_FOUND));
 
-
-        Map<String, String> errorMap = new HashMap<>();  //// TODO: 11.08.2023 в отдельный метод
+        Map<String, String> errorMap = new HashMap<>();
 
         if (!resultDTO.isManagerCheck()) {
-            errorMap.put("manager.field", "not found in the system");
+            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
         }
         if (!resultDTO.isManagerCheckRole()) {
-            errorMap.put("manager.role_field", "The user does not have the specified role");
+            errorMap.put(EFieldsErrorInfo.MANAGER_ROLE_FIELD.name(), ROLE_NOT_FOUND_MESSAGE);
         }
         if (!resultDTO.isListUsersCheck()) {
-            errorMap.put("staff.field", "the list has invalid users");
+            errorMap.put(EFieldsErrorInfo.STAFF_FILED.name(), INVALID_USERS_MESSAGE);
         }
         if (!errorMap.isEmpty()) {
             throw new CustomValidationException(errorMap);

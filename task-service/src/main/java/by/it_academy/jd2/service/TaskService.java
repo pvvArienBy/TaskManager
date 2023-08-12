@@ -8,6 +8,7 @@ import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IProjectService;
 import by.it_academy.jd2.service.api.ITaskService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
+import org.example.mylib.tm.itacademy.enums.EFieldsErrorInfo;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
@@ -28,6 +29,8 @@ public class TaskService implements ITaskService {
     private static final String NEW_TASK_CREATED = "Creating a new task under a different task";
     private static final String TASK_UPDATED = "Task updated! Try again";
     private static final String REQUESTED_DATA_UUID = "Requested task data by UUID";
+    public static final String NOT_FOUND_MESSAGE = "not found in the system";
+    public static final String PERFORMER_NOT_FOUND_MESSAGE = "the performer was not found as a member in the specified project!";
 
     private final ITaskDao taskDao;
     private final ConversionService conversionService;
@@ -171,14 +174,14 @@ public class TaskService implements ITaskService {
         Map<String, String> errorMap = new HashMap<>();  //// TODO: 11.08.2023 в отдельный метод
 
         if (!this.projectService.existsById(item.getProject().getUuid())) {
-            errorMap.put("project.field", "not found in the system");
+            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
         }
 
         if (item.getImplementer() != null) {
             if (!this.projectService.existsByUuidAndStaffContaining(
                     item.getProject().getUuid(), item.getImplementer().getUuid())) {
                 if (!this.projectService.existsByManager(item.getImplementer().getUuid())) {
-                    errorMap.put("implementer.field", "the performer was not found as a member in the specified project!");
+                    errorMap.put(EFieldsErrorInfo.IMPLEMENTER_FILED.name(), PERFORMER_NOT_FOUND_MESSAGE);
                 }
             }
         }
