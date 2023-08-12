@@ -32,8 +32,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/users/verification/**").permitAll()
 //                                .requestMatchers(HttpMethod.POST,"/users").hasAnyAuthority("ROLE_ADMIN") // TODO: 11.08.2023 тут раскоментировать на релизе а низ ремув
                                 .requestMatchers(HttpMethod.POST,"/users").permitAll()
-                                .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.GET,"/users/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/users").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/users").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET,"/users/me").authenticated()
                                 .requestMatchers("/internal").permitAll()
                                 .requestMatchers("/internal/**").permitAll()
