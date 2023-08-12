@@ -204,4 +204,13 @@ public class UserExceptionHandler {
 
         return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<List<ErrorResponse>> handleNotFoundEntityException(EntityNotFoundException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+    }
 }

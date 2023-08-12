@@ -22,7 +22,6 @@ public class AuditService implements IAuditService {
     private final ConversionService conversionService;
     private final UserHolder userHolder;
 
-
     public AuditService(IAuditClientService feignClientService,
                         IUserClientService userClientService, JwtService jwtService,
                         ConversionService conversionService,

@@ -1,6 +1,8 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.*;
+import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
+import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
+import by.it_academy.jd2.core.dto.UserRefDTO;
 import by.it_academy.jd2.core.enums.EProjectStatus;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.dao.repositories.IProjectDao;
@@ -38,6 +40,8 @@ public class ProjectService implements IProjectService {
     public static final String NOT_FOUND_MESSAGE = "not found in the system";
     public static final String ROLE_NOT_FOUND_MESSAGE = "The user does not have the specified role";
     public static final String INVALID_USERS_MESSAGE = "the list has invalid users";
+    public static final String PERFORMER_NOT_FOUND_MESSAGE = "the performer was not found as a member in the specified project!";
+
 
     private final IProjectDao projectDao;
     private final IAuditService auditService;
@@ -70,7 +74,7 @@ public class ProjectService implements IProjectService {
             }
 
             return this.projectDao
-                    .findByManagerOrStaffOrAndStatusIsNotLike(meUuid, meUuid, EProjectStatus.ARCHIVE, pageRequest);
+                    .findByManagerAndStatusNotLikeOrStaffContainsAndStatusNotLike(meUuid, EProjectStatus.ARCHIVE, meUuid, EProjectStatus.ARCHIVE, pageRequest);
         }
 
         if (archived) {
@@ -82,10 +86,21 @@ public class ProjectService implements IProjectService {
     @Transactional(readOnly = true)
     @Override
     public ProjectEntity get(UUID uuid) {
-        ProjectEntity entity = this.projectDao
-                .findById(uuid)
-                .orElseThrow(()
-                        -> new EntityNotFoundException(PROJECT_NOT_FOUND));
+        ProjectEntity entity;
+        if (!userHolder.checkAdminRole()) {
+            UUID meUuid = UUID.fromString(this.jwtService
+                    .extractUuid(userHolder.getToken()));
+            entity = this.projectDao
+                    .findByUuidAndManagerOrUuidAndStaffContains(uuid, meUuid, uuid, meUuid)
+                    .orElseThrow(()
+                            -> new EntityNotFoundException(PROJECT_NOT_FOUND));
+
+        } else {
+            entity = this.projectDao
+                    .findById(uuid)
+                    .orElseThrow(()
+                            -> new EntityNotFoundException(PROJECT_NOT_FOUND));
+        }
 
         this.auditService.send(REQUESTED_DATA_UUID, uuid.toString(), EssenceType.PROJECT);
 
@@ -171,17 +186,37 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public boolean existsByUuidAndStaffContaining(UUID projectUuid, UUID staffUuid) {
-        return this.projectDao.existsByUuidAndStaffContaining(projectUuid, staffUuid);
+    public void checkInProject(TaskCreateUpdateDTO item) {
+
+        Map<String, String> errorMap = new HashMap<>();
+
+        if (!this.projectDao.existsById(item.getProject().getUuid())) {
+            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
+        }
+
+        if (item.getImplementer() != null) {
+            if (!this.projectDao.existsByUuidAndStaffContaining(
+                    item.getProject().getUuid(), item.getImplementer().getUuid())) {
+                if (!this.projectDao.existsByManager(item.getImplementer().getUuid())) {
+                    errorMap.put(EFieldsErrorInfo.IMPLEMENTER_FILED.name(), PERFORMER_NOT_FOUND_MESSAGE);
+                }
+            }
+        }
+
+        if (!errorMap.isEmpty()) {
+            throw new CustomValidationException(errorMap);
+        }
     }
 
-    @Override
-    public boolean existsByManager(UUID managerUuid) {
-        return this.projectDao.existsByManager(managerUuid);
-    }
+//    @Override
+//    public boolean checkProjectFromTask(UUID project) {
+//        UUID meUuid = UUID.fromString(
+//                this.jwtService.extractUuid(userHolder.getToken()));
+//
+//        return get(project).getManager().equals(meUuid) || get(project).getStaff().contains(meUuid);
+//    } // TODO: 12.08.2023 удалить после всех тестов
 
-    @Override
-    public boolean existsById(UUID uuid) {
-        return this.projectDao.existsById(uuid);
-    }
+//    @Override
+//    public boolean checkProjectFromTask(UUID project) {
+//        return this.get(project) != null;}
 }

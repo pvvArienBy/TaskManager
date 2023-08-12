@@ -8,9 +8,7 @@ import by.it_academy.jd2.service.api.IAuditService;
 import by.it_academy.jd2.service.api.IProjectService;
 import by.it_academy.jd2.service.api.ITaskService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
-import org.example.mylib.tm.itacademy.enums.EFieldsErrorInfo;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
-import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
@@ -20,7 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
 
 @Service
 public class TaskService implements ITaskService {
@@ -29,8 +30,6 @@ public class TaskService implements ITaskService {
     private static final String NEW_TASK_CREATED = "Creating a new task under a different task";
     private static final String TASK_UPDATED = "Task updated! Try again";
     private static final String REQUESTED_DATA_UUID = "Requested task data by UUID";
-    public static final String NOT_FOUND_MESSAGE = "not found in the system";
-    public static final String PERFORMER_NOT_FOUND_MESSAGE = "the performer was not found as a member in the specified project!";
 
     private final ITaskDao taskDao;
     private final ConversionService conversionService;
@@ -103,6 +102,8 @@ public class TaskService implements ITaskService {
                 .orElseThrow(()
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
+        this.projectService.get(entity.getProject());
+
         this.auditService.send(REQUESTED_DATA_UUID, uuid.toString(), EssenceType.TASK);
 
         return entity;
@@ -111,7 +112,11 @@ public class TaskService implements ITaskService {
     @Transactional
     @Override
     public TaskEntity save(TaskCreateUpdateDTO item) {
-        checkInProject(item);
+        this.projectService.checkInProject(item);
+
+        if (!userHolder.checkAdminRole()) {
+            this.projectService.get(item.getProject().getUuid());
+        }
 
         TaskEntity entity = Objects.requireNonNull(
                 conversionService
@@ -128,6 +133,12 @@ public class TaskService implements ITaskService {
     @Transactional
     @Override
     public TaskEntity update(UUID uuid, LocalDateTime version, TaskCreateUpdateDTO item) {
+        this.projectService.checkInProject(item);
+
+        if (!userHolder.checkAdminRole()) {
+            this.projectService.get(item.getProject().getUuid());
+        }
+
         TaskEntity entity = taskDao
                 .findById(uuid)
                 .orElseThrow(()
@@ -167,27 +178,5 @@ public class TaskService implements ITaskService {
         this.auditService.send(TASK_UPDATER, uuid.toString(), EssenceType.TASK);
 
         return saveEntity;
-    }
-
-    private void checkInProject(TaskCreateUpdateDTO item) {
-
-        Map<String, String> errorMap = new HashMap<>();  //// TODO: 11.08.2023 в отдельный метод
-
-        if (!this.projectService.existsById(item.getProject().getUuid())) {
-            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
-        }
-
-        if (item.getImplementer() != null) {
-            if (!this.projectService.existsByUuidAndStaffContaining(
-                    item.getProject().getUuid(), item.getImplementer().getUuid())) {
-                if (!this.projectService.existsByManager(item.getImplementer().getUuid())) {
-                    errorMap.put(EFieldsErrorInfo.IMPLEMENTER_FILED.name(), PERFORMER_NOT_FOUND_MESSAGE);
-                }
-            }
-        }
-
-        if (!errorMap.isEmpty()) {
-            throw new CustomValidationException(errorMap);
-        }
     }
 }

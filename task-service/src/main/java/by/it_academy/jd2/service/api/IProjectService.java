@@ -1,6 +1,7 @@
 package by.it_academy.jd2.service.api;
 
 import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
+import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,10 +15,7 @@ public interface IProjectService extends ICRUService<ProjectEntity, ProjectCreat
 
     List<UUID> getMyList();
 
-    boolean existsByUuidAndStaffContaining(UUID projectUuid, UUID staffUuid);
+    void checkInProject(TaskCreateUpdateDTO item);
 
-    boolean existsByManager(UUID managerUuid);
-
-    boolean existsById(UUID uuid);
-
+//    boolean checkProjectFromTask(UUID project); // TODO: 12.08.2023 удалить после тестов
 }
