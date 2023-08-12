@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service.api.feign;
 
-import by.it_academy.jd2.core.dto.ResultUsersVerificationDTO;
-import by.it_academy.jd2.core.dto.UsersVerificationDTO;
+import org.example.mylib.tm.itacademy.dto.ResultUsersVerificationDTO;
 import org.example.mylib.tm.itacademy.dto.UserDTO;
+import org.example.mylib.tm.itacademy.dto.UsersVerificationDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

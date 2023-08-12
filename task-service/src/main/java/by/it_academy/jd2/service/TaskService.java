@@ -1,6 +1,5 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.CustomValidationException;
 import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
 import by.it_academy.jd2.core.enums.ETaskStatus;
 import by.it_academy.jd2.dao.entity.TaskEntity;
@@ -10,6 +9,7 @@ import by.it_academy.jd2.service.api.IProjectService;
 import by.it_academy.jd2.service.api.ITaskService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
+import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
