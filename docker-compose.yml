@@ -2,14 +2,18 @@ version: '3.5'
 services:
   db:
     build: postgresql
-    image: taskmanager_postgresql:1.0.16
-    volumes:
-      - ./postgresql/user-service/ddl:/docker-entrypoint-initdb.d
+    image: taskmanager_postgresql:1.0.31
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     networks:
       - taskmanager_ntwrk
+  maildev:
+    build: maildev
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
   pgadmin:
     build: pgadmin
     image: taskmanager_pgadmin:1.0.1
@@ -21,6 +25,13 @@ services:
       - "82:80"
     networks:
       - taskmanager_ntwrk
+  eureka-server:
+    build: eureka-server
+    image: taskmanager_eureka-server:1.0.6
+    ports:
+      - "8761:8761"
+    networks:
+      - taskmanager_ntwrk
   swagger-ui:
     build: swagger-ui
     image: taskmanager_swagger-ui:1.0.3
@@ -28,16 +39,20 @@ services:
       - "81:8080"
     networks:
       - taskmanager_ntwrk
-
   user-service:
     build: user-service
-    image: taskmanager_user-service:1.0.21
+    image: taskmanager_user-service:1.0.27
     networks:
       - taskmanager_ntwrk
+#  audit-service:
+#    build: audit-service
+#    image: taskmanager_audit-service:1.0.2
+#    networks:
+#      - taskmanager_ntwrk
 
-  proxy:
-    build: proxy
-    image: taskmanager_proxy:1.0.8
+  gateway-service:
+    build: gateway-service
+    image: taskmanager_gateway-service:1.0.4
     ports:
       - "80:80"
     networks:
@@ -45,3 +60,4 @@ services:
 networks:
     taskmanager_ntwrk:
       name: taskmanager_ntwrk
+

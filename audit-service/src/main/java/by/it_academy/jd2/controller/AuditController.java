@@ -24,8 +24,8 @@ public class AuditController {
 
     @GetMapping("/{uuid}")
     public ResponseEntity<AuditDTO> findById(@PathVariable UUID uuid) {
-        AuditDTO auditDTO = conversionService.convert(this.auditService.findById(uuid), AuditDTO.class);
-        return ResponseEntity.status(HttpStatus.OK).body(auditDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(conversionService.convert(this.auditService.findById(uuid), AuditDTO.class));
     }
 
     @GetMapping
