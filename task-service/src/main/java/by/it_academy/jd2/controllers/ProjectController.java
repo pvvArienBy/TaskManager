@@ -33,9 +33,10 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                     @RequestParam(required = false, defaultValue = "20") int size) {
+                                     @RequestParam(required = false, defaultValue = "20") int size,
+                                     @RequestParam(required = false, defaultValue = "false") Boolean archived) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(conversionService.convert(this.projectService.getAll(PageRequest.of(page, size)), PageDTO.class));
+                .body(conversionService.convert(this.projectService.getAll(PageRequest.of(page, size), archived), PageDTO.class));
     }
 
     @PostMapping

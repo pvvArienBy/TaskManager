@@ -7,9 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.example.mylib.tm.itacademy.enums.ErrorType;
 import org.example.mylib.tm.itacademy.errors.ErrorResponse;
 import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
-import org.example.mylib.tm.itacademy.exceptions.NotCorrectValueException;
-import org.example.mylib.tm.itacademy.exceptions.UniqueConstraintViolation;
-import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
+import org.example.mylib.tm.itacademy.exceptions.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -47,6 +45,18 @@ public class UserExceptionHandler {
         ex.getConstraintViolations().stream().forEach(violation -> {
             response.getErrorMap().put(violation.getPropertyPath().toString(), violation.getMessage());
         });
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({CustomValidationException.class})
+    public ResponseEntity<StructuredErrorResponse> invalidFieldException(
+            CustomValidationException ex) {
+
+        StructuredErrorResponse response = new StructuredErrorResponse(
+                ErrorType.STRUCTURED_ERROR, new HashMap<>());
+
+        response.setErrorMap(ex.getErrors());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -183,5 +193,24 @@ public class UserExceptionHandler {
         response.getErrorMap().put(methodName, ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ResultNotFoundException.class})
+    public ResponseEntity<List<ErrorResponse>> handleResultError(ResultNotFoundException ex) {
+        List<ErrorResponse> errorList = new ArrayList<>();
+        ErrorResponse error = new ErrorResponse(
+                ErrorType.ERROR, ex.getMessage());
+        errorList.add(error);
+
+        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<List<ErrorResponse>> handleNotFoundEntityException(EntityNotFoundException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 }

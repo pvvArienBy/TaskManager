@@ -4,6 +4,7 @@ import by.it_academy.jd2.core.enums.EProjectStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
@@ -19,11 +20,11 @@ public class ProjectEntity implements Serializable {
     static final long serialVersionUID = 2L;
     @Id
     private UUID uuid;
-    @CreationTimestamp
+    @CreationTimestamp(source = SourceType.DB)
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
     @Version
-    @UpdateTimestamp
+    @UpdateTimestamp(source = SourceType.DB)
     @Column(name = "date_update")
     private LocalDateTime dtUpdate;
     @Size(max = 255)

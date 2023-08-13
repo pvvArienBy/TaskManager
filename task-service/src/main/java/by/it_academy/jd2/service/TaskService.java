@@ -5,6 +5,7 @@ import by.it_academy.jd2.core.enums.ETaskStatus;
 import by.it_academy.jd2.dao.entity.TaskEntity;
 import by.it_academy.jd2.dao.repositories.ITaskDao;
 import by.it_academy.jd2.service.api.IAuditService;
+import by.it_academy.jd2.service.api.IProjectService;
 import by.it_academy.jd2.service.api.ITaskService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
@@ -17,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 
 @Service
 public class TaskService implements ITaskService {
@@ -31,19 +34,64 @@ public class TaskService implements ITaskService {
     private final ITaskDao taskDao;
     private final ConversionService conversionService;
     private final IAuditService auditService;
+    private final IProjectService projectService;
+    private final UserHolder userHolder;
 
     public TaskService(ITaskDao taskDao,
-                       ConversionService conversionService,
-                       IAuditService auditService) {
+                       ConversionService conversionService, IAuditService auditService,
+                       IProjectService projectService, UserHolder userHolder) {
         this.taskDao = taskDao;
         this.conversionService = conversionService;
         this.auditService = auditService;
+        this.projectService = projectService;
+        this.userHolder = userHolder;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<TaskEntity> getAll(PageRequest pageRequest) {
-        return this.taskDao.findAll(pageRequest);
+    public Page<TaskEntity> getAll(PageRequest pageRequest,
+                                   List<UUID> project,
+                                   List<UUID> implementer,
+                                   List<ETaskStatus> status) {
+
+        if (!userHolder.checkAdminRole()) {
+            List<UUID> result = projectService.getMyList();
+            project.removeIf(uuid -> !result.contains(uuid));
+
+            if (project.isEmpty() && implementer.isEmpty() && status.isEmpty()) {
+                return taskDao.findByProjectIn(result, pageRequest);
+            }
+        }
+
+        if (!project.isEmpty() && implementer.isEmpty() && status.isEmpty()) {
+            return taskDao.findByProjectIn(project, pageRequest);
+        }
+
+        if (project.isEmpty() && !implementer.isEmpty() && status.isEmpty()) {
+            return taskDao.findByImplementerIn(implementer, pageRequest);
+        }
+
+        if (!project.isEmpty() && !implementer.isEmpty() && status.isEmpty()) {
+            return taskDao.findByProjectInAndImplementerIn(project, implementer, pageRequest);
+        }
+
+        if (project.isEmpty() && implementer.isEmpty() && !status.isEmpty()) {
+            return taskDao.findByStatusIn(status, pageRequest);
+        }
+
+        if (!project.isEmpty() && implementer.isEmpty() && !status.isEmpty()) {
+            return taskDao.findByProjectInAndStatusIn(project, status, pageRequest);
+        }
+
+        if (project.isEmpty() && !implementer.isEmpty() && !status.isEmpty()) {
+            return taskDao.findByImplementerInAndStatusIn(implementer, status, pageRequest);
+        }
+
+        if (!project.isEmpty() && !implementer.isEmpty() && !status.isEmpty()) {
+            return taskDao.findByProjectInAndImplementerInAndStatusIn(project, implementer, status, pageRequest);
+        }
+
+        return taskDao.findAll(pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -54,6 +102,8 @@ public class TaskService implements ITaskService {
                 .orElseThrow(()
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
+        this.projectService.get(entity.getProject());
+
         this.auditService.send(REQUESTED_DATA_UUID, uuid.toString(), EssenceType.TASK);
 
         return entity;
@@ -62,6 +112,12 @@ public class TaskService implements ITaskService {
     @Transactional
     @Override
     public TaskEntity save(TaskCreateUpdateDTO item) {
+        this.projectService.checkInProject(item);
+
+        if (!userHolder.checkAdminRole()) {
+            this.projectService.get(item.getProject().getUuid());
+        }
+
         TaskEntity entity = Objects.requireNonNull(
                 conversionService
                         .convert(item, TaskEntity.class));
@@ -77,6 +133,12 @@ public class TaskService implements ITaskService {
     @Transactional
     @Override
     public TaskEntity update(UUID uuid, LocalDateTime version, TaskCreateUpdateDTO item) {
+        this.projectService.checkInProject(item);
+
+        if (!userHolder.checkAdminRole()) {
+            this.projectService.get(item.getProject().getUuid());
+        }
+
         TaskEntity entity = taskDao
                 .findById(uuid)
                 .orElseThrow(()

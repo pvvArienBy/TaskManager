@@ -10,16 +10,16 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public class ProjectCreateUpdateDTO {
-    @NotBlank(message = "name не должен быть пустым")
+    @NotBlank(message = "name - must not be empty")
     @Size(max = 255)
     private String name;
-    @NotBlank(message = "description не должен быть пустым")
     @Size(max = 1000)
     private String description;
-    @NotBlank(message = "manager не должен быть пустым")
+    @NotBlank(message = "manager - must not be empty")
     private UserRefDTO manager;
+    @NotBlank(message = "staff - must not be empty")
     private List<UserRefDTO> staff;
-    @NotNull(message = "status не должен быть пустым")
+    @NotNull(message = "status - must not be empty")
     @Enumerated(EnumType.STRING)
     private EProjectStatus status;
 

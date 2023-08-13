@@ -6,11 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class UserLoginDTO {
-    @NotBlank(message = "mail не должен быть пустым")
+    @NotBlank(message = "mail - must not be empty")
     @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$",
-            message = "Некорректный адрес электронной почты!")
+            message = "Invalid email address!")
     private String mail;
-    @Size(min = 6, max = 250, message = "Пароль должен содержать от {min} до {max} символов")
+    @Size(min = 6, max = 250, message = "Password must contain between {min} and {max} characters")
     private String password;
 
     public UserLoginDTO() {

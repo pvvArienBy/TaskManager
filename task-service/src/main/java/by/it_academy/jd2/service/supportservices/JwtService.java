@@ -30,6 +30,14 @@ public class JwtService {
         return username;
     }
 
+    public String extractUuid(String token) {
+        String jwt = token.substring(7);
+        validate(jwt);
+        String uuid = extractClaim(jwt, claims -> claims.get("uuid", String.class));
+
+        return uuid;
+    }
+
     public <T> T extractClaim(String token,
                               Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);

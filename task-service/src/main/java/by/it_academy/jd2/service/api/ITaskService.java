@@ -7,10 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface ITaskService extends ICRUService<TaskEntity, TaskCreateUpdateDTO> {
-    Page<TaskEntity> getAll(PageRequest pageRequest);
+    Page<TaskEntity> getAll(PageRequest pageRequest, List<UUID> project,
+                            List<UUID> implementer, List<ETaskStatus> status);
+
     TaskEntity update(UUID uuid, LocalDateTime version, ETaskStatus status);
 
 }
