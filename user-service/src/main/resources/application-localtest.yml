@@ -2,8 +2,6 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/user_service?ApplicationName=user-service-app
-    username: postgres123
-    password: postgres123
 
   jpa:
     hibernate:
@@ -15,22 +13,41 @@ spring:
     open-in-view: true
   application:
     name: users
+#  mail:
+#    host: localhost
+#    port: 1025
+#    username: hello
+#    password: hello
+#    properties:
+#      mail:
+#        smtp:
+#          ssl:
+#            trust: "*"
+#          auth: true
+#          starttls:
+#            enable: true
+#          connectiontimeout: 5000
+#          timeout: 3000
+#          writetimeout: 5000
+
+
   mail:
-    host: localhost
-    port: 1025
-    username: hello
-    password: hello
+    host: smtp.mail.ru
+    port: 465
+    username: l2mypers03@mail.ru
+    password: "6jaRa5gdhCHN1jamhaSD"
     properties:
+      "mail.smtp.ssl.enable": true
       mail:
+        encoding: UTF-8
+        transport:
+          protocol: smtp
         smtp:
-          ssl:
-            trust: "*"
           auth: true
           starttls:
             enable: true
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
+
+
 
 server:
   port: 0

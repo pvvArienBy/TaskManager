@@ -2,12 +2,10 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/task_service?ApplicationName=task-service-app
-    username: postgres123
-    password: postgres123
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate.default_schema: task_app
       hibernate:

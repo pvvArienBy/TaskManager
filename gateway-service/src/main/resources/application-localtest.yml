@@ -8,10 +8,34 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true # включаем использование Eureka в качестве сервера обнаружения сервисов
-          lower-case-service-id: true # преобразуем имена сервисов к нижнему регистру
-  profiles:
-    active: dev # указываем профиль dev (может быть любым другим)
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: users
+          uri: lb://USERS/
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - StripPrefix=2
+        - id: task
+          uri: lb://TASK/
+          predicates:
+            - Path=/api/v1/task/**
+          filters:
+            - StripPrefix=2
+        - id: project
+          uri: lb://TASK/
+          predicates:
+            - Path=/api/v1/project/**
+          filters:
+            - StripPrefix=2
+        - id: audit
+          uri: lb://AUDIT/
+          predicates:
+            - Path=/api/v1/audit
+          filters:
+            - StripPrefix=2
+
 
 eureka:
   client:
@@ -20,19 +44,5 @@ eureka:
 
 logging:
   pattern:
-    console: "%C{1.} [%-5level] %d{HH:mm:ss} - %msg%n" # паттерн для логирования
+    console: "%C{1.} [%-5level] %d{HH:mm:ss} - %msg%n"
 
-spring.cloud.gateway:
-  routes:
-    - id: users
-      uri: lb://users/
-      predicates:
-        - Path=/api/v1/users/**
-      filters:
-        - StripPrefix=2
-    - id: users
-      uri: lb://users/
-      predicates:
-        - Path=/api/v1/audit/**
-      filters:
-        - StripPrefix=2
