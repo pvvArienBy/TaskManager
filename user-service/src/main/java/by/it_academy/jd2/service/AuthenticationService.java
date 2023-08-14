@@ -1,6 +1,5 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.TokenEntity;
@@ -28,6 +27,7 @@ public class AuthenticationService implements IAuthenticationService {
     private static final String TOKEN_EXPIRED = "token expired";
     private static final String DATA_FROM_CONTEXT_ERROR = "Data from context error, please try again after new user authorization!";
     private static final String USER_VERIFIED = "User verified";
+    private static final String NEW_USER_REGISTRATION = "New user registration";
 
     private final IUserService userService;
     private final IAuditService auditService;
@@ -74,11 +74,12 @@ public class AuthenticationService implements IAuthenticationService {
 
         this.tokenService.save(confirmationToken);
         this.mailSenderService.send(dto, token.toString());
+        this.auditService.send(entity, NEW_USER_REGISTRATION);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public TokenDTO authentication(UserLoginDTO dto) {
+    public String authentication(UserLoginDTO dto) {
         this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         dto.getMail(),
@@ -92,9 +93,7 @@ public class AuthenticationService implements IAuthenticationService {
 
         this.auditService.send(user, USER_AUTHENTICATION);
 
-        return TokenDTO.builder()
-                .token(jwtToken)
-                .build();
+        return jwtToken;
     }
 
     @Transactional
