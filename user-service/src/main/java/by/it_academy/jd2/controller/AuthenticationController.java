@@ -1,6 +1,5 @@
 package by.it_academy.jd2.controller;
 
-import by.it_academy.jd2.core.dto.TokenDTO;
 import by.it_academy.jd2.core.dto.UserLoginDTO;
 import by.it_academy.jd2.core.dto.UserRegistrationDTO;
 import by.it_academy.jd2.dao.entity.UserEntity;
@@ -34,7 +33,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> authentication(@RequestBody @Valid UserLoginDTO dto) {
+    public ResponseEntity<String> authentication(@RequestBody @Valid UserLoginDTO dto) {
         return ResponseEntity.ok(this.authService.authentication(dto));
     }
 
