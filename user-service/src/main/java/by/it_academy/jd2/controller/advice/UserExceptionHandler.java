@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.example.mylib.tm.itacademy.enums.ErrorType;
 import org.example.mylib.tm.itacademy.errors.ErrorResponse;
 import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
+import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
 import org.example.mylib.tm.itacademy.exceptions.NotCorrectValueException;
 import org.example.mylib.tm.itacademy.exceptions.UniqueConstraintViolation;
 import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
@@ -15,6 +16,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
@@ -138,6 +140,7 @@ public class UserExceptionHandler {
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 
+    // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<List<ErrorResponse>> authenticationException(AccessDeniedException ex) {
 
@@ -183,5 +186,23 @@ public class UserExceptionHandler {
         response.getErrorMap().put(methodName, ex.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<List<ErrorResponse>> handleMailSendException(MailSendException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<List<ErrorResponse>> handleNotFoundEntityException(EntityNotFoundException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus. BAD_REQUEST);
     }
 }
