@@ -1,6 +1,6 @@
 \c user_service;
 
-INSERT INTO user_app.users VALUES ('cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', '2023-08-13 19:52:52.009', '2023-08-13 19:52:52.009', 'admin', 'admin@admin.by', 'USER', 'ACTIVATED', '$2a$10$PwIdJ9pw5Iud4iLtFvAmluWjYvYrXypGZM0IEPn7iD9NblsQEQ7zy');
+INSERT INTO user_app.users VALUES ('cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', '2023-08-13 19:52:52.009', '2023-08-13 19:52:52.009', 'admin', 'admin@admin.by', 'ADMIN', 'ACTIVATED', '$2a$10$PwIdJ9pw5Iud4iLtFvAmluWjYvYrXypGZM0IEPn7iD9NblsQEQ7zy');
 INSERT INTO user_app.users VALUES ('30a6a8df-eafc-47d2-912c-efe53d865df5', '2023-08-13 19:59:50.521', '2023-08-13 19:59:50.521', 'manager', 'manager@manager.by', 'MANAGER', 'ACTIVATED', '$2a$10$XxhqUtZiP2EZf32aJu0CDOhOu4hRMGvZAmiQ0yUn75BMMftyfczA6');
 INSERT INTO user_app.users VALUES ('a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', '2023-08-13 19:59:58.825', '2023-08-13 19:59:58.825', 'manager', '2manager@manager.by', 'MANAGER', 'ACTIVATED', '$2a$10$6TTmqLdHAWcinMlpdPjLz.y/N7rFIZHk8z1Y4nFXmp4Ch2nGqAvKu');
 INSERT INTO user_app.users VALUES ('87c831d1-6e78-4d70-ab7d-dd909d257d88', '2023-08-13 20:00:04.458', '2023-08-13 20:00:04.458', 'manager', '3manager@manager.by', 'MANAGER', 'ACTIVATED', '$2a$10$MeSRvmLbfdM9u/zAFW2kDukYEqB2q1TpJkqr46zW3cKmtDHJUy.Y2');
