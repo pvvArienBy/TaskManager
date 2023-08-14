@@ -1,0 +1,12 @@
+\c task_service;
+INSERT INTO task_app.projects VALUES ('573e3404-91bd-490c-a39d-0fe821661a39', '2023-08-13 20:16:11.696', '2023-08-13 20:16:11.696', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName1', 'projecDescription', 'ACTIVE');
+INSERT INTO task_app.projects VALUES ('5eef24ea-09f8-4970-a47b-93e3993e2db2', '2023-08-13 20:16:43.744', '2023-08-13 20:16:43.744', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName2', 'projecDescription', 'ARCHIVE');
+INSERT INTO task_app.projects VALUES ('3137a299-6e20-44c6-a6ee-8c1ba9f8897c', '2023-08-13 20:17:20.341', '2023-08-13 20:17:20.341', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName3', 'projecDescription', 'ARCHIVE');
+INSERT INTO task_app.projects VALUES ('77621dcd-cddd-42e2-bc2d-26cc836c84b0', '2023-08-13 20:17:37.012', '2023-08-13 20:17:37.012', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName4', 'projecDescription', 'ACTIVE');
+INSERT INTO task_app.projects VALUES ('402f3b4f-5c36-4cc0-bc5d-d6cd61867364', '2023-08-13 20:18:28.617', '2023-08-13 20:18:28.617', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName5', 'projecDescription', 'ACTIVE');
+INSERT INTO task_app.projects VALUES ('c3fbf86b-2e0e-4acd-ba45-05d94c47c8fc', '2023-08-13 20:18:43.303', '2023-08-13 20:18:43.303', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName6', 'projecDescription', 'ARCHIVE');
+INSERT INTO task_app.projects VALUES ('912960bb-3ca7-46a9-b607-5b6119a2f423', '2023-08-13 20:19:17.706', '2023-08-13 20:19:17.706', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName7', 'projecDescription', 'ARCHIVE');
+INSERT INTO task_app.projects VALUES ('08a322db-2cd1-4b8b-ad95-a7a0c36d0619', '2023-08-13 20:19:44.026', '2023-08-13 20:19:44.026', 'a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', 'projectName8', 'projecDescription', 'ACTIVE');
+INSERT INTO task_app.projects VALUES ('d5070b33-4fe6-4c37-a3ee-8fc2db9d32eb', '2023-08-13 20:20:05.787', '2023-08-13 20:20:05.787', '87c831d1-6e78-4d70-ab7d-dd909d257d88', 'projectName8', 'projecDescription', 'ACTIVE');
+INSERT INTO task_app.projects VALUES ('61e03061-ab65-492b-b29b-bb0e79946473', '2023-08-13 20:20:15.816', '2023-08-13 20:20:15.816', '87c831d1-6e78-4d70-ab7d-dd909d257d88', 'projectName9', 'projecDescription', 'ARCHIVE');
+INSERT INTO task_app.projects VALUES ('73704e10-9e1b-4913-8921-67f1881b15a1', '2023-08-13 20:20:36.078', '2023-08-13 20:20:36.078', '87c831d1-6e78-4d70-ab7d-dd909d257d88', 'projectName10', 'projecDescription', 'ARCHIVE');

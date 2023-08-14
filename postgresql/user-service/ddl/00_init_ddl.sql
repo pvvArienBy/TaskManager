@@ -9,14 +9,14 @@ GRANT ALL ON SCHEMA user_app TO userservice;
 
 CREATE TABLE IF NOT EXISTS user_app.users
 (
+    uuid        uuid                           NOT NULL,
     date_create timestamp(3) without time zone NOT NULL,
     date_update timestamp(3) without time zone NOT NULL,
-    uuid        uuid                           NOT NULL,
     fio         character varying(255)         NOT NULL,
     mail        character varying(255)         NOT NULL,
-    password    text                           NOT NULL,
     role        character varying(50)          NOT NULL,
     status      character varying(50)          NOT NULL,
+    password    text                           NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (uuid),
     CONSTRAINT email UNIQUE (mail),
     CONSTRAINT users_role_check CHECK (role::text = ANY
@@ -50,6 +50,8 @@ CREATE SEQUENCE IF NOT EXISTS user_app.confirmation_token_sequence
     MINVALUE 1
     MAXVALUE 9223372036854775807
     CACHE 1;
+
+GRANT ALL ON SEQUENCE user_app.confirmation_token_sequence TO userservice;
 
 ALTER TABLE IF EXISTS user_app.confirmation_token
     OWNER TO userservice;
