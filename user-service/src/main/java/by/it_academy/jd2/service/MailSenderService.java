@@ -6,8 +6,12 @@ import by.it_academy.jd2.service.api.IMailSenderService;
 import by.it_academy.jd2.service.api.IThymeleafService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
+import org.example.mylib.tm.itacademy.exceptions.ValidationListException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +24,7 @@ import java.util.Map;
 @Service
 public class MailSenderService implements IMailSenderService {
     private static final String FAILED_TO_SEND_EMAIL = "failed to send email";
+    private static final String SMTP_SERVER_ERROR = "Invalid mail address. No SMTP server connection.";
 
     private final JavaMailSender mailSender;
     private final IThymeleafService thymeleafService;
@@ -54,7 +59,11 @@ public class MailSenderService implements IMailSenderService {
             helper.setFrom(property.getMailfrom());
             helper.setSubject(property.getSubject());
 
-            this.mailSender.send(mimeMessage);
+            try {
+                this.mailSender.send(mimeMessage);
+            } catch (MailException e) {
+                throw new MailSendException(SMTP_SERVER_ERROR);
+            }
 
         } catch (MessagingException e) {
             throw new IllegalStateException(FAILED_TO_SEND_EMAIL);
