@@ -18,7 +18,7 @@ public class UserVerificationController {
     }
 
     @PostMapping
-    public ResponseEntity<ResultUsersVerificationDTO> checkForProject(@RequestBody UsersVerificationDTO dto) {
+    public ResponseEntity<ResultUsersVerificationDTO> checkForProject(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UsersVerificationDTO dto) {
         ResultUsersVerificationDTO resultDTO = this.verificationService.check(dto);
 
         return ResponseEntity.status(HttpStatus.OK).body(resultDTO);

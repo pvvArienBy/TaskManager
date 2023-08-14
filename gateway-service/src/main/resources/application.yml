@@ -26,9 +26,9 @@ spring:
         - id: project
           uri: lb://TASK/
           predicates:
-            - Path=/api/v1/project/**
+            - Path=/api/v1/task/project/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=3
         - id: audit
           uri: lb://AUDIT/
           predicates:

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS user_app.users
     CONSTRAINT users_pkey PRIMARY KEY (uuid),
     CONSTRAINT email UNIQUE (mail),
     CONSTRAINT users_role_check CHECK (role::text = ANY
-                                       (ARRAY ['ADMIN'::character varying, 'USER'::character varying, 'MANAGER'::character varying]::text[])),
+                                       (ARRAY ['ADMIN'::character varying, 'USER'::character varying, 'MANAGER'::character varying, 'SYSTEM'::character varying]::text[])),
     CONSTRAINT users_status_check CHECK (status::text = ANY
                                          (ARRAY ['WAITING_ACTIVATION'::character varying, 'ACTIVATED'::character varying, 'DEACTIVATED'::character varying]::text[]))
 );

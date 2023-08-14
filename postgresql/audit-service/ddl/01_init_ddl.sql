@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS audit_app.audits
     CONSTRAINT audits_type_check CHECK (type::text = ANY
                                         (ARRAY ['ADMIN'::character varying, 'COMMENT'::character varying, 'TASK'::character varying, 'USER'::character varying, 'PROJECT'::character varying]::text[])),
     CONSTRAINT audits_user_role_check CHECK (user_role::text = ANY
-                                             (ARRAY ['ADMIN'::character varying, 'USER'::character varying, 'MANAGER'::character varying]::text[]))
+                                             (ARRAY ['ADMIN'::character varying, 'USER'::character varying, 'MANAGER'::character varying, 'SYSTEM'::character varying]::text[]))
 );
 
 ALTER TABLE IF EXISTS audit_app.audits

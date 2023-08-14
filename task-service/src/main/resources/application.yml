@@ -23,6 +23,7 @@ spring:
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
   issuer: ITAcademy
+  systemToken: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiU1lTVEVNIiwibWFpbCI6InN5c3RlbUBzeXN0ZW0uYnkiLCJ1dWlkIjoiYTg3NTIzY2YtYzYzYS00YTNlLWI3YzItZTI5NzQyNjkyZTFmIiwiZmlvIjoic3lzdGVtIiwiaXNzIjoiSVRBY2FkZW15IiwiaWF0IjoxNjkyMDM2MjQ0LCJleHAiOjI1NTU1NTU1NTV9.vbmL9zulS45tUbecO3H0AN5N8FI0R545VrvpcdyJ0JU"
 
 server:
   port: 0

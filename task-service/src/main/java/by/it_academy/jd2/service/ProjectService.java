@@ -153,7 +153,7 @@ public class ProjectService implements IProjectService {
         ResultUsersVerificationDTO resultDTO = Optional
                 .ofNullable(
                         this.userClientService
-                                .checkForProject(usersVerificationDTO)
+                                .checkForProject(this.jwtService.getSystemToken(), usersVerificationDTO)
                                 .getBody())
                 .orElseThrow(()
                         -> new ResultNotFoundException(RESULT_NOT_FOUND));
