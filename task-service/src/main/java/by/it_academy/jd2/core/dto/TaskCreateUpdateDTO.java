@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 // TODO: 11.08.2023 описание и статус и implementer могут быть null // project NotNull
 public class TaskCreateUpdateDTO {
     @NotBlank(message = "project - must not be empty")
-    private ProjectRefDTO project;
+    private RefDTO project;
     @NotBlank(message = "title - must not be empty")
     @Size(max = 255)
     private String title;
@@ -17,13 +17,13 @@ public class TaskCreateUpdateDTO {
     private String description;
     @Enumerated(EnumType.STRING)
     private ETaskStatus status;
-    private UserRefDTO implementer;
+    private RefDTO implementer;
 
     public TaskCreateUpdateDTO() {
     }
 
-    public TaskCreateUpdateDTO(ProjectRefDTO project, String title, String description,
-                               ETaskStatus status, UserRefDTO implementer) {
+    public TaskCreateUpdateDTO(RefDTO project, String title, String description,
+                               ETaskStatus status, RefDTO implementer) {
         this.project = project;
         this.title = title;
         this.description = description;
@@ -31,11 +31,11 @@ public class TaskCreateUpdateDTO {
         this.implementer = implementer;
     }
 
-    public ProjectRefDTO getProject() {
+    public RefDTO getProject() {
         return project;
     }
 
-    public void setProject(ProjectRefDTO project) {
+    public void setProject(RefDTO project) {
         this.project = project;
     }
 
@@ -63,11 +63,11 @@ public class TaskCreateUpdateDTO {
         this.status = status;
     }
 
-    public UserRefDTO getImplementer() {
+    public RefDTO getImplementer() {
         return implementer;
     }
 
-    public void setImplementer(UserRefDTO implementer) {
+    public void setImplementer(RefDTO implementer) {
         this.implementer = implementer;
     }
 }

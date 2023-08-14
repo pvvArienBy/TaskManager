@@ -1,8 +1,8 @@
 package by.it_academy.jd2.service;
 
 import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
+import by.it_academy.jd2.core.dto.RefDTO;
 import by.it_academy.jd2.core.dto.TaskCreateUpdateDTO;
-import by.it_academy.jd2.core.dto.UserRefDTO;
 import by.it_academy.jd2.core.enums.EProjectStatus;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import by.it_academy.jd2.dao.repositories.IProjectDao;
@@ -137,7 +137,7 @@ public class ProjectService implements IProjectService {
         entity.setName(item.getName());
         entity.setDescription(item.getDescription());
         entity.setManager(item.getManager().getUuid());
-        entity.setStaff(item.getStaff().stream().map(UserRefDTO::getUuid).collect(Collectors.toList()));
+        entity.setStaff(item.getStaff().stream().map(RefDTO::getUuid).collect(Collectors.toList()));
         entity.setStatus(item.getStatus());
 
         ProjectEntity saveEntity = this.projectDao.saveAndFlush(entity);
@@ -149,7 +149,7 @@ public class ProjectService implements IProjectService {
     private void checkUsers(ProjectCreateUpdateDTO item) {
         UsersVerificationDTO usersVerificationDTO = new UsersVerificationDTO();
         usersVerificationDTO.setManager(item.getManager().getUuid());
-        usersVerificationDTO.setStaff(item.getStaff().stream().map(UserRefDTO::getUuid).collect(Collectors.toList()));
+        usersVerificationDTO.setStaff(item.getStaff().stream().map(RefDTO::getUuid).collect(Collectors.toList()));
         ResultUsersVerificationDTO resultDTO = Optional
                 .ofNullable(
                         this.userClientService

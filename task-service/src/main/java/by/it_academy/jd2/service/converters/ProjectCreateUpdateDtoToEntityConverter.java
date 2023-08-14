@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.ProjectCreateUpdateDTO;
-import by.it_academy.jd2.core.dto.UserRefDTO;
+import by.it_academy.jd2.core.dto.RefDTO;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class ProjectCreateUpdateDtoToEntityConverter
         entity.setName(dto.getName());
         entity.setDescription(dto.getDescription());
         entity.setManager(dto.getManager().getUuid());
-        entity.setStaff(dto.getStaff().stream().map(UserRefDTO::getUuid).collect(Collectors.toList()));
+        entity.setStaff(dto.getStaff().stream().map(RefDTO::getUuid).collect(Collectors.toList()));
         entity.setStatus(dto.getStatus());
 
         return entity;

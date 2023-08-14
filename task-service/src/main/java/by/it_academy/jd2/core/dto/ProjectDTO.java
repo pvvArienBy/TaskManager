@@ -11,16 +11,16 @@ public class ProjectDTO {
     private Long dtUpdate;
     private String name;
     private String description;
-    private UserRefDTO manager;
-    private List<UserRefDTO> staff;
+    private RefDTO manager;
+    private List<RefDTO> staff;
     private EProjectStatus status;
 
     public ProjectDTO() {
     }
 
     public ProjectDTO(UUID uuid, Long dtCreate, Long dtUpdate,
-                      String name, String description, UserRefDTO manager,
-                      List<UserRefDTO> staff, EProjectStatus status) {
+                      String name, String description, RefDTO manager,
+                      List<RefDTO> staff, EProjectStatus status) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
@@ -71,19 +71,19 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public UserRefDTO getManager() {
+    public RefDTO getManager() {
         return manager;
     }
 
-    public void setManager(UserRefDTO manager) {
+    public void setManager(RefDTO manager) {
         this.manager = manager;
     }
 
-    public List<UserRefDTO> getStaff() {
+    public List<RefDTO> getStaff() {
         return staff;
     }
 
-    public void setStaff(List<UserRefDTO> staff) {
+    public void setStaff(List<RefDTO> staff) {
         this.staff = staff;
     }
 

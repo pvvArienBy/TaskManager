@@ -8,18 +8,18 @@ public class TaskDTO {
     private UUID uuid;
     private Long dtCreate;
     private Long dtUpdate;
-    private ProjectRefDTO project;
+    private RefDTO project;
     private String title;
     private String description;
     private ETaskStatus status;
-    private UserRefDTO implementer;
+    private RefDTO implementer;
 
     public TaskDTO() {
     }
 
     public TaskDTO(UUID uuid, Long dtCreate, Long dtUpdate,
-                   ProjectRefDTO project, String title, String description,
-                   ETaskStatus status, UserRefDTO implementer) {
+                   RefDTO project, String title, String description,
+                   ETaskStatus status, RefDTO implementer) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
@@ -54,11 +54,11 @@ public class TaskDTO {
         this.dtUpdate = dtUpdate;
     }
 
-    public ProjectRefDTO getProject() {
+    public RefDTO getProject() {
         return project;
     }
 
-    public void setProject(ProjectRefDTO project) {
+    public void setProject(RefDTO project) {
         this.project = project;
     }
 
@@ -86,11 +86,11 @@ public class TaskDTO {
         this.status = status;
     }
 
-    public UserRefDTO getImplementer() {
+    public RefDTO getImplementer() {
         return implementer;
     }
 
-    public void setImplementer(UserRefDTO implementer) {
+    public void setImplementer(RefDTO implementer) {
         this.implementer = implementer;
     }
 }

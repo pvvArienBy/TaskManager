@@ -16,9 +16,9 @@ public class ProjectCreateUpdateDTO {
     @Size(max = 1000)
     private String description;
     @NotBlank(message = "manager - must not be empty")
-    private UserRefDTO manager;
+    private RefDTO manager;
     @NotBlank(message = "staff - must not be empty")
-    private List<UserRefDTO> staff;
+    private List<RefDTO> staff;
     @NotNull(message = "status - must not be empty")
     @Enumerated(EnumType.STRING)
     private EProjectStatus status;
@@ -26,8 +26,8 @@ public class ProjectCreateUpdateDTO {
     public ProjectCreateUpdateDTO() {
     }
 
-    public ProjectCreateUpdateDTO(String name, String description, UserRefDTO manager,
-                                  List<UserRefDTO> staff, EProjectStatus status) {
+    public ProjectCreateUpdateDTO(String name, String description, RefDTO manager,
+                                  List<RefDTO> staff, EProjectStatus status) {
         this.name = name;
         this.description = description;
         this.manager = manager;
@@ -51,19 +51,19 @@ public class ProjectCreateUpdateDTO {
         this.description = description;
     }
 
-    public UserRefDTO getManager() {
+    public RefDTO getManager() {
         return manager;
     }
 
-    public void setManager(UserRefDTO manager) {
+    public void setManager(RefDTO manager) {
         this.manager = manager;
     }
 
-    public List<UserRefDTO> getStaff() {
+    public List<RefDTO> getStaff() {
         return staff;
     }
 
-    public void setStaff(List<UserRefDTO> staff) {
+    public void setStaff(List<RefDTO> staff) {
         this.staff = staff;
     }
 

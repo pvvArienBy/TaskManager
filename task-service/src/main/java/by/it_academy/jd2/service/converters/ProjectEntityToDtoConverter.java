@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.ProjectDTO;
-import by.it_academy.jd2.core.dto.UserRefDTO;
+import by.it_academy.jd2.core.dto.RefDTO;
 import by.it_academy.jd2.dao.entity.ProjectEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,8 @@ public class ProjectEntityToDtoConverter
         dto.setDtUpdate(item.getDtUpdate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         dto.setName(item.getName());
         dto.setDescription(item.getDescription());
-        dto.setManager(new UserRefDTO(item.getManager()));
-        dto.setStaff(item.getStaff().stream().map(UserRefDTO::new).collect(Collectors.toList()));
+        dto.setManager(new RefDTO(item.getManager()));
+        dto.setStaff(item.getStaff().stream().map(RefDTO::new).collect(Collectors.toList()));
         dto.setStatus(item.getStatus());
 
         return dto;

@@ -2,13 +2,13 @@ package by.it_academy.jd2.core.dto;
 
 import java.util.UUID;
 
-public class UserRefDTO {
+public class RefDTO {
     private UUID uuid;
 
-    public UserRefDTO() {
+    public RefDTO() {
     }
 
-    public UserRefDTO(UUID uuid) {
+    public RefDTO(UUID uuid) {
         this.uuid = uuid;
     }
 
