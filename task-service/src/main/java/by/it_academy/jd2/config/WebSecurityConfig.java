@@ -27,16 +27,10 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/project/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/project").permitAll()
-                                .requestMatchers("/task/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/task").permitAll()
-//                                .requestMatchers("/users/login").permitAll()
-//                                .requestMatchers("/users/verification/**").permitAll()
-//                                .requestMatchers(HttpMethod.POST, "/users").hasAnyAuthority("ROLE_ADMIN")
-//                                .requestMatchers(HttpMethod.PUT, "/users/**").hasAnyAuthority("ROLE_ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("ROLE_ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
+                                .requestMatchers(HttpMethod.POST,"/project/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT,"/project/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/project/**").authenticated()
+                                .requestMatchers("/task/**").authenticated()
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session

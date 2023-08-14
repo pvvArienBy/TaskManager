@@ -28,7 +28,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/audit/**").authenticated()
-                                .requestMatchers("/audit").authenticated()
                                 .requestMatchers("/internal").permitAll()
                                 .anyRequest()
                                 .authenticated())
