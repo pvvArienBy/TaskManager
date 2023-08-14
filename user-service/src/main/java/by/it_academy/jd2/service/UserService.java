@@ -32,7 +32,6 @@ public class UserService implements IUserService {
     private static final String USER_NOT_FOUND = "User is not found";
     private static final String NEW_USER_CREATED = "Creating a new user under a different user";
     private static final String USER_UPDATED = "User updated! Try again";
-    private static final String NEW_USER_REGISTRATION = "New user registration";
     private static final String REQUESTED_DATA_UUID = "Requested user data by UUID";
 
     private final IUserDao userDao;
@@ -98,8 +97,7 @@ public class UserService implements IUserService {
         entity.setRole(ERole.USER);
         entity.setStatus(EStatusUser.WAITING_ACTIVATION);
 
-        this.userDao.saveAndFlush(entity);
-        this.auditService.send(entity, NEW_USER_REGISTRATION);
+        this.userDao.save(entity);
 
         return entity;
     }
