@@ -18,7 +18,7 @@ public class UserCreateUpdateDTO {
     private String mail;
     @NotBlank(message = "fio - must not be empty")
     @Size(max = 255)
-    @Pattern(regexp = "^[^\\d]+$", message = "fio - must not be empty")
+    @Pattern(regexp = "^[^\\d]+$", message = "fio - must not contain numbers")
     private String fio;
     @NotNull(message = "role - must not be empty")
     @Enumerated(EnumType.STRING)
