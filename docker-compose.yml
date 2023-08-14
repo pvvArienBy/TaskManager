@@ -2,18 +2,12 @@ version: '3.5'
 services:
   db:
     build: postgresql
-    image: taskmanager_postgresql:1.0.31
+    image: taskmanager_postgresql:1.0.40
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
     networks:
       - taskmanager_ntwrk
-  maildev:
-    build: maildev
-    image: maildev/maildev
-    ports:
-      - "1080:1080"
-      - "1025:1025"
   pgadmin:
     build: pgadmin
     image: taskmanager_pgadmin:1.0.1
@@ -27,7 +21,7 @@ services:
       - taskmanager_ntwrk
   eureka-server:
     build: eureka-server
-    image: taskmanager_eureka-server:1.0.6
+    image: taskmanager_eureka-server:1.0.7
     ports:
       - "8761:8761"
     networks:
@@ -41,18 +35,22 @@ services:
       - taskmanager_ntwrk
   user-service:
     build: user-service
-    image: taskmanager_user-service:1.0.27
+    image: taskmanager_user-service:1.1.1
     networks:
       - taskmanager_ntwrk
-#  audit-service:
-#    build: audit-service
-#    image: taskmanager_audit-service:1.0.2
-#    networks:
-#      - taskmanager_ntwrk
-
+  audit-service:
+    build: audit-service
+    image: taskmanager_audit-service:1.0.7
+    networks:
+      - taskmanager_ntwrk
+  task-service:
+    build: task-service
+    image: taskmanager_task-service:1.0.4
+    networks:
+      - taskmanager_ntwrk
   gateway-service:
     build: gateway-service
-    image: taskmanager_gateway-service:1.0.4
+    image: taskmanager_gateway-service:1.0.12
     ports:
       - "80:80"
     networks:
