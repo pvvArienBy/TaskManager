@@ -11,4 +11,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class JWTProperty {
     private String secret;
     private String issuer;
+    private String systemToken;
 }

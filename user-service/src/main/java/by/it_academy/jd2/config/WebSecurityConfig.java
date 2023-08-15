@@ -36,8 +36,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.PUT,"/users").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/users").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/users/me").authenticated()
-//                                .requestMatchers("/internal").permitAll()  // TODO: 14.08.2023  
-                                .requestMatchers("/internal/**").permitAll()
+                                .requestMatchers("/internal/**").hasAnyAuthority("ROLE_SYSTEM")
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session

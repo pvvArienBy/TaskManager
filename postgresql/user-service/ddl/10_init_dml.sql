@@ -1,5 +1,6 @@
 \c user_service;
 
+INSERT INTO user_app.users VALUES ('a87523cf-c63a-4a3e-b7c2-e29742692e1f', '2023-08-13 20:00:59.346', '2023-08-13 20:00:59.346', 'system', 'system@system.by', 'SYSTEM', 'ACTIVATED', '$2a$10$aApqCyYYyYMrhMF7favwCeOL8180XbNH421G/xmrws7ZRd.ADl6IO');
 INSERT INTO user_app.users VALUES ('cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', '2023-08-13 19:52:52.009', '2023-08-13 19:52:52.009', 'admin', 'admin@admin.by', 'ADMIN', 'ACTIVATED', '$2a$10$PwIdJ9pw5Iud4iLtFvAmluWjYvYrXypGZM0IEPn7iD9NblsQEQ7zy');
 INSERT INTO user_app.users VALUES ('30a6a8df-eafc-47d2-912c-efe53d865df5', '2023-08-13 19:59:50.521', '2023-08-13 19:59:50.521', 'manager', 'manager@manager.by', 'MANAGER', 'ACTIVATED', '$2a$10$XxhqUtZiP2EZf32aJu0CDOhOu4hRMGvZAmiQ0yUn75BMMftyfczA6');
 INSERT INTO user_app.users VALUES ('a3ed1110-2ae1-4a3d-ab2a-cc52a78789b9', '2023-08-13 19:59:58.825', '2023-08-13 19:59:58.825', 'manager', '2manager@manager.by', 'MANAGER', 'ACTIVATED', '$2a$10$6TTmqLdHAWcinMlpdPjLz.y/N7rFIZHk8z1Y4nFXmp4Ch2nGqAvKu');
@@ -13,4 +14,3 @@ INSERT INTO user_app.users VALUES ('9316f7db-13b4-4d09-a029-f27af40e8f3a', '2023
 INSERT INTO user_app.users VALUES ('3af74e6f-6ce4-4bc8-bea8-8a43f40b4f23', '2023-08-13 20:00:44.447', '2023-08-13 20:00:44.447', 'user', '6user@user.by', 'USER', 'ACTIVATED', '$2a$10$F90XNgEJX4X9gX3tQgvbDeHYQfbNvz1aSdB88YwIpz61AMGyjjJjm');
 INSERT INTO user_app.users VALUES ('08ed2ee0-c8a0-46ef-9f65-4a353e813a6c', '2023-08-13 20:00:48.646', '2023-08-13 20:00:48.646', 'user', '7user@user.by', 'USER', 'ACTIVATED', '$2a$10$8MO88gOTAtjGoUwwA6OAAuNJiUdi40e4qtX3r7Ifveq316x8e1vnq');
 INSERT INTO user_app.users VALUES ('cb44cd68-a249-41c5-9c58-7559f254fbe4', '2023-08-13 20:00:52.738', '2023-08-13 20:00:52.738', 'user', '8user@user.by', 'USER', 'ACTIVATED', '$2a$10$W2.q71rPlMe4S0P38uXU/ucT3aqNLpGj5jpt9A3yfNsDIoVYqOCPm');
-INSERT INTO user_app.users VALUES ('a87523cf-c63a-4a3e-b7c2-e29742692e1f', '2023-08-13 20:00:59.346', '2023-08-13 20:00:59.346', 'user', '9user@user.by', 'USER', 'ACTIVATED', '$2a$10$aApqCyYYyYMrhMF7favwCeOL8180XbNH421G/xmrws7ZRd.ADl6IO');

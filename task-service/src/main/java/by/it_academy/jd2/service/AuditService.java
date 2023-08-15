@@ -16,18 +16,18 @@ import java.time.ZoneId;
 
 @Service
 public class AuditService implements IAuditService {
-    private final IAuditClientService feignClientService;
+    private final IAuditClientService auditClientService;
     private final IUserClientService userClientService;
     private final JwtService jwtService;
     private final ConversionService conversionService;
     private final UserHolder userHolder;
 
-    public AuditService(IAuditClientService feignClientService,
+    public AuditService(IAuditClientService auditClientService,
                         IUserClientService userClientService, JwtService jwtService,
                         ConversionService conversionService,
                         UserHolder userHolder) {
 
-        this.feignClientService = feignClientService;
+        this.auditClientService = auditClientService;
         this.userClientService = userClientService;
         this.jwtService = jwtService;
         this.conversionService = conversionService;
@@ -52,7 +52,7 @@ public class AuditService implements IAuditService {
                 .toInstant()
                 .toEpochMilli());
 
-        this.feignClientService.save(dto);
+        this.auditClientService.save(jwtService.getSystemToken(), dto);
     }
 
     @Override
