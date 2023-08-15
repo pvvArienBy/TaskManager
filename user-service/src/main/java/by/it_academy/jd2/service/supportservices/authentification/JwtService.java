@@ -135,4 +135,8 @@ public class JwtService {
         }
         return false;
     }
+
+    public String getSystemToken() {
+        return this.property.getSystemToken();
+    }
 }

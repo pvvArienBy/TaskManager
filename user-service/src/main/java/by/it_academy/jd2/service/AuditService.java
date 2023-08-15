@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuditService implements IAuditService {
-    private final IAuditClientService feignClientService;
+    private final IAuditClientService auditClientService;
     private final JwtService jwtService;
     private final ConversionService conversionService;
 
 
-    public AuditService(IAuditClientService feignClientService,
+    public AuditService(IAuditClientService auditClientService,
                         JwtService jwtService,
                         ConversionService conversionService) {
 
-        this.feignClientService = feignClientService;
+        this.auditClientService = auditClientService;
         this.jwtService = jwtService;
         this.conversionService = conversionService;
     }
@@ -37,7 +37,7 @@ public class AuditService implements IAuditService {
         dto.setText(text);
         dto.setId(id);
 
-        this.feignClientService.save(dto);
+        this.auditClientService.save(jwtService.getSystemToken(), dto);
     }
 
     @Override
@@ -46,6 +46,6 @@ public class AuditService implements IAuditService {
         dto.setText(text);
         dto.setId(entity.getUuid().toString());
 
-        this.feignClientService.save(dto);
+        this.auditClientService.save(jwtService.getSystemToken(), dto);
     }
 }
