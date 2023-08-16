@@ -10,5 +10,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "AUDIT")
 public interface IAuditClientService {
     @PostMapping("/internal")
-    ResponseEntity<?> save(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AuditCreateDTO dto);
+    ResponseEntity<?> save(@RequestHeader("Authorization") String authorizationHeader,
+                           @RequestBody AuditCreateDTO dto);
 }

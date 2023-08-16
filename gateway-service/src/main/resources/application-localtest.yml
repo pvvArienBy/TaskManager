@@ -10,32 +10,6 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-      routes:
-        - id: users
-          uri: lb://USERS/
-          predicates:
-            - Path=/api/v1/users/**
-          filters:
-            - StripPrefix=2
-        - id: task
-          uri: lb://TASK/
-          predicates:
-            - Path=/api/v1/task/**
-          filters:
-            - StripPrefix=2
-        - id: project
-          uri: lb://TASK/
-          predicates:
-            - Path=/api/v1/project/**
-          filters:
-            - StripPrefix=2
-        - id: audit
-          uri: lb://AUDIT/
-          predicates:
-            - Path=/api/v1/audit
-          filters:
-            - StripPrefix=2
-
 
 eureka:
   client:

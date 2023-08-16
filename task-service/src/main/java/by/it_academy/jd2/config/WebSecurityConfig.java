@@ -29,8 +29,8 @@ public class WebSecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers(HttpMethod.POST,"/project/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.PUT,"/project/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.GET,"/project/**").authenticated()
-                                .requestMatchers("/task/**").authenticated()
+                                .requestMatchers(HttpMethod.GET,"/project/**").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER","ROLE_USER")
+                                .requestMatchers("/**").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER","ROLE_USER")
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session

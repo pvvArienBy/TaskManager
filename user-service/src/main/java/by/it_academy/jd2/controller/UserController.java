@@ -3,6 +3,7 @@ package by.it_academy.jd2.controller;
 import by.it_academy.jd2.core.dto.*;
 import by.it_academy.jd2.dao.entity.UserEntity;
 import by.it_academy.jd2.service.api.IUserService;
+import jakarta.validation.Valid;
 import org.example.mylib.tm.itacademy.dto.PageDTO;
 import org.example.mylib.tm.itacademy.dto.UserDTO;
 import org.springframework.core.convert.ConversionService;
@@ -49,10 +50,10 @@ public class UserController {
     @PutMapping("/{uuid}/dt_update/{dt_update}")
     public ResponseEntity<UserDTO> save(@PathVariable UUID uuid,
                                         @PathVariable("dt_update") LocalDateTime dtUpdate,
-                                        @RequestBody UserCreateUpdateDTO dto) {
+                                        @RequestBody @Valid UserCreateUpdateDTO dto) {
         UserEntity userEntity = this.userService.update(uuid, dtUpdate, dto);
         UserDTO userDTO = conversionService.convert(userEntity, UserDTO.class);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
 }

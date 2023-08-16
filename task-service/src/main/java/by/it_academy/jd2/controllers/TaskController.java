@@ -59,7 +59,7 @@ public class TaskController {
         TaskEntity taskEntity = this.taskService.update(uuid, dtUpdate, dto);
         TaskDTO taskDTO = conversionService.convert(taskEntity, TaskDTO.class);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(taskDTO);
     }
 
     @PatchMapping("/{uuid}/dt_update/{dt_update}/status/{status}")

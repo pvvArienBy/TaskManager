@@ -26,11 +26,11 @@ public class UserEntity implements Serializable, UserDetails {
     static final long serialVersionUID = 9L;
     @Id
     private UUID uuid;
-    @CreationTimestamp(source = SourceType.DB)
+    @CreationTimestamp
     @Column(name = "date_create", nullable = false)
     private LocalDateTime dtCreate;
     @Version
-    @UpdateTimestamp(source = SourceType.DB)
+    @UpdateTimestamp
     @Column(name = "date_update", nullable = false)
     private LocalDateTime dtUpdate;
     @Column(nullable = false)

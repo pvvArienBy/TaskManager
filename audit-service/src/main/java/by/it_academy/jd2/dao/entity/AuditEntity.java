@@ -19,7 +19,7 @@ public class AuditEntity implements Serializable {
     static final long serialVersionUID = 1L;
     @Id
     private UUID uuid;
-    @CreationTimestamp(source = SourceType.DB)
+    @CreationTimestamp
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
     private UUID userUuid;

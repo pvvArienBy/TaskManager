@@ -73,7 +73,7 @@ public class UserService implements IUserService {
 
     @Transactional
     @Override
-    public UserEntity save(UserCreateUpdateDTO item) {
+    public UserEntity save(@Valid UserCreateUpdateDTO item) {
         item.setPassword(passwordEncoder.encode(item.getPassword()));
         UserEntity entity = Objects.requireNonNull(
                 conversionService

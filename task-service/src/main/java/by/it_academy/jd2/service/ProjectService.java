@@ -13,7 +13,6 @@ import by.it_academy.jd2.service.supportservices.JwtService;
 import by.it_academy.jd2.service.supportservices.UserHolder;
 import org.example.mylib.tm.itacademy.dto.ResultUsersVerificationDTO;
 import org.example.mylib.tm.itacademy.dto.UsersVerificationDTO;
-import org.example.mylib.tm.itacademy.enums.EFieldsErrorInfo;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
 import org.example.mylib.tm.itacademy.exceptions.CustomValidationException;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
@@ -34,6 +33,7 @@ public class ProjectService implements IProjectService {
     private static final String PROJECT_UPDATER = "Updating project data";
     private static final String PROJECT_NOT_FOUND = "Project is not found";
     private static final String NEW_PROJECT_CREATED = "Creating a new project under a different project";
+
     private static final String PROJECT_UPDATED = "Project updated! Try again";
     private static final String REQUESTED_DATA_UUID = "Requested project data by UUID";
     private static final String RESULT_NOT_FOUND = "RESULT is not found";
@@ -125,6 +125,7 @@ public class ProjectService implements IProjectService {
     @Transactional
     @Override
     public ProjectEntity update(UUID uuid, LocalDateTime version, ProjectCreateUpdateDTO item) {
+        checkUsers(item);
         ProjectEntity entity = projectDao
                 .findById(uuid)
                 .orElseThrow(()
@@ -161,13 +162,13 @@ public class ProjectService implements IProjectService {
         Map<String, String> errorMap = new HashMap<>();
 
         if (!resultDTO.isManagerCheck()) {
-            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
+            errorMap.put("manager", NOT_FOUND_MESSAGE);
         }
         if (!resultDTO.isManagerCheckRole()) {
-            errorMap.put(EFieldsErrorInfo.MANAGER_ROLE_FIELD.name(), ROLE_NOT_FOUND_MESSAGE);
+            errorMap.put("manager.role", ROLE_NOT_FOUND_MESSAGE);
         }
         if (!resultDTO.isListUsersCheck()) {
-            errorMap.put(EFieldsErrorInfo.STAFF_FILED.name(), INVALID_USERS_MESSAGE);
+            errorMap.put("staff", INVALID_USERS_MESSAGE);
         }
         if (!errorMap.isEmpty()) {
             throw new CustomValidationException(errorMap);
@@ -185,20 +186,21 @@ public class ProjectService implements IProjectService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void checkInProject(TaskCreateUpdateDTO item) {
 
         Map<String, String> errorMap = new HashMap<>();
 
         if (!this.projectDao.existsById(item.getProject().getUuid())) {
-            errorMap.put(EFieldsErrorInfo.MANAGER_FIELD.name(), NOT_FOUND_MESSAGE);
+            errorMap.put("project", NOT_FOUND_MESSAGE);
         }
 
         if (item.getImplementer() != null) {
             if (!this.projectDao.existsByUuidAndStaffContaining(
                     item.getProject().getUuid(), item.getImplementer().getUuid())) {
                 if (!this.projectDao.existsByManager(item.getImplementer().getUuid())) {
-                    errorMap.put(EFieldsErrorInfo.IMPLEMENTER_FILED.name(), PERFORMER_NOT_FOUND_MESSAGE);
+                    errorMap.put("implementer", PERFORMER_NOT_FOUND_MESSAGE);
                 }
             }
         }
@@ -207,6 +209,9 @@ public class ProjectService implements IProjectService {
             throw new CustomValidationException(errorMap);
         }
     }
+
+
+
 
 //    @Override
 //    public boolean checkProjectFromTask(UUID project) {
