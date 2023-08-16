@@ -53,18 +53,6 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<StructuredErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex) {
-
-        StructuredErrorResponse response = new StructuredErrorResponse(
-                ErrorType.STRUCTURED_ERROR, new HashMap<>());
-
-        response.getErrorMap().put(ex.getCause().toString(), ex.getMessage());
-
-        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<List<ErrorResponse>> handleAuthenticationException(AuthenticationException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
@@ -204,5 +192,17 @@ public class UserExceptionHandler {
         errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
 
         return new ResponseEntity(errorList, HttpStatus. BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<StructuredErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex) {
+
+        StructuredErrorResponse response = new StructuredErrorResponse(
+                ErrorType.STRUCTURED_ERROR, new HashMap<>());
+
+        response.getErrorMap().put("enums",INCORRECT_QUERY_CHARACTERS);
+
+        return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
 }

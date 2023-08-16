@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/audit/**").authenticated()
+                                .requestMatchers("/audit/**").hasAnyAuthority("ROLE_SYSTEM","ROLE_ADMIN")
                                 .requestMatchers("/internal/**").hasAnyAuthority("ROLE_SYSTEM")
                                 .anyRequest()
                                 .authenticated())

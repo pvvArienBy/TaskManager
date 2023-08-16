@@ -53,6 +53,6 @@ public class ProjectController {
         ProjectEntity projectEntity = this.projectService.update(uuid, dtUpdate, dto);
         ProjectDTO projectDTO = conversionService.convert(projectEntity, ProjectDTO.class);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(projectDTO);
     }
 }

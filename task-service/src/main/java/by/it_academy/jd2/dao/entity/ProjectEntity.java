@@ -20,11 +20,11 @@ public class ProjectEntity implements Serializable {
     static final long serialVersionUID = 2L;
     @Id
     private UUID uuid;
-    @CreationTimestamp(source = SourceType.DB)
+    @CreationTimestamp
     @Column(name = "date_create")
     private LocalDateTime dtCreate;
     @Version
-    @UpdateTimestamp(source = SourceType.DB)
+    @UpdateTimestamp
     @Column(name = "date_update")
     private LocalDateTime dtUpdate;
     @Size(max = 255)

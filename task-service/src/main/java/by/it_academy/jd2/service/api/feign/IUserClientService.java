@@ -16,5 +16,7 @@ public interface IUserClientService {
     ResponseEntity<UserDTO> meDetails(@RequestHeader("Authorization") String authorizationHeader);
 
     @PostMapping("/internal")
-    ResponseEntity<ResultUsersVerificationDTO> checkForProject(@RequestHeader("Authorization") String authorizationHeader, @RequestBody UsersVerificationDTO dto);
+    ResponseEntity<ResultUsersVerificationDTO> checkForProject(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody UsersVerificationDTO dto);
 }

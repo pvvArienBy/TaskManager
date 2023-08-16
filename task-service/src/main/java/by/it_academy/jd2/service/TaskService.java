@@ -168,6 +168,10 @@ public class TaskService implements ITaskService {
                 .orElseThrow(()
                         -> new EntityNotFoundException(TASK_NOT_FOUND));
 
+        if (!userHolder.checkAdminRole()) {
+            this.projectService.get(entity.getProject());
+        }
+
         if (!version.equals(entity.getDtUpdate())) {
             throw new UpdateEntityException(TASK_UPDATED);
         }

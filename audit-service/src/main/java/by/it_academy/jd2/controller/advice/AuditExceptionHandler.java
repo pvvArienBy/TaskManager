@@ -1,4 +1,4 @@
-package by.it_academy.jd2.controllers.advice;
+package by.it_academy.jd2.controller.advice;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -7,7 +7,10 @@ import jakarta.validation.ConstraintViolationException;
 import org.example.mylib.tm.itacademy.enums.ErrorType;
 import org.example.mylib.tm.itacademy.errors.ErrorResponse;
 import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
-import org.example.mylib.tm.itacademy.exceptions.*;
+import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
+import org.example.mylib.tm.itacademy.exceptions.NotCorrectValueException;
+import org.example.mylib.tm.itacademy.exceptions.UniqueConstraintViolation;
+import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -32,7 +35,7 @@ import java.util.List;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-public class UserExceptionHandler {
+public class AuditExceptionHandler {
     private static final String INCORRECT_QUERY_CHARACTERS = "The characters in the query were entered incorrectly. Change the request and try again.";
     private static final String INTERNAL_SERVER_ERROR = "An internal server error has occurred. Please contact support.";
 
@@ -45,18 +48,6 @@ public class UserExceptionHandler {
         ex.getConstraintViolations().stream().forEach(violation -> {
             response.getErrorMap().put(violation.getPropertyPath().toString(), violation.getMessage());
         });
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({CustomValidationException.class})
-    public ResponseEntity<StructuredErrorResponse> invalidFieldException(
-            CustomValidationException ex) {
-
-        StructuredErrorResponse response = new StructuredErrorResponse(
-                ErrorType.STRUCTURED_ERROR, new HashMap<>());
-
-        response.setErrorMap(ex.getErrors());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -195,22 +186,12 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ResultNotFoundException.class})
-    public ResponseEntity<List<ErrorResponse>> handleResultError(ResultNotFoundException ex) {
-        List<ErrorResponse> errorList = new ArrayList<>();
-        ErrorResponse error = new ErrorResponse(
-                ErrorType.ERROR, ex.getMessage());
-        errorList.add(error);
-
-        return new ResponseEntity<>(errorList, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<List<ErrorResponse>> handleNotFoundEntityException(EntityNotFoundException ex) {
 
         List<ErrorResponse> errorList = new ArrayList<>();
         errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
 
-        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+        return new ResponseEntity(errorList, HttpStatus.NOT_FOUND);
     }
 }

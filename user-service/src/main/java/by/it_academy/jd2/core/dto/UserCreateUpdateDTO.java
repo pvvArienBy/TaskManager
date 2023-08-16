@@ -12,9 +12,9 @@ import org.example.mylib.tm.itacademy.enums.EStatusUser;
 
 public class UserCreateUpdateDTO {
     @NotBlank(message = "mail - must not be empty")
+    @ValidEmail(message = "mail - ${validatedValue} already exists! Choose another mail.")
     @Pattern(regexp = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$",
             message = "Invalid email address!")
-    @ValidEmail(message = "mail - ${validatedValue} already exists! Choose another mail.")
     private String mail;
     @NotBlank(message = "fio - must not be empty")
     @Size(max = 255)
