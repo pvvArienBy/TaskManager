@@ -209,19 +209,4 @@ public class ProjectService implements IProjectService {
             throw new CustomValidationException(errorMap);
         }
     }
-
-
-
-
-//    @Override
-//    public boolean checkProjectFromTask(UUID project) {
-//        UUID meUuid = UUID.fromString(
-//                this.jwtService.extractUuid(userHolder.getToken()));
-//
-//        return get(project).getManager().equals(meUuid) || get(project).getStaff().contains(meUuid);
-//    } // TODO: 12.08.2023 удалить после всех тестов
-
-//    @Override
-//    public boolean checkProjectFromTask(UUID project) {
-//        return this.get(project) != null;}
 }

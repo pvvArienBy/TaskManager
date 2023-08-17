@@ -114,7 +114,6 @@ public class AuditExceptionHandler {
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();

@@ -6,7 +6,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-// TODO: 11.08.2023 описание и статус и implementer могут быть null // project NotNull
 public class TaskCreateUpdateDTO {
     @NotBlank(message = "project - must not be empty")
     private RefDTO project;

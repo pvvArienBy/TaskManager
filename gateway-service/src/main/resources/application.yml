@@ -35,7 +35,12 @@ spring:
             - Path=/api/v1/audit/**
           filters:
             - StripPrefix=2
-
+        - id: report
+          uri: lb://REPORT/
+          predicates:
+            - Path=/api/v1/report/**
+          filters:
+            - StripPrefix=2
 
 #eureka:
 #  client:

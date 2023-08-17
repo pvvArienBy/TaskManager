@@ -1,2 +1,4 @@
 \c audit_service;
 INSERT INTO audit_app.audits VALUES ('d0b8ab44-0e12-405c-ad8f-b3077f849203', '2023-08-16 08:35:30.265017', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', 'admin', 'admin@admin.by', 'ADMIN', 'User authentication', 'USER', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2');
+INSERT INTO audit_app.audits VALUES ('b0b3bdb5-8b88-4ac8-a912-7dfae61a78cc', '2023-08-16 08:35:30.265017', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', 'admin', 'admin@admin.by', 'ADMIN', 'User authentication', 'USER', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2');
+INSERT INTO audit_app.audits VALUES ('6a7bcec0-aef5-4f8f-9d8d-f52fdefa8f91', '2023-08-16 12:35:30.265017', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2', 'admin', 'admin@admin.by', 'ADMIN', 'User authentication', 'USER', 'cd3e7ee8-2252-4fe1-8c3e-db189db44bf2');

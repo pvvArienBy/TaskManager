@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/audit/**").hasAnyAuthority("ROLE_SYSTEM","ROLE_ADMIN")
                                 .requestMatchers("/internal/**").hasAnyAuthority("ROLE_SYSTEM")
+                                .requestMatchers("/report/**").permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session

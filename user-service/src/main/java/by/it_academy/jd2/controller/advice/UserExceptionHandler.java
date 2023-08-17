@@ -103,7 +103,6 @@ public class UserExceptionHandler {
         return new ResponseEntity(errorList, HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<List<ErrorResponse>> handleJwtException(ExpiredJwtException ex) {
         List<ErrorResponse> errorList = new ArrayList<>();
@@ -128,7 +127,6 @@ public class UserExceptionHandler {
         return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
     }
 
-    // TODO: 28.07.2023 problem exception (403)
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<List<ErrorResponse>> authenticationException(AccessDeniedException ex) {
 

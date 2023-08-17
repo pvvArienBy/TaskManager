@@ -1,8 +1,14 @@
 version: '3.5'
+
+
+volumes:
+  minio-data:
+    driver: local
+
 services:
   db:
     build: postgresql
-    image: taskmanager_postgresql:1.1.11
+    image: taskmanager_postgresql:1.1.17
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -21,7 +27,7 @@ services:
       - taskmanager_ntwrk
   eureka-server:
     build: eureka-server
-    image: taskmanager_eureka-server:1.0.7
+    image: taskmanager_eureka-server:1.0.8
     ports:
       - "8761:8761"
     networks:
@@ -33,24 +39,43 @@ services:
       - "81:8080"
     networks:
       - taskmanager_ntwrk
+  minio:
+    build: minio
+    image: minio/minio
+    environment:
+      - MINIO_ROOT_USER=minioservice
+      - MINIO_ROOT_PASSWORD=minioservice
+    command: server ~/minio --console-address :9001
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - taskmanager_ntwrk
+    volumes:
+      - minio-data:/minio
   user-service:
     build: user-service
-    image: taskmanager_user-service:1.1.28
+    image: taskmanager_user-service:1.1.32
     networks:
       - taskmanager_ntwrk
   audit-service:
     build: audit-service
-    image: taskmanager_audit-service:1.1.2
+    image: taskmanager_audit-service:1.1.4
     networks:
       - taskmanager_ntwrk
   task-service:
     build: task-service
-    image: taskmanager_task-service:1.0.20
+    image: taskmanager_task-service:1.0.23
+    networks:
+      - taskmanager_ntwrk
+  report-service:
+    build: report-service
+    image: taskmanager_report-service:1.1.4
     networks:
       - taskmanager_ntwrk
   gateway-service:
     build: gateway-service
-    image: taskmanager_gateway-service:1.0.20
+    image: taskmanager_gateway-service:1.0.22
     ports:
       - "80:80"
     networks:
