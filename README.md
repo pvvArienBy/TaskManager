@@ -1,59 +1,57 @@
 
 # TaskManager
 
-Финальный проект в рамках обучения курса - Технологии разработки энтерпрайз решений на JAVA  от IT-ACADEMY.
+The final project within the framework of the training course - Technologies for the development of enterprise solutions in JAVA from IT-ACADEMY.
 
 
 
-## Проект  с микросервисной архитектурой
+## Project with microservice architecture
 
+This project is a microservice architecture implemented in Docker containers.
 
-Этот проект представляет собой микросервисную архитектуру, реализованную в Docker-контейнерах.
+## Description
 
-## Описание
+A microservice architecture is an approach to application development in which an application is broken down into small, self-contained services that interact with each other through an API. Each service is responsible for a specific functionality and can be deployed and scaled independently of other services.
 
-Микросервисная архитектура - это подход к разработке приложений, в котором приложение разбивается на небольшие автономные сервисы, взаимодействующие между собой посредством API. Каждый сервис отвечает за определенную функциональность и может быть развернут и масштабирован независимо от других сервисов.
-
-## Модули
+## Modules
 
 Проект состоит из следующих модулей:
 
-1. **Модуль user-service**: Отвечает за регистрацию,аутентификацию пользователей и выдачу токенов доступа.
+1. **User-service module**: Responsible for registering, authenticating users and issuing access tokens.
 
-2. **Модуль audit-service**: Отвечает за регистрацию событий в рамках всего проекта. Предоставляет API для работы с логгированием запросов..
+2. **Audit-service module**: Responsible for logging events throughout the project. Provides an API for handling request logging.
 
-3. **Модуль task-service**: Обрабатывает запросы на создание и управление проектами и задачами.
+3. **task-service module**: Handles requests to create and manage projects and tasks.
 
-4. **Модуль report-service**: Генерирует различные отчеты на основе данных из других сервисов.
+4. **Report-service module**: Generates various reports based on data from other services.
 
 
-## Компоненты
+## Components
 
-Проект включает следующие компоненты:
+The project includes the following components:
 
-1. **Eureka**: Eureka является сервисом регистрации и обнаружения, который позволяет сервисам в вашей архитектуре находить друг друга автоматически.
+1. **Eureka**: Eureka is a registration and discovery service that allows services in your architecture to discover each other automatically.
 
-2. **Spring Gateway**: Spring Gateway предоставляет проксирование запросов и маршрутизацию между различными сервисами в вашей архитектуре.
+2. **Spring Gateway**: Spring Gateway provides request proxying and routing between different services in your architecture.
 
-3. **Minio**: Minio - это система хранения объектов, которая предоставляет простой и масштабируемый способ хранения файлов и объектов в облаке.
+3. **Minio**: Minio is an object storage system that provides a simple and scalable way to store files and objects in the cloud.
 
-4. **Spring Security**: Spring Security обеспечивает аутентификацию и авторизацию для ваших микросервисов, позволяя контролировать доступ к защищенным ресурсам.
+4. **Spring Security**: Spring Security provides authentication and authorization for your microservices, allowing you to control access to protected resources.
 
-5. **Spring Data JPA**: Spring Data JPA предоставляет удобный способ взаимодействия с базой данных, используя объектно-реляционное отображение (ORM).
+5. **Spring Data JPA**: Spring Data JPA provides a convenient way to interact with the database using an object-relational mapping (ORM).
 
-6. **Spring MVC**: Spring MVC - это фреймворк для разработки веб-приложений, который обеспечивает обработку HTTP-запросов, включая маршрутизацию и обработку данных.
+6. **Spring MVC**: Spring MVC is a web application development framework that handles HTTP requests, including routing and data processing.
 
-## Требования
+## Requirements
 
-Для запуска контейнеров требуется 
+Containers require
 
-1. Перейдите в корневую папку проекта, где находятся Dockerfile и docker-compose.yml.
+1. Navigate to the root folder of the project where the Dockerfile and docker-compose.yml are located.
 
-2. Соберите контейнеры с помощью команды `docker-compose build`
+2. Build containers with `docker-compose build` command
 
-3. Запустите контейнеры с помощью команды `docker-compose up`
+3. Run containers with `docker-compose up` command
 
-## Authors
+##Authors
 
 - [@pvvArienBy](https://github.com/pvvArienBy)
-
