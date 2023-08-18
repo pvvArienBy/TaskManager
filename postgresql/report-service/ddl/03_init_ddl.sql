@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS report_app.reports
     status      character varying(255),
     type        character varying(255),
     description character varying(500),
-    report_url  character varying(255),
     CONSTRAINT reports_pkey PRIMARY KEY (uuid),
     CONSTRAINT reports_status_check CHECK (status::text = ANY
                                            (ARRAY ['LOADER'::character varying, 'PROGRESS'::character varying, 'ERROR'::character varying, 'DONE'::character varying]::text[])),
@@ -54,5 +53,45 @@ CREATE TABLE IF NOT EXISTS report_app.reports_param
 
 ALTER TABLE IF EXISTS report_app.reports_param
     OWNER to reportservice;
+
+
+CREATE TABLE IF NOT EXISTS report_app.files_info
+(
+    id          bigint                         NOT NULL,
+    file_name   character varying(255),
+    date_create timestamp(6) without time zone NOT NULL,
+    CONSTRAINT files_info_pkey PRIMARY KEY (id)
+);
+
+ALTER TABLE IF EXISTS report_app.files_info
+    OWNER to reportservice;
+
+CREATE TABLE IF NOT EXISTS report_app.report_file
+(
+    file_id    bigint NOT NULL,
+    reports_id uuid,
+    CONSTRAINT report_file_pkey PRIMARY KEY (file_id),
+    CONSTRAINT file_id_to_id FOREIGN KEY (file_id)
+        REFERENCES report_app.files_info (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT report_id_to_uuid FOREIGN KEY (reports_id)
+        REFERENCES report_app.reports (uuid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+ALTER TABLE IF EXISTS report_app.report_file
+    OWNER to reportservice;
+
+CREATE SEQUENCE IF NOT EXISTS report_app.files_info_seq
+    INCREMENT 50
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE report_app.files_info_seq
+    OWNER TO reportservice;
 
 GRANT ALL PRIVILEGES ON DATABASE report_service TO reportservice;
