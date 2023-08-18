@@ -88,7 +88,7 @@ public class JwtService {
                     .getBody();
         } catch (ExpiredJwtException | MalformedJwtException e) {
             SecurityContextHolder.getContext().setAuthentication(null);
-            throw new AccessDeniedException("Invalid token");// TODO: 01.08.2023 Check trouble
+            throw new AccessDeniedException("Invalid token");
         }
 
         return body;

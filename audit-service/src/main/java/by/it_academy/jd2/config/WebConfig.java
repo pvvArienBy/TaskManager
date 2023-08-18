@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.example.mylib.tm.itacademy.errors.ErrorResponse;
 import org.example.mylib.tm.itacademy.errors.StructuredErrorResponse;
@@ -34,6 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
         builder.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         builder.modules(new ParameterNamesModule());
         builder.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        builder.modules(new ParameterNamesModule(), new JavaTimeModule());
 
         return builder;
     }

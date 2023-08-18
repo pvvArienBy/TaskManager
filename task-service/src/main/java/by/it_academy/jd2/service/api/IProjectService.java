@@ -17,5 +17,4 @@ public interface IProjectService extends ICRUService<ProjectEntity, ProjectCreat
 
     void checkInProject(TaskCreateUpdateDTO item);
 
-//    boolean checkProjectFromTask(UUID project); // TODO: 12.08.2023 удалить после тестов
 }

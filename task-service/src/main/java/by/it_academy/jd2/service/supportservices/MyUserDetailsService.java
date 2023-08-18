@@ -31,7 +31,7 @@ public class MyUserDetailsService implements UserDetailsService {
                                 .meDetails(token)
                                 .getBody())
                 .orElseThrow(()
-                        -> new IllegalStateException(USER_NOT_FOUND)); //todo свой эксепшен сюда
+                        -> new IllegalStateException(USER_NOT_FOUND));
 
         UserDetails userDetails = new UserDetails() {
             @Override
