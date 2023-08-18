@@ -15,7 +15,7 @@ A microservice architecture is an approach to application development in which a
 
 ## Modules
 
-Проект состоит из следующих модулей:
+The project consists of the following modules:
 
 1. **User-service module**: Responsible for registering, authenticating users and issuing access tokens.
 
