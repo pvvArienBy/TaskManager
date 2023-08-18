@@ -5,7 +5,6 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
-import io.minio.errors.*;
 import lombok.SneakyThrows;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,11 +13,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.mylib.tm.itacademy.dto.AuditDTO;
 import org.example.mylib.tm.itacademy.exceptions.ReportUploadException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,18 +27,18 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ApachePOIService {
-
+public class GenerateFileService {
     private final MinioClient minioClient;
     private final MinioProperty minioProperty;
 
-    public ApachePOIService(MinioClient minioClient, MinioProperty minioProperty) {
+
+    public GenerateFileService(MinioClient minioClient, MinioProperty minioProperty) {
         this.minioClient = minioClient;
         this.minioProperty = minioProperty;
     }
 
 
-    public void convertToExcel(List<AuditDTO> auditList, String filePath) throws IOException {
+    public String convertToExcel(List<AuditDTO> auditList, String userUuid) throws IOException {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Audit Data");
 
@@ -78,45 +77,20 @@ public class ApachePOIService {
             sheet.autoSizeColumn(i);
         }
 
-//        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
-//            workbook.write(outputStream);
-//        }
+        String filename;
+
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             workbook.write(outputStream);
-
-            byte[] data = outputStream.toByteArray();
-
-            // Загрузка файла в MinIO
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(minioProperty.getBucket())
-                            .object(filePath)
-                            .stream(inputStream, data.length, -1)
-                            .contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                            .build()
-            );
-        } catch (ServerException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (InsufficientDataException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (ErrorResponseException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (InvalidKeyException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (InvalidResponseException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (XmlParserException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        } catch (InternalException e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
+            filename = upload(outputStream, userUuid);
+        } catch (IOException e) {
+            throw new ReportUploadException("Report upload failed: " + e.getMessage() + e.getCause().getMessage());
         }
+
+        return filename;
     }
 
 
-    public String upload(ByteArrayOutputStream outputStream, String filePath) {
+    public String upload(ByteArrayOutputStream outputStream, String userUuid) {
         try {
             createBucket();
         } catch (Exception e) {
@@ -125,12 +99,14 @@ public class ApachePOIService {
 
         byte[] data = outputStream.toByteArray();
 
-        String fileName = generateFileName(filePath);
+        String fileName = generateFileName(userUuid) + ".xml";
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
-            saveReport(inputStream, UUID.randomUUID().toString() +".xml");
+            saveReport(inputStream, fileName);
         } catch (IOException e) {
             throw new ReportUploadException("Report upload failed: " + e.getMessage() + e.getCause().getMessage());
         }
+
+
 
         return fileName;
     }

@@ -8,7 +8,7 @@ volumes:
 services:
   db:
     build: postgresql
-    image: taskmanager_postgresql:1.1.17
+    image: taskmanager_postgresql:1.1.18
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -70,7 +70,7 @@ services:
       - taskmanager_ntwrk
   report-service:
     build: report-service
-    image: taskmanager_report-service:1.1.4
+    image: taskmanager_report-service:1.1.13
     networks:
       - taskmanager_ntwrk
   gateway-service:
