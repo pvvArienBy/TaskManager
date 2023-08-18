@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Map;
 import java.util.UUID;
@@ -42,10 +43,7 @@ public class ReportController {
     }
 
     @GetMapping("/{uuid}/export")
-    public ResponseEntity<?> test(@PathVariable UUID uuid) {
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(conversionService.convert(this.reportService.getAll(PageRequest.of(page, size)), PageDTO.class));
-        return null;
+    public RedirectView  export(@PathVariable UUID uuid) {
+        return this.reportService.getUrlReport(uuid);
     }
-
 }
