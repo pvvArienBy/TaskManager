@@ -50,9 +50,7 @@ public class ParamService implements IParamService {
     @Transactional
     @Override
     public ParamEntity save(ParamEntity item) {
-
         item.setUuid(UUID.randomUUID());
-
         this.paramDao.saveAndFlush(item);
 
         return item;
