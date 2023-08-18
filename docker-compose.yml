@@ -70,7 +70,7 @@ services:
       - taskmanager_ntwrk
   report-service:
     build: report-service
-    image: taskmanager_report-service:1.1.13
+    image: taskmanager_report-service:1.1.16
     networks:
       - taskmanager_ntwrk
   gateway-service:

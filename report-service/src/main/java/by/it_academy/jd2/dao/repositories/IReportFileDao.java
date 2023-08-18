@@ -9,4 +9,5 @@ import java.util.UUID;
 @Repository
 public interface IReportFileDao extends JpaRepository<ReportFileEntity, Long> {
     ReportFileEntity findByReportUuid(UUID uuid);
+    boolean existsByReportUuid(UUID uuid);
 }

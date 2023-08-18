@@ -19,4 +19,6 @@ public interface IReportService {
     RedirectView getUrlReport(UUID uuid);
 
     String getFileName(UUID uuid);
+
+    boolean checkFileInData(UUID uuid);
 }

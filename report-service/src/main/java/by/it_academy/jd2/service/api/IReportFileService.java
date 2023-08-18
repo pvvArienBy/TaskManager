@@ -6,4 +6,6 @@ import java.util.UUID;
 public interface IReportFileService {
     void save(ReportFileEntity item);
     ReportFileEntity findFileNameByReport(UUID uuid);
+
+    boolean checkFileInData(UUID uuid);
 }

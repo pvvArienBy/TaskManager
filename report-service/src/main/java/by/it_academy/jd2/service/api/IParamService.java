@@ -12,4 +12,5 @@ public interface IParamService {
     ParamEntity save(ParamDTO item);
 
     ParamEntity save(ParamEntity item);
+
 }

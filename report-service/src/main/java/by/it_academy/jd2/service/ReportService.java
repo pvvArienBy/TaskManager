@@ -6,12 +6,14 @@ import by.it_academy.jd2.dao.entity.ReportEntity;
 import by.it_academy.jd2.dao.entity.ReportFileEntity;
 import by.it_academy.jd2.dao.repositories.IReportDao;
 import by.it_academy.jd2.service.api.IParamService;
+import by.it_academy.jd2.service.api.IReportFileService;
 import by.it_academy.jd2.service.api.IReportService;
 import by.it_academy.jd2.service.api.feign.IAuditClientService;
 import io.minio.MinioClient;
 import org.example.mylib.tm.itacademy.dto.AuditDTO;
 import org.example.mylib.tm.itacademy.dto.ParamDTO;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
+import org.example.mylib.tm.itacademy.exceptions.ReportGenerateException;
 import org.example.mylib.tm.itacademy.exceptions.ResultNotFoundException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,8 @@ import java.util.UUID;
 @Service
 public class ReportService implements IReportService {
     private static final String REPORT_NOT_FOUND = "Report is not found";
-    private static final String RESULT_NOT_FOUND = "RESULT is not found";
+    private static final String RESULT_NOT_FOUND = "Result is not found";
+    private static final String FILE_NOT_CREATED = "File generation and saving error";
 
     private final IReportDao reportDao;
     private final IParamService paramService;
@@ -38,7 +41,7 @@ public class ReportService implements IReportService {
     private final GenerateFileService generateFileService;
     private final MinioProperty minioProperty;
     private final MinioClient minioClient;
-    private final ReportFileService fileService;
+    private final IReportFileService fileService;
 
     public ReportService(IReportDao reportDao, IParamService paramService,
                          IAuditClientService auditClientService,
@@ -74,7 +77,6 @@ public class ReportService implements IReportService {
     @Transactional
     @Override
     public ReportEntity save(ReportCreateDTO item) {
-        // TODO: 17.08.2023 заложить email в отчет или fio
         ReportEntity entity = Objects.requireNonNull(
                 conversionService
                         .convert(item, ReportEntity.class));
@@ -85,12 +87,16 @@ public class ReportService implements IReportService {
 
         try {
             ReportFileEntity fileEntity = new ReportFileEntity();
-            fileEntity.setFileName(getReportFile(conversionService.convert(entity.getParamEntity(), ParamDTO.class)));
+
+            fileEntity.setFileName(getReportFile(
+                    conversionService.convert(
+                            entity.getParamEntity(), ParamDTO.class)));
+
             fileEntity.setReport(entity);
 
             this.fileService.save(fileEntity);
         } catch (IOException e) {
-            throw new RuntimeException(e); // TODO: 17.08.2023
+            throw new ReportGenerateException(FILE_NOT_CREATED);
         }
 
         return entity;
@@ -108,6 +114,12 @@ public class ReportService implements IReportService {
     @Override
     public String getFileName(UUID uuid) {
         return this.fileService.findFileNameByReport(uuid).getFileName();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean checkFileInData(UUID uuid) {
+        return this.fileService.checkFileInData(uuid);
     }
 
     private String getReportFile(ParamDTO dto) throws IOException {

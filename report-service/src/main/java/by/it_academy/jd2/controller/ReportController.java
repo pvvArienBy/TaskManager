@@ -2,6 +2,7 @@ package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.ReportCreateDTO;
 import by.it_academy.jd2.core.enums.EType;
+import by.it_academy.jd2.service.api.IReportFileService;
 import by.it_academy.jd2.service.api.IReportService;
 import org.example.mylib.tm.itacademy.dto.PageDTO;
 import org.springframework.core.convert.ConversionService;
@@ -19,10 +20,12 @@ import java.util.UUID;
 public class ReportController {
     private final IReportService reportService;
     private final ConversionService conversionService;
+    private final IReportFileService fileService;
 
-    public ReportController(IReportService reportService, ConversionService conversionService) {
+    public ReportController(IReportService reportService, ConversionService conversionService, IReportFileService fileService) {
         this.reportService = reportService;
         this.conversionService = conversionService;
+        this.fileService = fileService;
     }
 
 
@@ -45,5 +48,11 @@ public class ReportController {
     @GetMapping("/{uuid}/export")
     public RedirectView  export(@PathVariable UUID uuid) {
         return this.reportService.getUrlReport(uuid);
+    }
+
+    @RequestMapping(value = "/{uuid}/export", method = RequestMethod.HEAD)
+    public ResponseEntity<?>  availabilityCheck(@PathVariable UUID uuid) {
+        if (this.fileService.checkFileInData(uuid)) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

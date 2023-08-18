@@ -24,4 +24,9 @@ public class ReportFileService implements IReportFileService {
     public ReportFileEntity findFileNameByReport(UUID uuid) {
         return this.reportFileDao.findByReportUuid(uuid);
     }
+
+    @Override
+    public boolean checkFileInData(UUID uuid) {
+        return this.reportFileDao.existsByReportUuid(uuid);
+    }
 }
