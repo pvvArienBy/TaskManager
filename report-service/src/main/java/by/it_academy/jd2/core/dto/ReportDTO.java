@@ -15,7 +15,6 @@ public class ReportDTO {
     private EType type;
     private String description;
     private ParamDTO params;
-    private String reportUrl;
 
     public ReportDTO() {
     }
@@ -30,7 +29,6 @@ public class ReportDTO {
         this.type = type;
         this.description = description;
         this.params = params;
-        this.reportUrl = reportUrl;
     }
 
     public UUID getUuid() {
@@ -89,11 +87,4 @@ public class ReportDTO {
         this.params = params;
     }
 
-    public String getReportUrl() {
-        return reportUrl;
-    }
-
-    public void setReportUrl(String reportUrl) {
-        this.reportUrl = reportUrl;
-    }
 }

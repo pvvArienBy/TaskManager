@@ -32,9 +32,6 @@ public class ReportEntity implements Serializable {
     private EType type;
     @Size(max = 500)
     private String description;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "report_url")
-    private String reportUrl;
     @JoinTable(
             name = "reports_param",
             joinColumns = @JoinColumn(name = "reports_id"),
@@ -48,16 +45,14 @@ public class ReportEntity implements Serializable {
 
     public ReportEntity(UUID uuid, LocalDateTime dtCreate,
                         LocalDateTime dtUpdate, EReportStatus status,
-                        EType type, String description, ParamEntity paramEntity,
-                        String reportUrl) {
+                        EType type, String description, ParamEntity paramEntity) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.dtUpdate = dtUpdate;
         this.status = status;
         this.type = type;
         this.description = description;
-        this.paramEntity = paramEntity;
-        this.reportUrl = reportUrl;
+        this.paramEntity = paramEntity;;
     }
 
     public UUID getUuid() {
@@ -116,14 +111,6 @@ public class ReportEntity implements Serializable {
         this.paramEntity = paramEntity;
     }
 
-    public String getReportUrl() {
-        return reportUrl;
-    }
-
-    public void setReportUrl(String reportUrl) {
-        this.reportUrl = reportUrl;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -131,13 +118,12 @@ public class ReportEntity implements Serializable {
         ReportEntity that = (ReportEntity) o;
         return Objects.equals(uuid, that.uuid) && Objects.equals(dtCreate, that.dtCreate) &&
                 Objects.equals(dtUpdate, that.dtUpdate) && status == that.status && type == that.type &&
-                Objects.equals(description, that.description) && Objects.equals(paramEntity, that.paramEntity) &&
-                Objects.equals(reportUrl, that.reportUrl);
+                Objects.equals(description, that.description) && Objects.equals(paramEntity, that.paramEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, dtCreate, dtUpdate, status, type, description, paramEntity, reportUrl);
+        return Objects.hash(uuid, dtCreate, dtUpdate, status, type, description, paramEntity);
     }
 }
 
