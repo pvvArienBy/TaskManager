@@ -52,7 +52,9 @@ public class ReportController {
 
     @RequestMapping(value = "/{uuid}/export", method = RequestMethod.HEAD)
     public ResponseEntity<?>  availabilityCheck(@PathVariable UUID uuid) {
-        if (this.fileService.checkFileInData(uuid)) return new ResponseEntity<>(HttpStatus.OK);
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (this.fileService.checkFileInData(uuid))
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
