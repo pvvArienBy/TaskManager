@@ -14,6 +14,7 @@ import org.example.mylib.tm.itacademy.exceptions.UpdateEntityException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,15 +37,17 @@ public class TaskService implements ITaskService {
     private final IAuditService auditService;
     private final IProjectService projectService;
     private final UserHolder userHolder;
+    private  final TaskSpecifications taskSpecifications;
 
     public TaskService(ITaskDao taskDao,
                        ConversionService conversionService, IAuditService auditService,
-                       IProjectService projectService, UserHolder userHolder) {
+                       IProjectService projectService, UserHolder userHolder, TaskSpecifications taskSpecifications) {
         this.taskDao = taskDao;
         this.conversionService = conversionService;
         this.auditService = auditService;
         this.projectService = projectService;
         this.userHolder = userHolder;
+        this.taskSpecifications = taskSpecifications;
     }
 
     @Transactional(readOnly = true)
@@ -54,44 +57,27 @@ public class TaskService implements ITaskService {
                                    List<UUID> implementer,
                                    List<ETaskStatus> status) {
 
+        Specification<TaskEntity> specification = Specification.where(null);
+
         if (!userHolder.checkAdminRole()) {
             List<UUID> result = projectService.getMyList();
             project.removeIf(uuid -> !result.contains(uuid));
-
-            if (project.isEmpty() && implementer.isEmpty() && status.isEmpty()) {
-                return taskDao.findByProjectIn(result, pageRequest);
-            }
+            specification = specification.and(taskSpecifications.findByProjectIn(result));
         }
 
-        if (!project.isEmpty() && implementer.isEmpty() && status.isEmpty()) {
-            return taskDao.findByProjectIn(project, pageRequest);
+        if (!project.isEmpty()) {
+            specification = specification.and(taskSpecifications.findByProjectIn(project));
         }
 
-        if (project.isEmpty() && !implementer.isEmpty() && status.isEmpty()) {
-            return taskDao.findByImplementerIn(implementer, pageRequest);
+        if (!implementer.isEmpty()) {
+            specification = specification.and(taskSpecifications.findByImplementerIn(implementer));
         }
 
-        if (!project.isEmpty() && !implementer.isEmpty() && status.isEmpty()) {
-            return taskDao.findByProjectInAndImplementerIn(project, implementer, pageRequest);
+        if (!status.isEmpty()) {
+            specification = specification.and(taskSpecifications.findByStatusIn(status));
         }
 
-        if (project.isEmpty() && implementer.isEmpty() && !status.isEmpty()) {
-            return taskDao.findByStatusIn(status, pageRequest);
-        }
-
-        if (!project.isEmpty() && implementer.isEmpty() && !status.isEmpty()) {
-            return taskDao.findByProjectInAndStatusIn(project, status, pageRequest);
-        }
-
-        if (project.isEmpty() && !implementer.isEmpty() && !status.isEmpty()) {
-            return taskDao.findByImplementerInAndStatusIn(implementer, status, pageRequest);
-        }
-
-        if (!project.isEmpty() && !implementer.isEmpty() && !status.isEmpty()) {
-            return taskDao.findByProjectInAndImplementerInAndStatusIn(project, implementer, status, pageRequest);
-        }
-
-        return taskDao.findAll(pageRequest);
+        return taskDao.findAll(specification, pageRequest);
     }
 
     @Transactional(readOnly = true)
