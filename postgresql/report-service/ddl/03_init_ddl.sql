@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS report_app.reports
     description character varying(500),
     CONSTRAINT reports_pkey PRIMARY KEY (uuid),
     CONSTRAINT reports_status_check CHECK (status::text = ANY
-                                           (ARRAY ['LOADER'::character varying, 'PROGRESS'::character varying, 'ERROR'::character varying, 'DONE'::character varying]::text[])),
+                                           (ARRAY ['LOADED'::character varying, 'PROGRESS'::character varying, 'ERROR'::character varying, 'DONE'::character varying]::text[])),
     CONSTRAINT reports_type_check CHECK (type::text = 'JOURNAL_AUDIT'::text)
 );
 
@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS report_app.files_info
 (
     id          bigint                         NOT NULL,
     file_name   character varying(255),
+    bucket_name   character varying(255),
     date_create timestamp(6) without time zone NOT NULL,
     CONSTRAINT files_info_pkey PRIMARY KEY (id)
 );
