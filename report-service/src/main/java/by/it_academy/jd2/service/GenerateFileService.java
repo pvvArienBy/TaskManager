@@ -1,141 +1,185 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.config.properties.MinioProperty;
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import lombok.SneakyThrows;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import by.it_academy.jd2.core.enums.EReportStatus;
+import by.it_academy.jd2.core.enums.EType;
+import by.it_academy.jd2.dao.entity.ReportEntity;
+import by.it_academy.jd2.dao.entity.ReportFileEntity;
+import by.it_academy.jd2.service.api.IFileService;
+import by.it_academy.jd2.service.api.IReportFileService;
+import by.it_academy.jd2.service.api.IReportService;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.mylib.tm.itacademy.dto.AuditDTO;
-import org.example.mylib.tm.itacademy.exceptions.ReportUploadException;
+import org.example.mylib.tm.itacademy.dto.ParamDTO;
+import org.example.mylib.tm.itacademy.exceptions.MinioClientException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Service
 public class GenerateFileService {
-    private final MinioClient minioClient;
-    private final MinioProperty minioProperty;
+    private final IReportService reportService;
+    private final ConversionService conversionService;
+    private final IReportFileService reportFileService;
+    private final IFileService fileService;
 
+    private Function<UUID, String> fileNameFromUuidFunction = (x) -> x.toString().concat(".xlsx");
+    private Function<EType, String> bucketNameFromReportTypeFunction = (x) -> "journal_audit";
 
-    public GenerateFileService(MinioClient minioClient, MinioProperty minioProperty) {
-        this.minioClient = minioClient;
-        this.minioProperty = minioProperty;
+    public GenerateFileService(IReportService reportService, ConversionService conversionService,
+                               IReportFileService reportFileService, IFileService fileService) {
+        this.reportService = reportService;
+        this.conversionService = conversionService;
+        this.reportFileService = reportFileService;
+        this.fileService = fileService;
     }
 
+    @Scheduled(fixedDelay = 30000)
+    public void performScheduledReportFormingAndSending() {
+        List<ReportEntity> reports = reportService
+                .getReportsWithTypeAndStatus(EType.JOURNAL_AUDIT, EReportStatus.LOADED);
 
-    public String convertToExcel(List<AuditDTO> auditList, String userUuid) throws IOException {
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Audit Data");
+        for (ReportEntity report : reports) {
+            UUID uuid = report.getUuid();
 
-        // Создание заголовка таблицы
-        Row headerRow = sheet.createRow(0);
-        headerRow.createCell(0).setCellValue("UUID");
-        headerRow.createCell(1).setCellValue("Date");
-        headerRow.createCell(2).setCellValue("User UUID");
-        headerRow.createCell(3).setCellValue("User Mail");
-        headerRow.createCell(4).setCellValue("User FIO");
-        headerRow.createCell(5).setCellValue("User Role");
-        headerRow.createCell(6).setCellValue("Text");
-        headerRow.createCell(7).setCellValue("Type");
-        headerRow.createCell(8).setCellValue("ID");
-
-        int rowNum = 1;
-        for (AuditDTO audit : auditList) {
-            Instant instant = Instant.ofEpochMilli(audit.getDtCreate());
-            ZonedDateTime zonedDateTime = instant.atZone(ZoneId.systemDefault());
-            LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-            Row dataRow = sheet.createRow(rowNum++);
-            dataRow.createCell(0).setCellValue(audit.getUuid().toString());
-            dataRow.createCell(1).setCellValue("\'" + localDateTime.format(formatter));
-            dataRow.createCell(2).setCellValue(audit.getUser().getUuid().toString());
-            dataRow.createCell(3).setCellValue(audit.getUser().getMail());
-            dataRow.createCell(4).setCellValue(audit.getUser().getFio());
-            dataRow.createCell(5).setCellValue(audit.getUser().getRole().toString());
-            dataRow.createCell(6).setCellValue(audit.getText());
-            dataRow.createCell(7).setCellValue(audit.getType().toString());
-            dataRow.createCell(8).setCellValue(audit.getId());
+            try {
+                reportService.setStatus(uuid, EReportStatus.PROGRESS);
+                formAndSendReport(report);
+                reportService.setStatus(uuid, EReportStatus.DONE);
+            } catch (MinioClientException e) {
+                reportService.setStatus(uuid, EReportStatus.ERROR);
+            }
         }
-
-        for (int i = 0; i < 9; i++) {
-            sheet.autoSizeColumn(i);
-        }
-
-        String filename;
-
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            workbook.write(outputStream);
-            filename = upload(outputStream, userUuid);
-        } catch (IOException e) {
-            throw new ReportUploadException("Report upload failed: " + e.getMessage() + e.getCause().getMessage());
-        }
-
-        return filename;
     }
 
+    private void formAndSendReport(ReportEntity entity) {
+        String fileName = null;
 
-    public String upload(ByteArrayOutputStream outputStream, String userUuid) {
         try {
-            createBucket();
+            ReportFileEntity fileEntity = new ReportFileEntity();
+
+            List<AuditDTO> auditDTOList = reportService.getListAudit(
+                    conversionService.convert(entity.getParamEntity(), ParamDTO.class));
+
+            UUID reportUuid = entity.getUuid();
+            fileName = createFileWithReports(auditDTOList, reportUuid, this.fileNameFromUuidFunction);
+
+            fileEntity.setFileName(fileName);
+            fileEntity.setReport(entity);
+            fileEntity.setBucketName(formBucketName(entity.getType(), this.bucketNameFromReportTypeFunction));
+
+            fileService.saveFile(fileName, fileEntity.getBucketName());
+
+            reportFileService.save(fileEntity);
+
         } catch (Exception e) {
-            throw new ReportUploadException("Report upload failed!: " + e.getMessage());
-        }
-
-        byte[] data = outputStream.toByteArray();
-
-        String fileName = generateFileName(userUuid) + ".xml";
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
-            saveReport(inputStream, fileName);
-        } catch (IOException e) {
-            throw new ReportUploadException("Report upload failed: " + e.getMessage() + e.getCause().getMessage());
-        }
-
-
-
-        return fileName;
-    }
-
-    @SneakyThrows
-    private void createBucket() {
-        boolean found = minioClient.bucketExists(
-                BucketExistsArgs.builder()
-                        .bucket(minioProperty.getBucket())
-                        .build());
-
-        if (!found) {
-            minioClient.makeBucket(
-                    MakeBucketArgs
-                            .builder().bucket(minioProperty.getBucket())
-                            .build());
+            //TODO place for logging
+            throw new MinioClientException(e.getMessage());
+        } finally {
+            if (fileName != null) {
+                File file = new File(fileName);
+                file.delete();
+            }
         }
     }
 
-    @SneakyThrows
-    private void saveReport(InputStream inputStream, String fileName) {
-        minioClient.putObject(PutObjectArgs.builder()
-                .stream(inputStream, inputStream.available(), -1)
-                .bucket(minioProperty.getBucket())
-                .object(fileName)
-                .build());
+    private <T> String createFileWithReports(List<AuditDTO> auditDTOList, T source, Function<T, String> formReportFileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("report");
+            int rowNum = 0;
+
+            createTopRow(workbook, sheet, rowNum++);
+            createHeaderRow(workbook, sheet, rowNum++);
+
+            for (AuditDTO auditDTO : auditDTOList) {
+                fillRowWithData(auditDTO, workbook, sheet, rowNum++);
+            }
+
+            for (int i = 0; i < 9; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            String fileName = fileNameFormer(source, formReportFileName);
+
+            try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
+                workbook.write(fileOutputStream);
+                workbook.close();
+            }
+
+            return fileName;
+        }
     }
 
-    private String generateFileName(String file) {
-        return UUID.randomUUID() + "." + file;
+    private void fillRowWithData(AuditDTO auditDTO, Workbook workbook, Sheet sheet, int rowNum) {
+        Row contextRow = sheet.createRow(rowNum);
+
+        contextRow.createCell(0).setCellValue(auditDTO.getUuid().toString());
+
+        CellStyle dtUpdateCellStyle = workbook.createCellStyle();
+        CreationHelper creationHelper = workbook.getCreationHelper();
+        dtUpdateCellStyle.setDataFormat(
+                creationHelper.createDataFormat().getFormat("dd-mm-yyyy h:mm:ss"));
+
+        Cell dtUpdateCell = contextRow.createCell(1);
+        dtUpdateCell.setCellStyle(dtUpdateCellStyle);
+        Long dtCreate = auditDTO.getDtCreate();
+        LocalDateTime converterLocalDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(dtCreate),
+                TimeZone.getDefault().toZoneId());
+        dtUpdateCell.setCellValue(converterLocalDateTime);
+
+        contextRow.createCell(2).setCellValue(auditDTO.getUser().getUuid().toString());
+        contextRow.createCell(3).setCellValue(auditDTO.getUser().getMail());
+        contextRow.createCell(4).setCellValue(auditDTO.getUser().getFio());
+        contextRow.createCell(5).setCellValue(auditDTO.getUser().getRole().toString());
+        contextRow.createCell(6).setCellValue(auditDTO.getText());
+        contextRow.createCell(7).setCellValue(auditDTO.getType().toString());
+        contextRow.createCell(8).setCellValue(auditDTO.getId());
+    }
+
+    private static void createHeaderRow(Workbook workbook, Sheet sheet, int rowNum) {
+        Row headerRow = sheet.createRow(rowNum);
+        headerRow.createCell(0).setCellValue("uuid");
+        headerRow.createCell(1).setCellValue("dt_create");
+        headerRow.createCell(2).setCellValue("uuid");
+        headerRow.createCell(3).setCellValue("mail");
+        headerRow.createCell(4).setCellValue("fio");
+        headerRow.createCell(5).setCellValue("role");
+        headerRow.createCell(6).setCellValue("text");
+        headerRow.createCell(7).setCellValue("type");
+        headerRow.createCell(8).setCellValue("id");
+    }
+
+    private static void createTopRow(Workbook workbook, Sheet sheet, int rowNum) {
+        Row userHeaderRow = sheet.createRow(rowNum);
+        Cell userCell = userHeaderRow.createCell(2);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        userCell.setCellStyle(cellStyle);
+        userCell.setCellValue("user");
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 2, 5));
+    }
+
+    private <T> String fileNameFormer(T source, Function<T, String> formReportFileNameFunction) {
+        return formReportFileNameFunction.apply(source);
+    }
+
+    private <T> String formBucketName(T source, Function<T, String> formBucketFileNameFunction) {
+        return formBucketFileNameFunction.apply(source);
     }
 }
