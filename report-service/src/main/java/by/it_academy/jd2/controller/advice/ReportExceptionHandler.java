@@ -221,4 +221,13 @@ public class ReportExceptionHandler {
 
         return new ResponseEntity(errorList, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(MinioClientException.class)
+    public ResponseEntity<List<ErrorResponse>> minioHandlerException(MinioClientException ex) {
+
+        List<ErrorResponse> errorList = new ArrayList<>();
+        errorList.add(new ErrorResponse(ErrorType.ERROR, ex.getMessage()));
+
+        return new ResponseEntity(errorList, HttpStatus.FORBIDDEN);
+    }
 }
