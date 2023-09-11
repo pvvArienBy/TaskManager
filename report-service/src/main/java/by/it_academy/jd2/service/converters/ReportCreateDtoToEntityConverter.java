@@ -25,14 +25,13 @@ public class ReportCreateDtoToEntityConverter
     public ReportEntity convert(ReportCreateDTO dto) {
         ReportEntity entity = new ReportEntity();
 
-        entity.setStatus(EReportStatus.PROGRESS);
+        entity.setStatus(EReportStatus.LOADED);
         entity.setType(dto.getType());
         entity.setParamEntity(getParam(dto.getParams()));
         entity.setDescription(getDescription(entity));
 
         return entity;
     }
-
 
     private ParamEntity getParam(Map<String, Object> params) {
         ParamEntity paramEntity = new ParamEntity();
@@ -44,7 +43,7 @@ public class ReportCreateDtoToEntityConverter
         paramEntity.setUuid(UUID.randomUUID());
         paramEntity.setUserUuid(uuid);
         paramEntity.setFromDt(from);
-        paramEntity.setTooDt(to);
+        paramEntity.setTooDt(to.plusDays(1));
         return paramEntity;
     }
 
@@ -55,4 +54,5 @@ public class ReportCreateDtoToEntityConverter
                 entity.getParamEntity().getTooDt(),
                 entity.getParamEntity().getUserUuid());
     }
+
 }
