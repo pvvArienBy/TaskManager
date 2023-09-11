@@ -1,19 +1,19 @@
 package by.it_academy.jd2.service;
 
-import by.it_academy.jd2.config.properties.MinioProperty;
 import by.it_academy.jd2.core.dto.ReportCreateDTO;
+import by.it_academy.jd2.core.enums.EReportStatus;
+import by.it_academy.jd2.core.enums.EType;
 import by.it_academy.jd2.dao.entity.ReportEntity;
 import by.it_academy.jd2.dao.entity.ReportFileEntity;
 import by.it_academy.jd2.dao.repositories.IReportDao;
+import by.it_academy.jd2.service.api.IFileService;
 import by.it_academy.jd2.service.api.IParamService;
 import by.it_academy.jd2.service.api.IReportFileService;
 import by.it_academy.jd2.service.api.IReportService;
 import by.it_academy.jd2.service.api.feign.IAuditClientService;
-import io.minio.MinioClient;
 import org.example.mylib.tm.itacademy.dto.AuditDTO;
 import org.example.mylib.tm.itacademy.dto.ParamDTO;
 import org.example.mylib.tm.itacademy.exceptions.EntityNotFoundException;
-import org.example.mylib.tm.itacademy.exceptions.ReportGenerateException;
 import org.example.mylib.tm.itacademy.exceptions.ResultNotFoundException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,22 +37,17 @@ public class ReportService implements IReportService {
     private final IParamService paramService;
     private final IAuditClientService auditClientService;
     private final ConversionService conversionService;
-    private final GenerateFileService generateFileService;
-    private final MinioProperty minioProperty;
-    private final MinioClient minioClient;
-    private final IReportFileService fileService;
+    private final IReportFileService reportFileService;
+    private final IFileService fileService;
 
     public ReportService(IReportDao reportDao, IParamService paramService,
-                         IAuditClientService auditClientService,
-                         ConversionService conversionService, GenerateFileService generateFileService,
-                         MinioProperty minioProperty, MinioClient minioClient, ReportFileService fileService) {
+                         IAuditClientService auditClientService, ConversionService conversionService,
+                         ReportFileService reportFileService, IFileService fileService) {
         this.reportDao = reportDao;
         this.paramService = paramService;
         this.auditClientService = auditClientService;
         this.conversionService = conversionService;
-        this.generateFileService = generateFileService;
-        this.minioProperty = minioProperty;
-        this.minioClient = minioClient;
+        this.reportFileService = reportFileService;
         this.fileService = fileService;
     }
 
@@ -85,27 +79,13 @@ public class ReportService implements IReportService {
         this.paramService.save(entity.getParamEntity());
         this.reportDao.saveAndFlush(entity);
 
-        try {
-            ReportFileEntity fileEntity = new ReportFileEntity();
-
-            fileEntity.setFileName(getReportFile(
-                    conversionService.convert(
-                            entity.getParamEntity(), ParamDTO.class)));
-
-            fileEntity.setReport(entity);
-
-            this.fileService.save(fileEntity);
-        } catch (IOException e) {
-            throw new ReportGenerateException(FILE_NOT_CREATED);
-        }
-
         return entity;
     }
 
     @Override
     public RedirectView getUrlReport(UUID uuid) {
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(minioProperty.getDownloadurl() + getFileName(uuid));
+        redirectView.setUrl(getReportFileUrl(uuid));
 
         return redirectView;
     }
@@ -113,27 +93,50 @@ public class ReportService implements IReportService {
     @Transactional(readOnly = true)
     @Override
     public String getFileName(UUID uuid) {
-        return this.fileService.findFileNameByReport(uuid).getFileName();
+        return this.reportFileService.findFileNameByReport(uuid).getFileName();
     }
 
     @Transactional(readOnly = true)
     @Override
     public boolean checkFileInData(UUID uuid) {
-        return this.fileService.checkFileInData(uuid);
+        return this.reportFileService.checkFileInData(uuid);
     }
 
-    private String getReportFile(ParamDTO dto) throws IOException {
-        List<AuditDTO> dtoList = Optional
+    @Override
+    public List<AuditDTO> getListAudit(ParamDTO paramDTO) {
+        return Optional
                 .ofNullable(
-                        this.auditClientService.getList(dto)
+                        this.auditClientService.getList(paramDTO)
                                 .getBody())
                 .orElseThrow(()
                         -> new ResultNotFoundException(RESULT_NOT_FOUND));
-
-        String userUuid = dto.getUser().toString();
-
-        return this.generateFileService.convertToExcel(dtoList, userUuid);
-
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReportEntity> getReportsWithTypeAndStatus(EType type, EReportStatus status) {
+        return reportDao.findByTypeIsAndStatusIs(type, status);
+    }
+
+    @Override
+    @Transactional
+    public void setStatus(UUID uuid, EReportStatus reportStatus) {
+        ReportEntity entity = this.reportDao
+                .findById(uuid)
+                .orElseThrow(()
+                        -> new EntityNotFoundException(REPORT_NOT_FOUND));
+
+        entity.setStatus(reportStatus);
+        reportDao.saveAndFlush(entity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getReportFileUrl(UUID uuid) {
+        ReportFileEntity reportInfo = reportFileService.findFileNameByReport(uuid);
+
+        return fileService.getFileUrl(reportInfo.getFileName(), reportInfo.getBucketName());
+    }
+
 }
 
