@@ -3,17 +3,20 @@ package by.it_academy.jd2.dao.entity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "files_info")
-public class ReportFileEntity {
+public class ReportFileEntity implements Serializable {
+    static final long serialVersionUID = 2L;
     @Id
     @GeneratedValue
     private Long id;
     private String fileName;
+    private String bucketName;
     @JoinTable(
             name = "report_file",
             joinColumns = @JoinColumn(name = "file_id"),
@@ -28,9 +31,10 @@ public class ReportFileEntity {
     public ReportFileEntity() {
     }
 
-    public ReportFileEntity(Long id, String fileName, ReportEntity report, LocalDateTime dtCreate) {
+    public ReportFileEntity(Long id, String fileName, String bucketNme, ReportEntity report, LocalDateTime dtCreate) {
         this.id = id;
         this.fileName = fileName;
+        this.bucketName = bucketNme;
         this.report = report;
         this.dtCreate = dtCreate;
     }
@@ -49,6 +53,14 @@ public class ReportFileEntity {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
     }
 
     public ReportEntity getReport() {
@@ -73,11 +85,13 @@ public class ReportFileEntity {
         if (o == null || getClass() != o.getClass()) return false;
         ReportFileEntity that = (ReportFileEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(fileName, that.fileName) &&
+                Objects.equals(bucketName, that.bucketName) &&
                 Objects.equals(report, that.report) && Objects.equals(dtCreate, that.dtCreate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fileName, report, dtCreate);
+        return Objects.hash(id, fileName, bucketName, report, dtCreate);
     }
+
 }
