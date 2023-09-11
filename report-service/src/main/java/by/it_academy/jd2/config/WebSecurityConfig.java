@@ -26,7 +26,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/report/**").permitAll()
+                                .requestMatchers("/report/**").hasAnyAuthority("ROLE_ADMIN")
                                 .anyRequest()
                                 .authenticated())
                 .sessionManagement((session) -> session

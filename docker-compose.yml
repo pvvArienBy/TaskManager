@@ -8,7 +8,7 @@ volumes:
 services:
   db:
     build: postgresql
-    image: taskmanager_postgresql:1.1.19
+    image: taskmanager_postgresql:1.1.21
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -43,8 +43,8 @@ services:
     build: minio
     image: minio/minio
     environment:
-      - MINIO_ROOT_USER=minioservice
-      - MINIO_ROOT_PASSWORD=minioservice
+      - MINIO_ROOT_USER=minioservice_user
+      - MINIO_ROOT_PASSWORD=minioservice_pass
     command: server ~/minio --console-address :9001
     ports:
       - "9000:9000"
@@ -70,12 +70,12 @@ services:
       - taskmanager_ntwrk
   report-service:
     build: report-service
-    image: taskmanager_report-service:1.1.17
+    image: taskmanager_report-service:1.1.51
     networks:
       - taskmanager_ntwrk
   gateway-service:
     build: gateway-service
-    image: taskmanager_gateway-service:1.0.23
+    image: taskmanager_gateway-service:1.0.30
     ports:
       - "80:80"
     networks:

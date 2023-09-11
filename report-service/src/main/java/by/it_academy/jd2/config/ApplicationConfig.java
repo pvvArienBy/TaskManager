@@ -21,8 +21,8 @@ public class ApplicationConfig {
 
     @Bean
     public MinioClient minioClient() {
-        return MinioClient.builder().endpoint(
-                minioProperty.getUrl())
+        return MinioClient.builder()
+                .endpoint(minioProperty.getUrl())
                 .credentials(minioProperty.getAccessKey(), minioProperty.getSecretKey())
                 .build();
     }

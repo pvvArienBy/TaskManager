@@ -22,7 +22,7 @@ public class ReportFileService implements IReportFileService {
 
     @Override
     public ReportFileEntity findFileNameByReport(UUID uuid) {
-        return this.reportFileDao.findByReportUuid(uuid);
+        return this.reportFileDao.findByReportUuid(uuid).orElseThrow(() -> new RuntimeException("Отчет не найден")); // TODO: 09.09.2023 ref
     }
 
     @Override
