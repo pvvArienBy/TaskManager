@@ -55,7 +55,7 @@ services:
       - minio-data:/minio
   user-service:
     build: user-service
-    image: taskmanager_user-service:1.1.33
+    image: taskmanager_user-service:1.1.34
     networks:
       - taskmanager_ntwrk
   audit-service:
@@ -65,12 +65,12 @@ services:
       - taskmanager_ntwrk
   task-service:
     build: task-service
-    image: taskmanager_task-service:1.0.29
+    image: taskmanager_task-service:1.0.30
     networks:
       - taskmanager_ntwrk
   report-service:
     build: report-service
-    image: taskmanager_report-service:1.1.51
+    image: taskmanager_report-service:1.2.33
     networks:
       - taskmanager_ntwrk
   gateway-service:

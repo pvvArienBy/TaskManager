@@ -41,3 +41,5 @@ minio:
   accessKey: minioservice_user
   secretKey: minioservice_pass
   downloadurl: http://localhost:9000
+
+
