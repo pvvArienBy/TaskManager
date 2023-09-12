@@ -6,6 +6,9 @@ import by.it_academy.jd2.core.enums.ETaskStatus;
 import by.it_academy.jd2.dao.entity.TaskEntity;
 import by.it_academy.jd2.service.api.ITaskService;
 import org.example.mylib.tm.itacademy.dto.PageDTO;
+import org.example.mylib.tm.itacademy.utils.ClassNameUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,8 @@ import java.util.UUID;
 public class TaskController {
     private final ITaskService taskService;
     private final ConversionService conversionService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassNameUtil.getCurrentClassName());
 
     public TaskController(ITaskService taskService, ConversionService conversionService) {
         this.taskService = taskService;
@@ -39,6 +44,8 @@ public class TaskController {
                                      @RequestParam(required = false, defaultValue = "") List<UUID> project,
                                      @RequestParam(required = false, defaultValue = "") List<UUID> implementer,
                                      @RequestParam(required = false, defaultValue = "") List<ETaskStatus> status) {
+        logger.info("Request export, findAll task");
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(conversionService.convert(
                         this.taskService.getAll(
@@ -47,6 +54,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody TaskCreateUpdateDTO dto) {
+        logger.info("Request export, start save task in {} project", dto.getProject());
         this.taskService.save(dto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -56,6 +64,7 @@ public class TaskController {
     public ResponseEntity<TaskDTO> save(@PathVariable UUID uuid,
                                         @PathVariable("dt_update") LocalDateTime dtUpdate,
                                         @RequestBody TaskCreateUpdateDTO dto) {
+        logger.info("Request export, start update {} - task", uuid);
         TaskEntity taskEntity = this.taskService.update(uuid, dtUpdate, dto);
         TaskDTO taskDTO = conversionService.convert(taskEntity, TaskDTO.class);
 
@@ -66,6 +75,7 @@ public class TaskController {
     public ResponseEntity<?> save(@PathVariable UUID uuid,
                                   @PathVariable("dt_update") LocalDateTime dtUpdate,
                                   @PathVariable ETaskStatus status) {
+        logger.info("Request export, start update {} - task status", uuid);
         this.taskService.update(uuid, dtUpdate, status);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -92,12 +92,6 @@ public class ReportService implements IReportService {
 
     @Transactional(readOnly = true)
     @Override
-    public String getFileName(UUID uuid) {
-        return this.reportFileService.findFileNameByReport(uuid).getFileName();
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public boolean checkFileInData(UUID uuid) {
         return this.reportFileService.checkFileInData(uuid);
     }

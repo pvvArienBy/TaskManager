@@ -5,6 +5,9 @@ import io.minio.*;
 import io.minio.errors.ErrorResponseException;
 import io.minio.http.Method;
 import org.example.mylib.tm.itacademy.exceptions.MinioClientException;
+import org.example.mylib.tm.itacademy.utils.ClassNameUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -15,6 +18,8 @@ public class FileService implements IFileService {
     private static final String UNKNOWN_ERROR_MESSAGE = "Unknown error during operation";
 
     private final MinioClient minioClient;
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassNameUtil.getCurrentClassName());
 
     public FileService(MinioClient minioClient) {
         this.minioClient = minioClient;
@@ -51,7 +56,8 @@ public class FileService implements IFileService {
             );
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.warn("Save file minio {}", e.getMessage());
+            throw new MinioClientException(e);
         }
     }
 
@@ -80,9 +86,10 @@ public class FileService implements IFileService {
 
         } catch (ErrorResponseException e) {
             if (e.errorResponse().code().equals("NoSuchKey")) {
-                //TODO place for logging
+                logger.warn("Get URL file minio {} and {}", e.getMessage(), REPORT_NOT_FOUND_MESSAGE);
                 throw new MinioClientException(REPORT_NOT_FOUND_MESSAGE);
             } else {
+                logger.warn("Get URL file minio {} and {}", e.getMessage(), UNKNOWN_ERROR_MESSAGE);
                 throw new MinioClientException(UNKNOWN_ERROR_MESSAGE);
             }
         } catch (Exception e) {
