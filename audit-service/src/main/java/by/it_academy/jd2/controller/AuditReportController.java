@@ -1,7 +1,7 @@
 package by.it_academy.jd2.controller;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.dao.entity.AuditEntity;
+import by.it_academy.jd2.dao.entity.Audit;
 import by.it_academy.jd2.service.api.IAuditService;
 import org.example.mylib.tm.itacademy.dto.ParamDTO;
 import org.springframework.core.convert.ConversionService;
@@ -30,7 +30,7 @@ public class AuditReportController {
     public ResponseEntity<List<AuditDTO>> getList(@RequestBody ParamDTO dto) {
         List<AuditDTO> dtos = new ArrayList<>();
 
-        for (AuditEntity entity : this.auditService.getList(dto)) {
+        for (Audit entity : this.auditService.getList(dto)) {
             dtos.add(this.conversionService.convert((entity), AuditDTO.class));
         }
 
