@@ -1,6 +1,6 @@
 package by.it_academy.jd2.service.converters;
 
-import by.it_academy.jd2.dao.entity.AuditEntity;
+import by.it_academy.jd2.dao.entity.AuditDoc;
 import org.example.mylib.tm.itacademy.dto.AuditCreateDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class AuditCreateDtoToEntityConverter implements Converter<AuditCreateDTO, AuditEntity> {
+public class AuditCreateDtoToEntityConverter implements Converter<AuditCreateDTO, AuditDoc> {
     @Override
-    public AuditEntity convert(AuditCreateDTO dto) {
-        AuditEntity entity = new AuditEntity();
+    public AuditDoc convert(AuditCreateDTO dto) {
+        AuditDoc entity = new AuditDoc();
 
         entity.setUuid(UUID.randomUUID().toString());
         entity.setDtCreate(LocalDateTime.now());
