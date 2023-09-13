@@ -84,7 +84,6 @@ public class GenerateFileService {
             reportFileService.save(fileEntity);
 
         } catch (Exception e) {
-            //TODO place for logging
             throw new MinioClientException(e.getMessage());
         } finally {
             if (fileName != null) {

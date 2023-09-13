@@ -1,46 +1,42 @@
 package by.it_academy.jd2.dao.entity;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import org.example.mylib.tm.itacademy.enums.ERole;
 import org.example.mylib.tm.itacademy.enums.EssenceType;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SourceType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
-@Table(name = "audits")
-public class AuditEntity implements Serializable {
+@Document(collection = "audit")
+public class Audit implements Serializable {
     static final long serialVersionUID = 1L;
     @Id
-    private UUID uuid;
-    @CreationTimestamp
-    @Column(name = "date_create")
+    private String uuid;
+    @Field("date_create")
     private LocalDateTime dtCreate;
     private UUID userUuid;
     @Email(message = "Incorrect email address")
     private String userMail;
     @Size(max = 255)
     private String userFio;
-    @Enumerated(EnumType.STRING)
     private ERole userRole;
     @Size(max = 255)
     private String text;
-    @Enumerated(EnumType.STRING)
     private EssenceType type;
     private String id;
 
-    public AuditEntity() {
+    public Audit() {
     }
 
-    public AuditEntity(UUID uuid, LocalDateTime dtCreate, UUID userUuid,
-                       String userMail, String userFio, ERole userRole,
-                       String text, EssenceType type, String id) {
+    public Audit(String uuid, LocalDateTime dtCreate, UUID userUuid,
+                 String userMail, String userFio, ERole userRole,
+                 String text, EssenceType type, String id) {
         this.uuid = uuid;
         this.dtCreate = dtCreate;
         this.userUuid = userUuid;
@@ -52,11 +48,11 @@ public class AuditEntity implements Serializable {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
@@ -124,11 +120,12 @@ public class AuditEntity implements Serializable {
         this.id = id;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AuditEntity that = (AuditEntity) o;
+        Audit that = (Audit) o;
         return Objects.equals(uuid, that.uuid) && Objects.equals(dtCreate, that.dtCreate)
                 && Objects.equals(userUuid, that.userUuid) && Objects.equals(userMail, that.userMail)
                 && Objects.equals(userFio, that.userFio) && userRole == that.userRole

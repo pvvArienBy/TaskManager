@@ -1,7 +1,7 @@
 package by.it_academy.jd2.service.converters;
 
 import by.it_academy.jd2.core.dto.AuditDTO;
-import by.it_academy.jd2.dao.entity.AuditEntity;
+import by.it_academy.jd2.dao.entity.Audit;
 import org.example.mylib.tm.itacademy.dto.PageDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class PageEntityToPageDtoConverter
-        implements Converter<Page<AuditEntity>, PageDTO<AuditDTO>> {
+        implements Converter<Page<Audit>, PageDTO<AuditDTO>> {
 
     private final AuditEntityToDtoConverter auditEntityToDtoConverter;
 
@@ -21,7 +21,7 @@ public class PageEntityToPageDtoConverter
     }
 
     @Override
-    public PageDTO<AuditDTO> convert(Page<AuditEntity> page) {
+    public PageDTO<AuditDTO> convert(Page<Audit> page) {
         PageDTO<AuditDTO> dto = new PageDTO<>();
 
         dto.setNumber(page.getNumber());

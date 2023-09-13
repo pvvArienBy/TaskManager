@@ -1,21 +1,12 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://db:5432/audit_service?ApplicationName=audit-service-app
-    username: auditservice
-    password: auditservice
-
-  mvc:
-    throw-exception-if-no-handler-found: true
-
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate.default_schema: audit_app
-      hibernate:
-        show_sql: true
-    open-in-view: true
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: example
+      database: audit-service
+      port: 27017
+      host: mongo
 
   application:
     name: audit

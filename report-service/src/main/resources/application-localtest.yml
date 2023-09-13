@@ -5,7 +5,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate.default_schema: report_app
       hibernate:
@@ -28,5 +28,5 @@ eureka:
 minio:
   bucket: reports
   url: http://localhost:9000
-  accessKey: minioservice
-  secretKey: minioservice
+  accessKey: minioservice_user
+  secretKey: minioservice_pass
