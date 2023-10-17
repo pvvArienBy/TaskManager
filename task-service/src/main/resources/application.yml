@@ -19,7 +19,6 @@ spring:
   application:
     name: task
 
-
 jwt:
   secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
   issuer: ITAcademy

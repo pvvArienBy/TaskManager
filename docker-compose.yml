@@ -74,24 +74,57 @@ services:
       - taskmanager_ntwrk
     volumes:
       - minio-data:/minio
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - taskmanager_ntwrk
+  kafka:
+    depends_on:
+      - zookeeper
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - taskmanager_ntwrk
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9002:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:9092"
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - "kafka"
+    networks:
+      - taskmanager_ntwrk
   user-service:
     build: user-service
-    image: taskmanager_user-service:1.1.35
+    image: taskmanager_user-service:1.1.38
     networks:
       - taskmanager_ntwrk
   audit-service:
     build: audit-service
-    image: taskmanager_audit-service:1.1.8
+    image: taskmanager_audit-service:1.1.10
     networks:
       - taskmanager_ntwrk
   task-service:
     build: task-service
-    image: taskmanager_task-service:1.0.30
+    image: taskmanager_task-service:1.0.31
     networks:
       - taskmanager_ntwrk
   report-service:
     build: report-service
-    image: taskmanager_report-service:1.2.34
+    image: taskmanager_report-service:1.2.35
     networks:
       - taskmanager_ntwrk
   gateway-service:
