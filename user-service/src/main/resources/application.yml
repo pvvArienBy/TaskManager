@@ -16,6 +16,8 @@ spring:
       hibernate:
         show_sql: true
     open-in-view: true
+  kafka:
+    bootstrap-servers: kafka:9092
 
   application:
     name: users

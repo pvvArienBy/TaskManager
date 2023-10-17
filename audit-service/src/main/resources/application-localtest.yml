@@ -6,6 +6,11 @@ spring:
       host: localhost
       uri: mongodb://localhost:27017/audit-service
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: group-1
+
 server:
   port: 0
 

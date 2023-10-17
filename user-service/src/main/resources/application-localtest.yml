@@ -5,7 +5,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate.default_schema: user_app
       hibernate:
@@ -13,6 +13,10 @@ spring:
     open-in-view: true
   application:
     name: users
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
 #  mail:
 #    host: localhost
 #    port: 1025
